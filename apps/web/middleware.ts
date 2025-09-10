@@ -1,17 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 export function middleware(request: NextRequest) {
-  // Force HTTPS redirect if not already HTTPS
-  if (
-    process.env.NODE_ENV === 'production' &&
-    request.headers.get('x-forwarded-proto') !== 'https'
-  ) {
-    return NextResponse.redirect(
-      `https://${request.headers.get('host')}${request.nextUrl.pathname}${request.nextUrl.search}`,
-      301
-    );
-  }
-
+  // Skip HTTPS redirect when behind Cloudflare proxy
+  // Cloudflare handles HTTPS termination and passes traffic to origin via HTTP
+  
   return NextResponse.next();
 }
 

@@ -8,7 +8,7 @@ echo "🚀 Starting manual deployment..."
 deploy_web() {
     echo "📦 Building Web..."
     cd /var/www/mono/apps/web
-    pnpm install --prod
+    pnpm install
     pnpm build
     pm2 restart web
     echo "✅ Web deployed successfully"
@@ -18,7 +18,7 @@ deploy_web() {
 deploy_cms() {
     echo "📦 Building CMS..."
     cd /var/www/mono/apps/cms
-    pnpm install --prod
+    pnpm install
     pnpm build
     pm2 restart cms
     echo "✅ CMS deployed successfully"
