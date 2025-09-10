@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://b-audio.vn
+
+# Sitemaps
+Sitemap: https://b-audio.vn/sitemap.xml

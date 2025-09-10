@@ -1,0 +1,67 @@
+# Dependencies
+node_modules/
+*/node_modules/
+**/node_modules/
+
+# Build outputs
+.next/
+out/
+dist/
+build/
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+pnpm-debug.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Cache
+.npm
+.pnpm-store/
+.yarn/cache
+.cache/
+
+# Database
+database/
+*.db
+*.sqlite
+
+# PM2
+.pm2/
+ecosystem.config.js
+
+# Strapi
+apps/cms/.tmp/
+apps/cms/public/uploads/
+apps/cms/.cache/
+apps/cms/build/
+
+# MacOS
+.DS_Store
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Temporary files
+*.tmp
+*.temp

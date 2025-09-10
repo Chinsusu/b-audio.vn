@@ -1,0 +1,12 @@
+# /etc/cloudflared/config.yml
+tunnel: <TUNNEL-UUID>
+credentials-file: /etc/cloudflared/<TUNNEL-UUID>.json
+
+ingress:
+  - hostname: b-audio.vn
+    service: http://localhost:3000
+  - hostname: www.b-audio.vn
+    service: http://localhost:3000
+  - hostname: api.b-audio.vn
+    service: http://localhost:1337
+  - service: http_status:404

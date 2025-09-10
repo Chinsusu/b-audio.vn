@@ -1,0 +1,117 @@
+name: Deploy b-audio.vn
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'apps/**'
+      - '.github/workflows/**'
+
+env:
+  NODE_VERSION: '22'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+      
+      - name: Install pnpm
+        run: npm install -g pnpm
+      
+      # Build Web (Next.js)
+      - name: Build Web App
+        run: |
+          cd apps/web
+          pnpm install --frozen-lockfile
+          pnpm build
+          tar -czf web-dist.tar.gz .next public package.json pnpm-lock.yaml next.config.js middleware.ts next-sitemap.config.js
+      
+      # Build CMS (Strapi) - only if changed
+      - name: Check if CMS changed
+        id: cms-changes
+        run: |
+          if git diff --name-only HEAD~1 | grep -q "apps/cms/"; then
+            echo "changed=true" >> $GITHUB_OUTPUT
+          else
+            echo "changed=false" >> $GITHUB_OUTPUT
+          fi
+      
+      - name: Build CMS
+        if: steps.cms-changes.outputs.changed == 'true'
+        run: |
+          cd apps/cms
+          pnpm install --frozen-lockfile
+          pnpm build
+          tar -czf cms-dist.tar.gz build package.json pnpm-lock.yaml src config
+      
+      # Deploy to server
+      - name: Deploy Web to server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT || 22 }}
+          source: "apps/web/web-dist.tar.gz"
+          target: "/tmp/deploy/"
+      
+      - name: Deploy CMS to server (if changed)
+        if: steps.cms-changes.outputs.changed == 'true'
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT || 22 }}
+          source: "apps/cms/cms-dist.tar.gz"
+          target: "/tmp/deploy/"
+      
+      - name: Execute deployment on server
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT || 22 }}
+          script: |
+            set -e
+            
+            # Deploy Web
+            echo "🚀 Deploying Web..."
+            cd /var/www/mono/apps/web
+            cp /tmp/deploy/apps/web/web-dist.tar.gz ./
+            tar -xzf web-dist.tar.gz
+            rm web-dist.tar.gz
+            pnpm install --prod --frozen-lockfile
+            
+            # Deploy CMS (if changed)
+            if [ -f "/tmp/deploy/apps/cms/cms-dist.tar.gz" ]; then
+              echo "🚀 Deploying CMS..."
+              cd /var/www/mono/apps/cms
+              cp /tmp/deploy/apps/cms/cms-dist.tar.gz ./
+              tar -xzf cms-dist.tar.gz
+              rm cms-dist.tar.gz
+              pnpm install --prod --frozen-lockfile
+              pm2 restart cms
+              echo "✅ CMS deployed and restarted"
+            fi
+            
+            # Always restart web
+            pm2 restart web
+            echo "✅ Web deployed and restarted"
+            
+            # Cleanup
+            rm -rf /tmp/deploy/
+            
+            # Show PM2 status
+            pm2 list
+            echo "🎉 Deployment completed!"
