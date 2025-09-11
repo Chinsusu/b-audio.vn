@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 
 interface SearchFiltersProps {
@@ -20,6 +20,10 @@ interface DualRangeSliderProps {
 function DualRangeSlider({ min, max, step, value, onChange, formatValue, accent }: DualRangeSliderProps) {
   const [minVal, setMinVal] = useState(value[0]);
   const [maxVal, setMaxVal] = useState(value[1]);
+  const [activeThumb, setActiveThumb] = useState<'min' | 'max' | null>(null);
+  
+  const minInputRef = useRef<HTMLInputElement>(null);
+  const maxInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     setMinVal(value[0]);
@@ -42,6 +46,17 @@ function DualRangeSlider({ min, max, step, value, onChange, formatValue, accent 
   const minPercent = ((minVal - min) / (max - min)) * 100;
   const maxPercent = ((maxVal - min) / (max - min)) * 100;
   
+  // Calculate which thumb should be on top based on proximity
+  const getThumbZIndex = () => {
+    if (activeThumb === 'min') return { minZ: 5, maxZ: 1 };
+    if (activeThumb === 'max') return { minZ: 1, maxZ: 5 };
+    
+    // Default positioning - max on top
+    return { minZ: 1, maxZ: 2 };
+  };
+
+  const { minZ, maxZ } = getThumbZIndex();
+  
   return (
     <div className="space-y-4">
       <div className="relative h-2 bg-darkBg rounded-lg">
@@ -60,29 +75,39 @@ function DualRangeSlider({ min, max, step, value, onChange, formatValue, accent 
         <div className="relative w-full h-2">
           {/* Min slider */}
           <input
+            ref={minInputRef}
             type="range"
             min={min}
             max={max}
             step={step}
             value={minVal}
             onChange={handleMinChange}
+            onMouseDown={() => setActiveThumb('min')}
+            onTouchStart={() => setActiveThumb('min')}
+            onMouseUp={() => setActiveThumb(null)}
+            onTouchEnd={() => setActiveThumb(null)}
             className="absolute w-full h-full bg-transparent appearance-none cursor-pointer outline-none"
             style={{
-              zIndex: minVal > max - (max - min) * 0.5 ? 5 : 1
+              zIndex: minZ
             }}
           />
           
           {/* Max slider */}
           <input
+            ref={maxInputRef}
             type="range"
             min={min}
             max={max}
             step={step}
             value={maxVal}
             onChange={handleMaxChange}
+            onMouseDown={() => setActiveThumb('max')}
+            onTouchStart={() => setActiveThumb('max')}
+            onMouseUp={() => setActiveThumb(null)}
+            onTouchEnd={() => setActiveThumb(null)}
             className="absolute w-full h-full bg-transparent appearance-none cursor-pointer outline-none"
             style={{
-              zIndex: maxVal < min + (max - min) * 0.5 ? 5 : 2
+              zIndex: maxZ
             }}
           />
         </div>
@@ -142,12 +167,14 @@ function DualRangeSlider({ min, max, step, value, onChange, formatValue, accent 
           border: none;
         }
 
-        input[type="range"]:focus::-webkit-slider-thumb {
-          box-shadow: 0 0 12px ${accentColor}88;
+        input[type="range"]:active::-webkit-slider-thumb {
+          box-shadow: 0 0 15px ${accentColor}88;
+          transform: scale(1.1);
         }
 
-        input[type="range"]:focus::-moz-range-thumb {
-          box-shadow: 0 0 12px ${accentColor}88;
+        input[type="range"]:active::-moz-range-thumb {
+          box-shadow: 0 0 15px ${accentColor}88;
+          transform: scale(1.1);
         }
       `}</style>
     </div>
