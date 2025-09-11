@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE || 'https://api.b-audio.vn';
+const DEFAULT_OG = 'https://b-audio.vn/og/product-default.svg';
 
 export async function generateStaticParams() {
   const res = await fetch(`${API_BASE}/api/products?fields[0]=slug&pagination[pageSize]=100`);
@@ -34,8 +35,9 @@ export async function generateMetadata({ params }: { params: { slug: string }}):
       title,
       description: desc,
       url: canonical,
-      images: imageUrl ? [{ url: imageUrl }] : undefined,
+      images: imageUrl ? [{ url: imageUrl }] : [{ url: DEFAULT_OG, width: 1200, height: 630, alt: p.title }],
     },
+    twitter: { card: 'summary_large_image', images: [imageUrl || DEFAULT_OG] },
   };
 }
 

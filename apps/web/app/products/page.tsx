@@ -8,7 +8,9 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Sản phẩm | B-Audio',
     url: 'https://b-audio.vn/products',
+    images: [{ url: 'https://b-audio.vn/og/products-cover.svg', width: 1200, height: 630, alt: 'B-Audio Products' }],
   },
+  twitter: { card: 'summary_large_image', images: ['https://b-audio.vn/og/products-cover.svg'] },
 };
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE || 'https://api.b-audio.vn';
