@@ -113,6 +113,28 @@ jobs:
             pm2 restart web
             echo "✅ Web deployed and restarted"
             
+            # Health checks (CMS & Web)
+            wait_for() {
+              url="$1"; expected="$2"; timeout="${3:-90}"; interval=3
+              while [ "$timeout" -gt 0 ]; do
+                code=$(curl -sk -o /dev/null -w "%{http_code}" "$url" || true)
+                if [ "$code" = "$expected" ]; then
+                  echo "OK $url => $code"; return 0
+                fi
+                echo "Waiting $url ... got $code; remaining ${timeout}s"; sleep $interval; timeout=$((timeout-interval))
+              done
+              echo "Timeout waiting $url"; exit 1
+            }
+            
+            # If CMS was deployed, verify it's up on localhost and public endpoint
+            if pm2 info cms >/dev/null 2>&1; then
+              wait_for "http://localhost:1337/admin" 200 90
+              wait_for "https://api.b-audio.vn/api/products" 200 120
+            fi
+            
+            # Verify Web is up
+            wait_for "https://b-audio.vn/" 200 90
+            
             # Cleanup
             rm -rf /tmp/deploy/
             
