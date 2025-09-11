@@ -79,12 +79,12 @@ export default function SearchFilters({ onFiltersChange }: SearchFiltersProps) {
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow p-4 mb-6">
+    <div className="bg-white rounded-2xl border border-cloud shadow p-4 mb-6">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="font-semibold">Bộ lọc tìm kiếm</h3>
+        <h3 className="text-heading-sm font-semibold">Bộ lọc tìm kiếm</h3>
         <button
           onClick={() => setIsExpanded(!isExpanded)}
-          className="md:hidden text-gray-600"
+          className="md:hidden text-gray-600 rounded-2xl p-2 hover:bg-cloud focus:outline-none focus:ring-2 focus:ring-espresso focus:ring-offset-2"
         >
           {isExpanded ? '▲' : '▼'}
         </button>
@@ -99,7 +99,7 @@ export default function SearchFilters({ onFiltersChange }: SearchFiltersProps) {
           <select
             value={filters.sortBy}
             onChange={(e) => handleFilterChange('sortBy', e.target.value)}
-            className="w-full border rounded-lg px-3 py-2 text-sm"
+            className="w-full border border-cloud rounded-2xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-espresso focus:ring-offset-2"
           >
             <option value="newest">Mới nhất</option>
             <option value="price-asc">Giá thấp → cao</option>
@@ -122,7 +122,7 @@ export default function SearchFilters({ onFiltersChange }: SearchFiltersProps) {
               step="100000"
               value={filters.priceRange[0]}
               onChange={(e) => handleFilterChange('priceRange', [parseInt(e.target.value), filters.priceRange[1]])}
-              className="flex-1"
+              className="flex-1 rounded-full accent-espresso focus:outline-none focus:ring-2 focus:ring-espresso focus:ring-offset-2"
             />
             <input
               type="range"
@@ -131,7 +131,7 @@ export default function SearchFilters({ onFiltersChange }: SearchFiltersProps) {
               step="100000"
               value={filters.priceRange[1]}
               onChange={(e) => handleFilterChange('priceRange', [filters.priceRange[0], parseInt(e.target.value)])}
-              className="flex-1"
+              className="flex-1 rounded-full accent-espresso focus:outline-none focus:ring-2 focus:ring-espresso focus:ring-offset-2"
             />
           </div>
         </div>
@@ -149,7 +149,7 @@ export default function SearchFilters({ onFiltersChange }: SearchFiltersProps) {
               step="10"
               value={filters.powerRange[0]}
               onChange={(e) => handleFilterChange('powerRange', [parseInt(e.target.value), filters.powerRange[1]])}
-              className="flex-1"
+              className="flex-1 rounded-full accent-espresso focus:outline-none focus:ring-2 focus:ring-espresso focus:ring-offset-2"
             />
             <input
               type="range"
@@ -158,7 +158,7 @@ export default function SearchFilters({ onFiltersChange }: SearchFiltersProps) {
               step="10"
               value={filters.powerRange[1]}
               onChange={(e) => handleFilterChange('powerRange', [filters.powerRange[0], parseInt(e.target.value)])}
-              className="flex-1"
+              className="flex-1 rounded-full accent-espresso focus:outline-none focus:ring-2 focus:ring-espresso focus:ring-offset-2"
             />
           </div>
         </div>
@@ -176,7 +176,7 @@ export default function SearchFilters({ onFiltersChange }: SearchFiltersProps) {
               step="1"
               value={filters.batteryRange[0]}
               onChange={(e) => handleFilterChange('batteryRange', [parseInt(e.target.value), filters.batteryRange[1]])}
-              className="flex-1"
+              className="flex-1 rounded-full accent-espresso focus:outline-none focus:ring-2 focus:ring-espresso focus:ring-offset-2"
             />
             <input
               type="range"
@@ -185,7 +185,7 @@ export default function SearchFilters({ onFiltersChange }: SearchFiltersProps) {
               step="1"
               value={filters.batteryRange[1]}
               onChange={(e) => handleFilterChange('batteryRange', [filters.batteryRange[0], parseInt(e.target.value)])}
-              className="flex-1"
+              className="flex-1 rounded-full accent-espresso focus:outline-none focus:ring-2 focus:ring-espresso focus:ring-offset-2"
             />
           </div>
         </div>
@@ -193,7 +193,7 @@ export default function SearchFilters({ onFiltersChange }: SearchFiltersProps) {
         {/* Clear Filters */}
         <button
           onClick={clearFilters}
-          className="w-full text-center text-sm text-gray-600 hover:text-black border rounded-lg py-2 mt-4"
+          className="w-full text-center text-sm text-gray-700 hover:bg-cloud border border-cloud rounded-2xl py-2 mt-4 focus:outline-none focus:ring-2 focus:ring-espresso focus:ring-offset-2"
         >
           Xóa bộ lọc
         </button>
