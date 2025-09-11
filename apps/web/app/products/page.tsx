@@ -33,33 +33,33 @@ type SearchParams = {
 };
 
 function buildFilters(searchParams: SearchParams) {
-  const filters: string[] = [];
+  const params = new URLSearchParams();
   
-  // Category filter
+  // Category filter - use proper nested format
   if (searchParams.category) {
-    filters.push(`category.slug[$eq]=${searchParams.category}`);
+    params.set('filters[category][slug][$eq]', searchParams.category);
   }
   
   // Price filters
   const minPrice = searchParams.minPrice || searchParams.min;
   const maxPrice = searchParams.maxPrice || searchParams.max;
-  if (minPrice) filters.push(`price[$gte]=${minPrice}`);
-  if (maxPrice) filters.push(`price[$lte]=${maxPrice}`);
+  if (minPrice) params.set('filters[price][$gte]', minPrice);
+  if (maxPrice) params.set('filters[price][$lte]', maxPrice);
   
   // Power filters
-  if (searchParams.minPower) filters.push(`power_watt[$gte]=${searchParams.minPower}`);
-  if (searchParams.maxPower) filters.push(`power_watt[$lte]=${searchParams.maxPower}`);
+  if (searchParams.minPower) params.set('filters[power_watt][$gte]', searchParams.minPower);
+  if (searchParams.maxPower) params.set('filters[power_watt][$lte]', searchParams.maxPower);
   
   // Battery filters
-  if (searchParams.minBattery) filters.push(`battery_hours[$gte]=${searchParams.minBattery}`);
-  if (searchParams.maxBattery) filters.push(`battery_hours[$lte]=${searchParams.maxBattery}`);
+  if (searchParams.minBattery) params.set('filters[battery_hours][$gte]', searchParams.minBattery);
+  if (searchParams.maxBattery) params.set('filters[battery_hours][$lte]', searchParams.maxBattery);
   
   // Search filter
   if (searchParams.search) {
-    filters.push(`title[$containsi]=${encodeURIComponent(searchParams.search)}`);
+    params.set('filters[title][$containsi]', searchParams.search);
   }
   
-  return filters;
+  return params;
 }
 
 function mapSort(sort?: string): string {
@@ -90,7 +90,7 @@ async function getProducts(searchParams: SearchParams) {
   const page = parseInt(searchParams.page || '1');
   const pageSize = 12;
   const sort = mapSort(searchParams.sort);
-  const filters = buildFilters(searchParams);
+  const filterParams = buildFilters(searchParams);
   
   const params = new URLSearchParams();
   params.set('pagination[page]', page.toString());
@@ -98,9 +98,9 @@ async function getProducts(searchParams: SearchParams) {
   params.set('populate', 'images,category');
   params.set('sort', sort);
   
-  // Add filters
-  filters.forEach((filter, index) => {
-    params.set(`filters[${index}]`, filter);
+  // Merge filter params
+  filterParams.forEach((value, key) => {
+    params.set(key, value);
   });
   
   try {
@@ -134,16 +134,16 @@ function nextQuery(current: SearchParams, updates: Partial<SearchParams>): strin
 
 export default async function ProductsPage({ searchParams }: { searchParams?: SearchParams }) {
   try {
-  const [categories, { products, pagination }] = await Promise.all([
-    getCategories(),
-    getProducts(searchParams || {})
-  ]);
-  
-  const { page: curPage, pageCount, total } = pagination;
-  const prevDisabled = curPage <= 1;
-  const nextDisabled = curPage >= pageCount;
-  
-  return (
+    const [categories, { products, pagination }] = await Promise.all([
+      getCategories(),
+      getProducts(searchParams || {})
+    ]);
+
+    const { page: curPage, pageCount, total } = pagination;
+    const prevDisabled = curPage <= 1;
+    const nextDisabled = curPage >= pageCount;
+
+    return (
     <main className="mx-auto max-w-6xl px-4 py-8">
       {/* Header */}
       <div className="mb-8">
@@ -261,7 +261,7 @@ export default async function ProductsPage({ searchParams }: { searchParams?: Se
         </div>
       </div>
     </main>
-  );
+    );
   } catch (err) {
     const msg = (err as Error)?.message || 'Unknown error';
     console.error('[products] rendering failed:', msg);
