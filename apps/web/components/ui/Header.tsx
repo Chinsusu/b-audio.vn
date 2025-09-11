@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Search, Phone } from 'lucide-react';
 import { useDebounce } from '@/hooks/useDebounce';
 import { analytics } from '@/lib/analytics';
+import CartDrawer from "../components/cart/CartDrawer";
 
 export default function Header() {
   const [q, setQ] = useState('');
@@ -40,6 +41,7 @@ export default function Header() {
         <a href="https://zalo.me/0877257799" className="hidden md:flex items-center gap-2 rounded-xl bg-black px-4 py-2 text-white">
           <Phone className="h-4 w-4" /> 0877 25 77 99
         </a>
+        <CartDrawer />
       </div>
     </header>
   );
