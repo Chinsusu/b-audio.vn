@@ -1,4 +1,17 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
+
+export const metadata: Metadata = {
+  title: 'B-Audio | Xưởng Loa DIY',
+  description: 'Loa bluetooth, loa kéo karaoke, gia công theo yêu cầu.',
+  alternates: { canonical: 'https://b-audio.vn/' },
+  openGraph: {
+    title: 'B-Audio | Xưởng Loa DIY',
+    url: 'https://b-audio.vn/',
+    images: [{ url: 'https://b-audio.vn/og/home-cover.svg', width: 1200, height: 630, alt: 'B-Audio' }],
+  },
+  twitter: { card: 'summary_large_image', images: ['https://b-audio.vn/og/home-cover.svg'] },
+};
 
 export default async function Page() {
   return (
