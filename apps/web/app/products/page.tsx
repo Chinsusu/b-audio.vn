@@ -1,4 +1,15 @@
 import Link from 'next/link';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Sản phẩm | B-Audio',
+  description: 'Danh sách sản phẩm loa B‑Audio: portable, karaoke... với hình ảnh và giá cập nhật.',
+  alternates: { canonical: 'https://b-audio.vn/products' },
+  openGraph: {
+    title: 'Sản phẩm | B-Audio',
+    url: 'https://b-audio.vn/products',
+  },
+};
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE || 'https://api.b-audio.vn';
 
@@ -59,8 +70,28 @@ export default async function ProductsPage({ searchParams }: { searchParams: Sea
   const prevDisabled = curPage <= 1;
   const nextDisabled = curPage >= pageCount;
 
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: 'Sản phẩm | B-Audio',
+    url: 'https://b-audio.vn/products',
+    breadcrumb: {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Trang chủ', item: 'https://b-audio.vn/' },
+        { '@type': 'ListItem', position: 2, name: 'Sản phẩm', item: 'https://b-audio.vn/products' },
+      ],
+    },
+  };
+
   return (
     <main className="mx-auto max-w-6xl px-6 py-12">
+      <script
+        type="application/ld+json"
+        suppressHydrationWarning
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+
       <h1 className="text-3xl font-semibold">Sản phẩm</h1>
 
       <form className="mt-6 grid grid-cols-1 md:grid-cols-5 gap-3" method="get">
