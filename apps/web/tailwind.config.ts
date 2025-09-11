@@ -10,12 +10,20 @@ const config: Config = {
     extend: {
       animation: {
         shimmer: 'shimmer 2s linear infinite',
+        glow: 'glow 2s ease-in-out infinite alternate',
       },
       keyframes: {
         shimmer: {
           '0%': { transform: 'translateX(-100%)' },
           '100%': { transform: 'translateX(100%)' },
         },
+        glow: {
+          '0%': { filter: 'drop-shadow(0 0 5px currentColor)' },
+          '100%': { filter: 'drop-shadow(0 0 20px currentColor)' },
+        },
+      },
+      backgroundImage: {
+        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
       },
       // Tech-Industrial Design Tokens from figma-tokens-overlay
       colors: {
@@ -48,15 +56,22 @@ const config: Config = {
         'body': '16px',
         'small': '14px',
         
-        // New tokens from figma-tokens-overlay
-        'h1': '48px',
-        'h2': '32px',
-        'microcopy': '12px',
+        // New tokens from figma-tokens-overlay  
+        'h1': ['48px', { lineHeight: '1.2', letterSpacing: '-0.02em' }],
+        'h2': ['32px', { lineHeight: '1.3', letterSpacing: '-0.01em' }],
+        'h3': ['24px', { lineHeight: '1.4' }],
+        'microcopy': ['12px', { letterSpacing: '0.15em' }],
+        
+        // Hero sizes for better visual impact
+        'hero': ['56px', { lineHeight: '1.1', letterSpacing: '-0.02em' }],
+        'hero-lg': ['64px', { lineHeight: '1.05', letterSpacing: '-0.03em' }],
       },
       boxShadow: {
         // Glow effects from tokens
-        'glowGold': '0 0 8px #C8A15A66',
-        'glowNeon': '0 0 8px #00E0B866',
+        'glowGold': '0 0 8px #C8A15A66, 0 0 20px #C8A15A33',
+        'glowNeon': '0 0 8px #00E0B866, 0 0 20px #00E0B833',
+        'glowGoldHover': '0 0 15px #C8A15A80, 0 0 30px #C8A15A40',
+        'glowNeonHover': '0 0 15px #00E0B880, 0 0 30px #00E0B840',
       },
       borderRadius: {
         '2xl': '1rem',
@@ -71,6 +86,10 @@ const config: Config = {
       },
       letterSpacing: {
         'widest': '0.2em',
+        'ultra-wide': '0.25em',
+      },
+      backdropBlur: {
+        'xs': '2px',
       },
     },
   },
