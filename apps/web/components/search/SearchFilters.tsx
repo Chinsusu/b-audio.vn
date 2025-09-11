@@ -79,27 +79,27 @@ export default function SearchFilters({ onFiltersChange }: SearchFiltersProps) {
   };
 
   return (
-    <div className="bg-white rounded-2xl border border-cloud shadow p-4 mb-6">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-heading-sm font-semibold">Bộ lọc tìm kiếm</h3>
+    <div className="bg-darkGrey/60 backdrop-blur-sm rounded-2xl border border-darkGrey shadow-2xl p-6 mb-6">
+      <div className="flex items-center justify-between mb-6">
+        <h3 className="font-heading text-h3 text-textWhite font-semibold">BỘ LỌC TÌM KIẾM</h3>
         <button
           onClick={() => setIsExpanded(!isExpanded)}
-          className="md:hidden text-gray-600 rounded-2xl p-2 hover:bg-cloud focus:outline-none focus:ring-2 focus:ring-espresso focus:ring-offset-2"
+          className="md:hidden text-goldAccent rounded-2xl p-2 hover:bg-darkGrey/60 focus:outline-none focus:ring-2 focus:ring-neonTurquoise focus:ring-offset-2 focus:ring-offset-darkBg transition-colors"
         >
           {isExpanded ? '▲' : '▼'}
         </button>
       </div>
 
-      <div className={`space-y-4 ${isExpanded ? 'block' : 'hidden md:block'}`}>
+      <div className={`space-y-6 ${isExpanded ? 'block' : 'hidden md:block'}`}>
         {/* Sort */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Sắp xếp theo
+          <label className="block font-microcopy text-microcopy text-goldAccent mb-3 tracking-widest">
+            SẮP XẾP THEO
           </label>
           <select
             value={filters.sortBy}
             onChange={(e) => handleFilterChange('sortBy', e.target.value)}
-            className="w-full border border-cloud rounded-2xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-espresso focus:ring-offset-2"
+            className="w-full bg-darkBg border border-darkGrey rounded-2xl px-4 py-3 text-textWhite focus:outline-none focus:ring-2 focus:ring-neonTurquoise focus:ring-offset-2 focus:ring-offset-darkBg transition-colors"
           >
             <option value="newest">Mới nhất</option>
             <option value="price-asc">Giá thấp → cao</option>
@@ -111,93 +111,164 @@ export default function SearchFilters({ onFiltersChange }: SearchFiltersProps) {
 
         {/* Price Range */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Khoảng giá ({formatPrice(filters.priceRange[0])} - {formatPrice(filters.priceRange[1])} VND)
+          <label className="block font-microcopy text-microcopy text-goldAccent mb-3 tracking-widest">
+            KHOẢNG GIÁ ({formatPrice(filters.priceRange[0])} - {formatPrice(filters.priceRange[1])} VND)
           </label>
-          <div className="flex gap-2">
-            <input
-              type="range"
-              min="0"
-              max="50000000"
-              step="100000"
-              value={filters.priceRange[0]}
-              onChange={(e) => handleFilterChange('priceRange', [parseInt(e.target.value), filters.priceRange[1]])}
-              className="flex-1 rounded-full accent-espresso focus:outline-none focus:ring-2 focus:ring-espresso focus:ring-offset-2"
-            />
-            <input
-              type="range"
-              min="0"
-              max="50000000"
-              step="100000"
-              value={filters.priceRange[1]}
-              onChange={(e) => handleFilterChange('priceRange', [filters.priceRange[0], parseInt(e.target.value)])}
-              className="flex-1 rounded-full accent-espresso focus:outline-none focus:ring-2 focus:ring-espresso focus:ring-offset-2"
-            />
+          <div className="space-y-3">
+            <div className="flex gap-3">
+              <div className="flex-1 relative">
+                <input
+                  type="range"
+                  min="0"
+                  max="50000000"
+                  step="100000"
+                  value={filters.priceRange[0]}
+                  onChange={(e) => handleFilterChange('priceRange', [parseInt(e.target.value), filters.priceRange[1]])}
+                  className="w-full h-2 bg-darkBg rounded-lg appearance-none cursor-pointer slider-thumb-gold focus:outline-none focus:ring-2 focus:ring-goldAccent focus:ring-offset-2 focus:ring-offset-darkBg"
+                />
+              </div>
+              <div className="flex-1 relative">
+                <input
+                  type="range"
+                  min="0"
+                  max="50000000"
+                  step="100000"
+                  value={filters.priceRange[1]}
+                  onChange={(e) => handleFilterChange('priceRange', [filters.priceRange[0], parseInt(e.target.value)])}
+                  className="w-full h-2 bg-darkBg rounded-lg appearance-none cursor-pointer slider-thumb-gold focus:outline-none focus:ring-2 focus:ring-goldAccent focus:ring-offset-2 focus:ring-offset-darkBg"
+                />
+              </div>
+            </div>
+            <div className="flex justify-between text-textGrey text-sm">
+              <span>{formatPrice(filters.priceRange[0])} VND</span>
+              <span>{formatPrice(filters.priceRange[1])} VND</span>
+            </div>
           </div>
         </div>
 
         {/* Power Range */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Công suất ({filters.powerRange[0]} - {filters.powerRange[1]}W)
+          <label className="block font-microcopy text-microcopy text-neonTurquoise mb-3 tracking-widest">
+            CÔNG SUẤT ({filters.powerRange[0]} - {filters.powerRange[1]}W)
           </label>
-          <div className="flex gap-2">
-            <input
-              type="range"
-              min="0"
-              max="2000"
-              step="10"
-              value={filters.powerRange[0]}
-              onChange={(e) => handleFilterChange('powerRange', [parseInt(e.target.value), filters.powerRange[1]])}
-              className="flex-1 rounded-full accent-espresso focus:outline-none focus:ring-2 focus:ring-espresso focus:ring-offset-2"
-            />
-            <input
-              type="range"
-              min="0"
-              max="2000"
-              step="10"
-              value={filters.powerRange[1]}
-              onChange={(e) => handleFilterChange('powerRange', [filters.powerRange[0], parseInt(e.target.value)])}
-              className="flex-1 rounded-full accent-espresso focus:outline-none focus:ring-2 focus:ring-espresso focus:ring-offset-2"
-            />
+          <div className="space-y-3">
+            <div className="flex gap-3">
+              <div className="flex-1 relative">
+                <input
+                  type="range"
+                  min="0"
+                  max="2000"
+                  step="10"
+                  value={filters.powerRange[0]}
+                  onChange={(e) => handleFilterChange('powerRange', [parseInt(e.target.value), filters.powerRange[1]])}
+                  className="w-full h-2 bg-darkBg rounded-lg appearance-none cursor-pointer slider-thumb-neon focus:outline-none focus:ring-2 focus:ring-neonTurquoise focus:ring-offset-2 focus:ring-offset-darkBg"
+                />
+              </div>
+              <div className="flex-1 relative">
+                <input
+                  type="range"
+                  min="0"
+                  max="2000"
+                  step="10"
+                  value={filters.powerRange[1]}
+                  onChange={(e) => handleFilterChange('powerRange', [filters.powerRange[0], parseInt(e.target.value)])}
+                  className="w-full h-2 bg-darkBg rounded-lg appearance-none cursor-pointer slider-thumb-neon focus:outline-none focus:ring-2 focus:ring-neonTurquoise focus:ring-offset-2 focus:ring-offset-darkBg"
+                />
+              </div>
+            </div>
+            <div className="flex justify-between text-textGrey text-sm">
+              <span>{filters.powerRange[0]}W</span>
+              <span>{filters.powerRange[1]}W</span>
+            </div>
           </div>
         </div>
 
         {/* Battery Range */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Thời lượng pin ({filters.batteryRange[0]} - {filters.batteryRange[1]}h)
+          <label className="block font-microcopy text-microcopy text-goldAccent mb-3 tracking-widest">
+            THỜI LƯỢNG PIN ({filters.batteryRange[0]} - {filters.batteryRange[1]}H)
           </label>
-          <div className="flex gap-2">
-            <input
-              type="range"
-              min="0"
-              max="24"
-              step="1"
-              value={filters.batteryRange[0]}
-              onChange={(e) => handleFilterChange('batteryRange', [parseInt(e.target.value), filters.batteryRange[1]])}
-              className="flex-1 rounded-full accent-espresso focus:outline-none focus:ring-2 focus:ring-espresso focus:ring-offset-2"
-            />
-            <input
-              type="range"
-              min="0"
-              max="24"
-              step="1"
-              value={filters.batteryRange[1]}
-              onChange={(e) => handleFilterChange('batteryRange', [filters.batteryRange[0], parseInt(e.target.value)])}
-              className="flex-1 rounded-full accent-espresso focus:outline-none focus:ring-2 focus:ring-espresso focus:ring-offset-2"
-            />
+          <div className="space-y-3">
+            <div className="flex gap-3">
+              <div className="flex-1 relative">
+                <input
+                  type="range"
+                  min="0"
+                  max="24"
+                  step="1"
+                  value={filters.batteryRange[0]}
+                  onChange={(e) => handleFilterChange('batteryRange', [parseInt(e.target.value), filters.batteryRange[1]])}
+                  className="w-full h-2 bg-darkBg rounded-lg appearance-none cursor-pointer slider-thumb-gold focus:outline-none focus:ring-2 focus:ring-goldAccent focus:ring-offset-2 focus:ring-offset-darkBg"
+                />
+              </div>
+              <div className="flex-1 relative">
+                <input
+                  type="range"
+                  min="0"
+                  max="24"
+                  step="1"
+                  value={filters.batteryRange[1]}
+                  onChange={(e) => handleFilterChange('batteryRange', [filters.batteryRange[0], parseInt(e.target.value)])}
+                  className="w-full h-2 bg-darkBg rounded-lg appearance-none cursor-pointer slider-thumb-gold focus:outline-none focus:ring-2 focus:ring-goldAccent focus:ring-offset-2 focus:ring-offset-darkBg"
+                />
+              </div>
+            </div>
+            <div className="flex justify-between text-textGrey text-sm">
+              <span>{filters.batteryRange[0]}h</span>
+              <span>{filters.batteryRange[1]}h</span>
+            </div>
           </div>
         </div>
 
         {/* Clear Filters */}
         <button
           onClick={clearFilters}
-          className="w-full text-center text-sm text-gray-700 hover:bg-cloud border border-cloud rounded-2xl py-2 mt-4 focus:outline-none focus:ring-2 focus:ring-espresso focus:ring-offset-2"
+          className="w-full font-microcopy text-microcopy text-textGrey hover:text-textWhite bg-darkBg hover:bg-darkGrey/80 border border-darkGrey hover:border-neonTurquoise/50 rounded-2xl py-3 mt-6 focus:outline-none focus:ring-2 focus:ring-neonTurquoise focus:ring-offset-2 focus:ring-offset-darkBg transition-all duration-300 tracking-widest"
         >
-          Xóa bộ lọc
+          XÓA BỘ LỌC
         </button>
       </div>
+
+      <style jsx>{`
+        input[type="range"]::-webkit-slider-thumb {
+          appearance: none;
+          height: 20px;
+          width: 20px;
+          border-radius: 50%;
+          cursor: pointer;
+          border: 2px solid;
+        }
+        
+        .slider-thumb-gold input[type="range"]::-webkit-slider-thumb {
+          background: #C8A15A;
+          border-color: #C8A15A;
+          box-shadow: 0 0 8px #C8A15A66;
+        }
+        
+        .slider-thumb-neon input[type="range"]::-webkit-slider-thumb {
+          background: #00E0B8;
+          border-color: #00E0B8;
+          box-shadow: 0 0 8px #00E0B866;
+        }
+        
+        input[type="range"]::-moz-range-thumb {
+          height: 20px;
+          width: 20px;
+          border-radius: 50%;
+          cursor: pointer;
+          border: 2px solid;
+        }
+        
+        .slider-thumb-gold input[type="range"]::-moz-range-thumb {
+          background: #C8A15A;
+          border-color: #C8A15A;
+        }
+        
+        .slider-thumb-neon input[type="range"]::-moz-range-thumb {
+          background: #00E0B8;
+          border-color: #00E0B8;
+        }
+      `}</style>
     </div>
   );
 }
