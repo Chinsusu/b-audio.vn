@@ -61,3 +61,25 @@ pm2 save
 
 ## Bản quyền
 MIT – dùng tự do cho dự án của bạn.
+
+
+## Sample data (seed)
+
+- The CMS includes a seed script to upsert sample categories, products, reviews and FAQs, and to attach placeholder images via the Upload plugin.
+- Run the script after configuring the database and environment:
+
+```bash
+# from repo root
+NODE_ENV=production pnpm --dir apps/cms run -s seed:sample
+# or from CMS directory
+cd apps/cms && NODE_ENV=production pnpm run seed:sample
+```
+
+- Verify:
+```bash
+curl -s "https://api.b-audio.vn/api/products?populate=images,category" | jq .
+```
+
+## CI/CD triggers note
+
+The deploy workflow triggers on push to `main` when files under `apps/**` or `.github/workflows/**` change. Pure documentation updates (README, CHANGELOG, docs) do not redeploy.
