@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import AddToCartButton from '../cart/AddToCartButton';
 import WishlistButton from "../wishlist/WishlistButton";
+import CompareButton from "../comparison/CompareButton";
 
 export function ProductCard({ p }: { p: any }) {
   const attrs = p?.attributes || {};
@@ -33,6 +34,21 @@ export function ProductCard({ p }: { p: any }) {
             attributes: { 
               title: attrs.title, 
               price_vnd: attrs.price, 
+              images: attrs.images 
+            } 
+          }}
+          size="md"
+          variant="icon"
+        />        <CompareButton
+          product={{ 
+            id: p.id, 
+            slug: attrs.slug, 
+            attributes: { 
+              title: attrs.title, 
+              price_vnd: attrs.price, 
+              power_watt: attrs.power_watt,
+              battery_hours: attrs.battery_hours,
+              connectivity: attrs.connectivity,
               images: attrs.images 
             } 
           }}

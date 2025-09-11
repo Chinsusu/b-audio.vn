@@ -1,16 +1,18 @@
 'use client';
 import Link from 'next/link';
 import { useState } from 'react';
-import { Search, Phone, Heart } from 'lucide-react';
+import { Search, Phone, Heart, BarChart3 } from 'lucide-react';
 import { useDebounce } from '@/hooks/useDebounce';
 import { analytics } from '@/lib/analytics';
 import CartDrawer from "../cart/CartDrawer";
 import { useWishlist } from "@/hooks/useWishlist";
+import { useComparison } from "@/hooks/useComparison";
 
 export default function Header() {
   const [q, setQ] = useState('');
   const debounced = useDebounce(q, 300);
   const { wishlist } = useWishlist();
+  const { comparison } = useComparison();
 
   // Simple client-side search redirect
   function submit(e: React.FormEvent) {
@@ -53,6 +55,18 @@ export default function Header() {
             {wishlist.itemCount > 0 && (
               <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium">
                 {wishlist.itemCount}
+              </span>
+            )}
+          </Link>
+                    <Link 
+            href="/compare" 
+            className="relative flex items-center justify-center h-10 w-10 rounded-lg border hover:bg-gray-50 transition-colors"
+            title="So sánh sản phẩm"
+          >
+            <BarChart3 className="h-5 w-5" />
+            {comparison.itemCount > 0 && (
+              <span className="absolute -top-1 -right-1 bg-blue-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium">
+                {comparison.itemCount}
               </span>
             )}
           </Link>
