@@ -69,6 +69,7 @@ export default async function ProductsPage({ searchParams }: { searchParams: Sea
   const pg = result.meta?.pagination || { page: 1, pageSize: 12, pageCount: 1, total: 0 };
   const curPage = Number(pg.page) || 1;
   const pageCount = Number(pg.pageCount) || 1;
+  const pageSizeNum = Number(pg.pageSize || 12) || 12;
   const prevDisabled = curPage <= 1;
   const nextDisabled = curPage >= pageCount;
 
@@ -84,7 +85,31 @@ export default async function ProductsPage({ searchParams }: { searchParams: Sea
         { '@type': 'ListItem', position: 2, name: 'Sản phẩm', item: 'https://b-audio.vn/products' },
       ],
     },
-  };
+  } as any;
+
+  const itemList = {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    itemListElement: products.map((p: any, i: number) => {
+      const attrs = p.attributes || {};
+      const slug = attrs.slug as string;
+      const url = `https://b-audio.vn/products/${slug}`;
+      const name = attrs.title as string;
+      const rel = attrs.images?.data?.[0]?.attributes?.url as string | undefined;
+      const imageUrl = rel ? (/^https?:\/\//.test(rel) ? rel : `${API_BASE}${rel}`) : undefined;
+      return {
+        '@type': 'ListItem',
+        position: (curPage - 1) * pageSizeNum + i + 1,
+        url,
+        item: {
+          '@type': 'Product',
+          name,
+          url,
+          image: imageUrl ? [imageUrl] : undefined,
+        },
+      };
+    }),
+  } as any;
 
   return (
     <main className="mx-auto max-w-6xl px-6 py-12">
@@ -92,6 +117,11 @@ export default async function ProductsPage({ searchParams }: { searchParams: Sea
         type="application/ld+json"
         suppressHydrationWarning
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        suppressHydrationWarning
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(itemList) }}
       />
 
       <h1 className="text-3xl font-semibold">Sản phẩm</h1>
