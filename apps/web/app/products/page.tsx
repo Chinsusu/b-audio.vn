@@ -160,9 +160,9 @@ export default async function ProductsPage({ searchParams }: { searchParams?: Se
             href="/products" 
             className={`rounded-full px-4 py-2 text-sm transition-colors ${
               !searchParams?.category 
-                ? 'bg-black text-white' 
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-            }`}
+                ? 'bg-espresso text-ivory hover:bg-espresso/90' 
+                : 'bg-gray-100 text-gray-700 hover:bg-cloud'
+            } focus:outline-none focus:ring-2 focus:ring-espresso focus:ring-offset-2`}
           >
             Tất cả
           </Link>
@@ -174,9 +174,9 @@ export default async function ProductsPage({ searchParams }: { searchParams?: Se
                 href={`/products?category=${cat.attributes.slug}`}
                 className={`rounded-full px-4 py-2 text-sm transition-colors ${
                   isActive 
-                    ? 'bg-black text-white' 
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                }`}
+                    ? 'bg-espresso text-ivory hover:bg-espresso/90' 
+                    : 'bg-gray-100 text-gray-700 hover:bg-cloud'
+                } focus:outline-none focus:ring-2 focus:ring-espresso focus:ring-offset-2`}
               >
                 {cat.attributes.name}
               </Link>
