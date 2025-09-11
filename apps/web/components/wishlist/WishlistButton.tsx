@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { useWishlist } from '../../hooks/useWishlist';
+import { toast } from '../../lib/toast';
 import { WishlistItem } from '../../lib/wishlist';
 
 interface WishlistButtonProps {

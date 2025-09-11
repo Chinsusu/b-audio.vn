@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { useCart } from '../../hooks/useCart';
+import { toast } from '../../lib/toast';
 import { CartItem } from '../../lib/cart';
 
 interface AddToCartButtonProps {

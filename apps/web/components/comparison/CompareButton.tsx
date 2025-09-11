@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { BarChart3, Check } from 'lucide-react';
 import { useComparison } from '../../hooks/useComparison';
+import { toast } from '../../lib/toast';
 
 interface Product {
   id: string;
@@ -67,13 +68,13 @@ export default function CompareButton({
       });
 
       if (wasAdded) {
-        showToastMessage('Đã thêm vào so sánh');
+        toast.success('Đã thêm vào so sánh');
       } else {
-        showToastMessage('Đã bỏ khỏi so sánh');
+        toast.info('Đã bỏ khỏi so sánh');
       }
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Có lỗi xảy ra';
-      showToastMessage(errorMessage);
+      toast.error('Lỗi', errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -119,12 +120,6 @@ export default function CompareButton({
             <BarChart3 className={`${iconSizes[size]} transition-all duration-200`} />
           )}
         </button>
-        
-        {showToast && (
-          <div className="absolute -top-10 left-1/2 transform -translate-x-1/2 bg-black text-white text-xs px-2 py-1 rounded whitespace-nowrap z-50">
-            {inComparison ? 'Đã thêm vào so sánh' : 'Đã bỏ khỏi so sánh'}
-          </div>
-        )}
       </div>
     );
   }
@@ -158,12 +153,6 @@ export default function CompareButton({
           </div>
         )}
       </button>
-
-      {showToast && (
-        <div className="absolute -top-12 left-1/2 transform -translate-x-1/2 bg-black text-white text-sm px-3 py-2 rounded whitespace-nowrap z-50">
-          {inComparison ? 'Đã thêm vào so sánh' : 'Đã bỏ khỏi so sánh'}
-        </div>
-      )}
     </div>
   );
 }
