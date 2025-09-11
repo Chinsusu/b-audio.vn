@@ -1,0 +1,151 @@
+"[info]-bash: syntax error near unexpected token `('
+ls: cannot access '"$ROOT"': No such file or directory
+-bash: syntax error near unexpected token `('
+-bash: syntax error near unexpected token `('
+Command '-name' not found, did you mean:
+  command 'uname' from deb coreutils (8.32-4.1ubuntu1.2)
+Try: apt install <deb name>
+Command '-name' not found, did you mean:
+  command 'uname' from deb coreutils (8.32-4.1ubuntu1.2)
+Try: apt install <deb name>
+Command '-name' not found, did you mean:
+  command 'uname' from deb coreutils (8.32-4.1ubuntu1.2)
+Try: apt install <deb name>
+Command '-name' not found, did you mean:
+  command 'uname' from deb coreutils (8.32-4.1ubuntu1.2)
+Try: apt install <deb name>
+Command '-name' not found, did you mean:
+  command 'uname' from deb coreutils (8.32-4.1ubuntu1.2)
+Try: apt install <deb name>
+-bash: syntax error near unexpected token `)'
+-bash: syntax error near unexpected token `('
+grep: Trailing backslash
+--exclude-dir=.git: command not found
+--exclude-dir=build: command not found
+--exclude="*.min.*": command not found
+-e: command not found
+grep: Trailing backslash
+--exclude-dir=.git: command not found
+--exclude-dir=build: command not found
+--exclude="*.min.*": command not found
+-e: command not found
+sed: -e expression #1, char 1: unknown command: `"'
+"
+[OK]-bash: syntax error near unexpected token `('
+]9278;d;7b22686f6f6b223a2022436f6d6d616e6446696e6973686564222c202276616c7565223a207b22657869745f636f6465223a20322c20226e6578745f626c6f636b5f6964223a2022707265636d642d3137353735363833353532313234322d3137313536227d7d0a]9279]9278;d;7b22686f6f6b223a2022507265636d64222c202276616c7565223a207b0a2022707764223a20222f7661722f7777772f6d6f6e6f222c0a2022707331223a202230313162356433303362373236663666373434303536353035333264333333373330333233333332326433313330333333613230326637363631373232663737373737373266366436663665366630373032373236663666373434303536353035333264333333373330333233333332326433313330333333613266373636313732326637373737373732663664366636653666323332303230222c0a2022686f6e6f725f707331223a2066616c73652c0a20227073315f69735f656e636f646564223a20747275652c0a20226769745f6272616e6368223a20226d61696e222c0a20227669727475616c5f656e76223a2022222c0a2022636f6e64615f656e76223a2022222c0a20226e6f64655f76657273696f6e223a2022222c0a202273657373696f6e5f6964223a203137353735363833353532313234320a207d7d0a]0;..-370232-103:/var/www/mono[?2004h[K]9278;d;7b2022686f6f6b223a2022496e707574427566666572222c202276616c7565223a207b2022627566666572223a202222207d207d0abash -lc 'set -Eeuo pipefail
+mkdir -p scripts
+printf "%s" "#!/usr/bin/env bash
+set -Euo pipefail
+trap 'status=\$?; printf \"[WARN] Command failed (status=%s): %s\\n\" \"\$status\" \"\$BASH_COMMAND\" >&2' ERR
+
+ROOT=\"/var/www/mono\"
+MAX_DEPTH=3
+OUTPUT=\"\" 
+STRICT=0
+
+usage() {
+  cat <<'USAGE'
+Usage: seo_scan.sh [--root PATH] [--max-depth N] [--output FILE] [--strict] [-h|--help]
+Options:
+  --root PATH       Root directory to scan (default: /var/www/mono)
+  --max-depth N     Max search depth for find (default: 3)
+  --output FILE     Write combined output to FILE (also prints to stdout)
+  --strict          Exit with non-zero code if no SEO signals found
+  -h, --help        Show this help and exit
+USAGE
+}
+
+while ((\$#)); do
+  case \"\$1\" in
+    --root)
+      [[ \$# -ge 2 ]] || { printf \"Missing value for --root\\n\" >&2; exit 2; }
+      ROOT=\"\$2\"; shift 2;;
+    --max-depth)
+      [[ \$# -ge 2 ]] || { printf \"Missing value for --max-depth\\n\" >&2; exit 2; }
+      MAX_DEPTH=\"\$2\"; shift 2;;
+    --output)
+      [[ \$# -ge 2 ]] || { printf \"Missing value for --output\\n\" >&2; exit 2; }
+      OUTPUT=\"\$2\"; shift 2;;
+    --strict)
+      STRICT=1; shift;;
+    -h|--help)
+      usage; exit 0;;
+    *)
+      printf \"Unknown option: %s\\n\" \"\$1\" >&2; usage; exit 2;;
+  esac
+done
+
+[7mif [[ -n \"\$OUTPUT\" ]]; then[27m
+[7m  OUTDIR=\"\${OUTPUT%/*}\"[27m[7m  mkdir -p \"\$OUTDIR\"[27m[7m  exec > >(tee -a \"\$OUTPUT\") 2>&1[27m[7m  printf \"[info] Logging to %s\\n\" \"\$OUTPUT\"[27m[7mfi[27m[7mprintf \"\\n=== inventory (top-level of %s) ===\\n\" \"\$ROOT\"[27m[7mls -la \"\$ROOT\" || true[27m[7mprintf \"\\n=== find framework & seo-related files (depth<=%s) ===\\n\" \"\$MAX_DEPTH\"[27m[7mfind \"\$ROOT\" -maxdepth \"\$MAX_DEPTH\" -type f \\( \\[27m[7m  -name \"package.json\" -o -name \"next.config.*\" -o -name \"nuxt.config.*\" -o \\[27m[7m  -name \"composer.json\" -o -name \"Gemfile\" -o -name \"go.mod\" -o \\[27m[7m  -name \"requirements.txt\" -o -name \"pyproject.toml\" -o -name \"manage.py\" -o \\[27m[7m  -name \"pom.xml\" -o -name \"build.gradle*\" -o -name \"README*\" -o \\[27m[7m  -name \"robots.txt\" -o -name \"sitemap*\" -o -name \"Caddyfile\" -o -name \"nginx.conf\" \\[27m[7m\\) -ls 2>/dev/null | sed -n \"1,200p\" || true[27m[7mprintf \"\\n=== grep for SEO signals (limited) ===\\n\"[27m[7mpattern='sitemap|robots\\.txt|canonical|application/ld\\+json|og:|twitter:'[27m[7mCOUNT=\$(grep -R -n -E --color=never --binary-files=without-match \\[27m[7m  --exclude-dir=.git --exclude-dir=node_modules --exclude-dir=dist \\[27m[7m  --exclude-dir=build --exclude-dir=.next --exclude-dir=.nuxt \\[27m[7m  --exclude=\"*.min.*\" --exclude=\"*.map\" \\[27m[7m  -e \"\$pattern\" \\[27m[7m  -- \"\$ROOT\" 2>/dev/null | wc -l || true)[27m[7mgrep -R -n -E --color=never --binary-files=without-match \\[27m[7m  --exclude-dir=.git --exclude-dir=node_modules --exclude-dir=dist \\[27m[7m  --exclude-dir=build --exclude-dir=.next --exclude-dir=.nuxt \\[27m[7m  --exclude=\"*.min.*\" --exclude=\"*.map\" \\[27m[7m  -e \"\$pattern\" \\[27m[7m  -- \"\$ROOT\" 2>/dev/null | sed -n \"1,200p\" || true[27m[7mif (( STRICT == 1 )) && [[ \"\${COUNT:-0}\" -eq 0 ]]; then[27m[7m  printf \"\\n[FAIL] No SEO signals found under %s\\n\" \"\$ROOT\" >&2[27m[7m  exit 1[27m[7melse[27m[7m  printf \"\\n[OK] SEO signals found: %s\\n\" \"\${COUNT:-0}\"[27m[7mfi[27m[7m" > scripts/seo_scan.sh[27m[Aif [[ -n \"\$OUTPUT\" ]]; then
+  OUTDIR=\"\${OUTPUT%/*}\"  mkdir -p \"\$OUTDIR\"  exec > >(tee -a \"\$OUTPUT\") 2>&1  printf \"[info] Logging to %s\\n\" \"\$OUTPUT\"fiprintf \"\\n=== inventory (top-level of %s) ===\\n\" \"\$ROOT\"ls -la \"\$ROOT\" || trueprintf \"\\n=== find framework & seo-related files (depth<=%s) ===\\n\" \"\$MAX_DEPTH\"find \"\$ROOT\" -maxdepth \"\$MAX_DEPTH\" -type f \\( \\  -name \"package.json\" -o -name \"next.config.*\" -o -name \"nuxt.config.*\" -o \\  -name \"composer.json\" -o -name \"Gemfile\" -o -name \"go.mod\" -o \\  -name \"requirements.txt\" -o -name \"pyproject.toml\" -o -name \"manage.py\" -o \\  -name \"pom.xml\" -o -name \"build.gradle*\" -o -name \"README*\" -o \\  -name \"robots.txt\" -o -name \"sitemap*\" -o -name \"Caddyfile\" -o -name \"nginx.conf\" \\\\) -ls 2>/dev/null | sed -n \"1,200p\" || trueprintf \"\\n=== grep for SEO signals (limited) ===\\n\"pattern='sitemap|robots\\.txt|canonical|application/ld\\+json|og:|twitter:'COUNT=\$(grep -R -n -E --color=never --binary-files=without-match \\  --exclude-dir=.git --exclude-dir=node_modules --exclude-dir=dist \\  --exclude-dir=build --exclude-dir=.next --exclude-dir=.nuxt \\  --exclude=\"*.min.*\" --exclude=\"*.map\" \\  -e \"\$pattern\" \\  -- \"\$ROOT\" 2>/dev/null | wc -l || true)grep -R -n -E --color=never --binary-files=without-match \\  --exclude-dir=.git --exclude-dir=node_modules --exclude-dir=dist \\  --exclude-dir=build --exclude-dir=.next --exclude-dir=.nuxt \\  --exclude=\"*.min.*\" --exclude=\"*.map\" \\  -e \"\$pattern\" \\  -- \"\$ROOT\" 2>/dev/null | sed -n \"1,200p\" || trueif (( STRICT == 1 )) && [[ \"\${COUNT:-0}\" -eq 0 ]]; then  printf \"\\n[FAIL] No SEO signals found under %s\\n\" \"\$ROOT\" >&2  exit 1else  printf \"\\n[OK] SEO signals found: %s\\n\" \"\${COUNT:-0}\"fi" > scripts/seo_scan.sh
+[?2004l-bash: syntax error near unexpected token `('
+-bash: $#: syntax error: operand expected (error token is "$#")
+"[info]-bash: syntax error near unexpected token `('
+"[info]-bash: syntax error near unexpected token `('
+ls: cannot access '"$ROOT"'ls: cannot access '"$ROOT"': No such file or directory
+: No such file or directory
+-bash: syntax error near unexpected token `('
+-bash: syntax error near unexpected token `('
+-bash: syntax error near unexpected token `('
+-bash: syntax error near unexpected token `('
+Command '-name' not found, did you mean:
+  command 'uname' from deb coreutils (8.32-4.1ubuntu1.2)
+Try: apt install <deb name>
+Command '-name' not found, did you mean:
+  command 'uname' from deb coreutils (8.32-4.1ubuntu1.2)
+Try: apt install <deb name>
+Command '-name' not found, did you mean:
+  command 'uname' from deb coreutils (8.32-4.1ubuntu1.2)
+Try: apt install <deb name>
+Command '-name' not found, did you mean:
+  command 'uname' from deb coreutils (8.32-4.1ubuntu1.2)
+Try: apt install <deb name>
+Command '-name' not found, did you mean:
+  command 'uname' from deb coreutils (8.32-4.1ubuntu1.2)
+Try: apt install <deb name>
+Command '-name' not found, did you mean:
+  command 'uname' from deb coreutils (8.32-4.1ubuntu1.2)
+Try: apt install <deb name>
+Command '-name' not found, did you mean:
+  command 'uname' from deb coreutils (8.32-4.1ubuntu1.2)
+Try: apt install <deb name>
+Command '-name' not found, did you mean:
+  command 'uname' from deb coreutils (8.32-4.1ubuntu1.2)
+Try: apt install <deb name>
+Command '-name' not found, did you mean:
+  command 'uname' from deb coreutils (8.32-4.1ubuntu1.2)
+Try: apt install <deb name>
+Command '-name' not found, did you mean:
+  command 'uname' from deb coreutils (8.32-4.1ubuntu1.2)
+Try: apt install <deb name>
+-bash: syntax error near unexpected token `)'
+-bash: syntax error near unexpected token `('
+-bash: syntax error near unexpected token `)'
+-bash: syntax error near unexpected token `('
+-bash: syntax error near unexpected token `('
+-bash: syntax error near unexpected token `('
+--exclude-dir=.git: command not found
+--exclude-dir=.git: command not found
+--exclude-dir=build: command not found
+--exclude-dir=build: command not found
+--exclude="*.min.*": command not found
+--exclude="*.min.*": command not found
+-e: command not found
+-e: command not found
+-bash: syntax error near unexpected token `)'
+-bash: syntax error near unexpected token `)'
+grep: Trailing backslash
+grep: Trailing backslash
+--exclude-dir=.git: command not found
+--exclude-dir=.git: command not found
+--exclude-dir=build: command not found
+--exclude-dir=build: command not found
+--exclude="*.min.*": command not found
+--exclude="*.min.*": command not found
+-e: command not found
+-e: command not found
+sed: -e expression #1, char 1: unknown command: `"'
+sed: -e expression #1, char 1: unknown command: `"'
+"
+[OK]"
+[OK][?2004h> [?2004h> 

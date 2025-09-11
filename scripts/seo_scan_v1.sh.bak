@@ -1,0 +1,83 @@
+#!/usr/bin/env bash
+set -Euo pipefail
+trap 'status=$?; printf "[WARN] Command failed (status=%s): %s\n" "$status" "$BASH_COMMAND" >&2' ERR
+
+ROOT="/var/www/mono"
+MAX_DEPTH=3
+OUTPUT=""
+STRICT=0
+
+usage() {
+  cat << 'USAGE_EOF'
+Usage: seo_scan.sh [--root PATH] [--max-depth N] [--output FILE] [--strict] [-h|--help]
+Options:
+  --root PATH       Root directory to scan (default: /var/www/mono)  
+  --max-depth N     Max search depth for find (default: 3)
+  --output FILE     Write combined output to FILE (also prints to stdout)
+  --strict          Exit with non-zero code if no SEO signals found
+  -h, --help        Show this help and exit
+USAGE_EOF
+}
+
+while (($#)); do
+  case "$1" in
+    --root)
+      [[ $# -ge 2 ]] || { printf "Missing value for --root\n" >&2; exit 2; }
+      ROOT="$2"; shift 2;;
+    --max-depth)
+      [[ $# -ge 2 ]] || { printf "Missing value for --max-depth\n" >&2; exit 2; }
+      MAX_DEPTH="$2"; shift 2;;
+    --output)
+      [[ $# -ge 2 ]] || { printf "Missing value for --output\n" >&2; exit 2; }
+      OUTPUT="$2"; shift 2;;
+    --strict)
+      STRICT=1; shift;;
+    -h|--help)
+      usage; exit 0;;
+    *)
+      printf "Unknown option: %s\n" "$1" >&2; usage; exit 2;;
+  esac
+done
+
+if [[ -n "$OUTPUT" ]]; then
+  if [[ "$OUTPUT" == */* ]]; then OUTDIR="${OUTPUT%/*}"; else OUTDIR="."; fi
+  mkdir -p "$OUTDIR"
+  exec > >(tee -a "$OUTPUT") 2>&1
+  printf "[info] Logging to %s\n" "$OUTPUT"
+fi
+
+printf "\n=== inventory (top-level of %s) ===\n" "$ROOT"
+ls -la "$ROOT" || true
+
+printf "\n=== find framework & seo-related files (depth<=%s) ===\n" "$MAX_DEPTH"
+find "$ROOT" -maxdepth "$MAX_DEPTH" -type f \( \
+  -name "package.json" -o -name "next.config.*" -o -name "nuxt.config.*" -o \
+  -name "composer.json" -o -name "Gemfile" -o -name "go.mod" -o \
+  -name "requirements.txt" -o -name "pyproject.toml" -o -name "manage.py" -o \
+  -name "pom.xml" -o -name "build.gradle*" -o -name "README*" -o \
+  -name "robots.txt" -o -name "sitemap*" -o -name "Caddyfile" -o -name "nginx.conf" \
+\) -ls 2>/dev/null | sed -n "1,200p" || true
+
+printf "\n=== grep for SEO signals (limited) ===\n"
+pattern='sitemap|robots\.txt|canonical|application/ld\+json|og:|twitter:'
+
+COUNT=$(grep -R -n -E --color=never --binary-files=without-match \
+  --exclude-dir=.git --exclude-dir=node_modules --exclude-dir=dist \
+  --exclude-dir=build --exclude-dir=.next --exclude-dir=.nuxt \
+  --exclude="*.min.*" --exclude="*.map" \
+  -e "$pattern" \
+  -- "$ROOT" 2>/dev/null | wc -l || true)
+
+grep -R -n -E --color=never --binary-files=without-match \
+  --exclude-dir=.git --exclude-dir=node_modules --exclude-dir=dist \
+  --exclude-dir=build --exclude-dir=.next --exclude-dir=.nuxt \
+  --exclude="*.min.*" --exclude="*.map" \
+  -e "$pattern" \
+  -- "$ROOT" 2>/dev/null | sed -n "1,200p" || true
+
+if (( STRICT == 1 )) && [[ "${COUNT:-0}" -eq 0 ]]; then
+  printf "\n[FAIL] No SEO signals found under %s\n" "$ROOT" >&2
+  exit 1
+else
+  printf "\n[OK] SEO signals found: %s\n" "${COUNT:-0}"
+fi

@@ -133,7 +133,6 @@ function nextQuery(current: SearchParams, updates: Partial<SearchParams>): strin
 }
 
 export default async function ProductsPage({ searchParams }: { searchParams?: SearchParams }) {
-  try {
   const [categories, { products, pagination }] = await Promise.all([
     getCategories(),
     getProducts(searchParams || {})
@@ -262,24 +261,4 @@ export default async function ProductsPage({ searchParams }: { searchParams?: Se
       </div>
     </main>
   );
-  } catch (err) {
-    const msg = (err as Error)?.message || 'Unknown error';
-    console.error('[products] rendering failed:', msg);
-    return (
-      <main className="mx-auto max-w-3xl px-4 py-16">
-        <div className="rounded-2xl border bg-white p-8 shadow">
-          <h1 className="text-2xl font-bold">Không tải được danh sách sản phẩm</h1>
-          <p className="mt-2 text-gray-600">Hệ thống đang gặp trục trặc tạm thời. Vui lòng thử lại sau ít phút.</p>
-          <div className="mt-6 flex flex-wrap gap-3">
-            <a href="/" className="rounded-lg bg-black px-4 py-2 text-white">Về trang chủ</a>
-            <a href="/products" className="rounded-lg border px-4 py-2">Tải lại trang</a>
-          </div>
-          <details className="mt-4 text-xs text-gray-400">
-            <summary>Chi tiết kỹ thuật</summary>
-            <pre className="mt-2 whitespace-pre-wrap break-words">{msg}</pre>
-          </details>
-        </div>
-      </main>
-    );
-  }
 }

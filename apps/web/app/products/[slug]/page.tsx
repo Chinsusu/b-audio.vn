@@ -42,6 +42,7 @@ export async function generateMetadata({ params }: { params: { slug: string }}):
 }
 
 export default async function ProductPage({ params }: { params: { slug: string }}) {
+  try {
   const data = await getProduct(params.slug);
   if (!data) return notFound();
   const p = data.attributes;
@@ -98,4 +99,24 @@ export default async function ProductPage({ params }: { params: { slug: string }
       </article>
     </main>
   );
+  } catch (err) {
+    const msg = (err as Error)?.message || 'Unknown error';
+    console.error(`[product-detail] ${params.slug} failed:`, msg);
+    return (
+      <main className="mx-auto max-w-3xl px-4 py-16">
+        <div className="rounded-2xl border bg-white p-8 shadow">
+          <h1 className="text-2xl font-bold">Không tải được sản phẩm</h1>
+          <p className="mt-2 text-gray-600">Hệ thống đang gặp trục trặc tạm thời. Vui lòng thử lại sau ít phút.</p>
+          <div className="mt-6 flex flex-wrap gap-3">
+            <a href="/products" className="rounded-lg bg-black px-4 py-2 text-white">Xem tất cả sản phẩm</a>
+            <button onClick={() => window.location.reload()} className="rounded-lg border px-4 py-2">Tải lại trang</button>
+          </div>
+          <details className="mt-4 text-xs text-gray-400">
+            <summary>Chi tiết kỹ thuật</summary>
+            <pre className="mt-2 whitespace-pre-wrap break-words">{msg}</pre>
+          </details>
+        </div>
+      </main>
+    );
+  }
 }
