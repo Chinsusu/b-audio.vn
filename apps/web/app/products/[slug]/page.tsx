@@ -24,6 +24,8 @@ export async function generateMetadata({ params }: { params: { slug: string }}):
   const title = `${p.title} | B-Audio`;
   const desc = p.description ? String(p.description).replace(/<[^>]+>/g,'').slice(0, 160) : `${p.title} – sản phẩm của B-Audio`;
   const canonical = `https://b-audio.vn/products/${params.slug}`;
+  const catName = p.category?.data?.attributes?.name as string | undefined;
+  const catSlug = p.category?.data?.attributes?.slug as string | undefined;
   return {
     title,
     description: desc,
@@ -44,6 +46,8 @@ export default async function ProductPage({ params }: { params: { slug: string }
   const rel = p.images?.data?.[0]?.attributes?.url as string | undefined;
   const imageUrl = rel ? (/^https?:\/\//.test(rel) ? rel : `${API_BASE}${rel}`) : undefined;
   const canonical = `https://b-audio.vn/products/${params.slug}`;
+  const catName = p.category?.data?.attributes?.name as string | undefined;
+  const catSlug = p.category?.data?.attributes?.slug as string | undefined;
 
   const jsonLdProduct = {
     '@context': 'https://schema.org',
@@ -77,7 +81,10 @@ export default async function ProductPage({ params }: { params: { slug: string }
       <article className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div>{imageUrl && <img src={imageUrl} alt={p.title} className="rounded-xl w-full object-cover" />}</div>
         <div>
+          <div className="flex items-center justify-between">
           <h1 className="text-3xl font-semibold">{p.title}</h1>
+          {catName && catSlug && (<a href="/products?category=${catSlug}" className="inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-xs text-gray-700">{catName}</a>)}
+        </div>
           <div className="mt-2 text-xl text-gray-700">{new Intl.NumberFormat('vi-VN').format(p.price)} đ</div>
           <div className="prose mt-6" dangerouslySetInnerHTML={{__html: p.description}} />
           <form className="mt-6 grid gap-3">

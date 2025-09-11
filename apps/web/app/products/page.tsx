@@ -13,6 +13,8 @@ export const metadata: Metadata = {
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE || 'https://api.b-audio.vn';
 
+const formatVND = (v: any) => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND', maximumFractionDigits: 0 }).format(Number(v || 0));
+
 type SearchParams = { category?: string; min?: string; max?: string; sort?: string; page?: string };
 
 function mapSort(sort?: string): string {
@@ -114,20 +116,38 @@ export default async function ProductsPage({ searchParams }: { searchParams: Sea
         </div>
       </form>
 
-      <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
-        {products.map((p:any) => {
-          const attrs = p.attributes || {};
-          const img = attrs.images?.data?.[0]?.attributes?.url as string | undefined;
-          const imageUrl = img ? (/^https?:\/\//.test(img) ? img : `${API_BASE}${img}`) : undefined;
-          return (
-            <Link key={p.id} href={`/products/${attrs.slug}`} className="rounded-xl border p-4">
-              {imageUrl && <img src={imageUrl} alt={attrs.title} className="aspect-square w-full object-cover rounded-lg" />}
-              <div className="mt-3 font-medium">{attrs.title}</div>
-              <div className="text-sm text-gray-600">{new Intl.NumberFormat('vi-VN').format(attrs.price)} đ</div>
-            </Link>
-          );
-        })}
-      </div>
+      {products.length === 0 ? (
+        <div className="py-20 text-center text-gray-600">
+          Không tìm thấy sản phẩm phù hợp.
+          <div className="mt-4"><a className="underline" href="/products">Xoá bộ lọc</a></div>
+        </div>
+      ) : (
+        <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+          {products.map((p:any) => {
+            const attrs = p.attributes || {};
+            const img = attrs.images?.data?.[0]?.attributes?.url as string | undefined;
+            const imageUrl = img ? (/^https?:\/\//.test(img) ? img : `${API_BASE}${img}`) : undefined;
+            const cat = attrs.category?.data?.attributes?.name as string | undefined;
+            const catSlug = attrs.category?.data?.attributes?.slug as string | undefined;
+            return (
+              <Link key={p.id} href={`/products/${attrs.slug}`} className="rounded-xl border p-4 block">
+                {imageUrl && <img src={imageUrl} alt={attrs.title} className="aspect-square w-full object-cover rounded-lg" />}
+                <div className="mt-3 flex items-center justify-between">
+                  <div className="font-medium">{attrs.title}</div>
+                  {typeof attrs.price !== 'undefined' && <div className="text-sm text-gray-700">{formatVND(attrs.price)}</div>}
+                </div>
+                {cat && catSlug && (
+                  <div className="mt-1">
+                    <a href={`/products?category=${catSlug}`} className="inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-xs text-gray-700">
+                      {cat}
+                    </a>
+                  </div>
+                )}
+              </Link>
+            );
+          })}
+        </div>
+      )}
 
       <nav className="mt-8 flex items-center justify-between">
         <div className="text-sm text-gray-600">Trang {curPage} / {pageCount}</div>
