@@ -21,20 +21,17 @@ function DualRangeSlider({ min, max, step, value, onChange, formatValue, accent 
   const [minVal, setMinVal] = useState(value[0]);
   const [maxVal, setMaxVal] = useState(value[1]);
 
-  // Update local state when prop changes
   useEffect(() => {
     setMinVal(value[0]);
     setMaxVal(value[1]);
   }, [value]);
 
-  // Handle min value change
   const handleMinChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     const newMinVal = Math.min(Number(event.target.value), maxVal - step);
     setMinVal(newMinVal);
     onChange([newMinVal, maxVal]);
   }, [maxVal, step, onChange]);
 
-  // Handle max value change
   const handleMaxChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     const newMaxVal = Math.max(Number(event.target.value), minVal + step);
     setMaxVal(newMaxVal);
@@ -42,44 +39,53 @@ function DualRangeSlider({ min, max, step, value, onChange, formatValue, accent 
   }, [minVal, step, onChange]);
 
   const accentColor = accent === 'gold' ? '#C8A15A' : '#00E0B8';
+  const minPercent = ((minVal - min) / (max - min)) * 100;
+  const maxPercent = ((maxVal - min) / (max - min)) * 100;
   
   return (
     <div className="space-y-4">
       <div className="relative h-2 bg-darkBg rounded-lg">
         {/* Progress bar between thumbs */}
         <div 
-          className="absolute h-full rounded-lg"
+          className="absolute h-full rounded-lg pointer-events-none"
           style={{
             background: accentColor,
-            left: `${((minVal - min) / (max - min)) * 100}%`,
-            right: `${100 - ((maxVal - min) / (max - min)) * 100}%`,
+            left: `${minPercent}%`,
+            width: `${maxPercent - minPercent}%`,
             opacity: 0.6
           }}
         />
         
-        {/* Min range input */}
-        <input
-          type="range"
-          min={min}
-          max={max}
-          step={step}
-          value={minVal}
-          onChange={handleMinChange}
-          className={`absolute w-full h-2 bg-transparent appearance-none cursor-pointer slider-${accent} focus:outline-none focus:ring-2 focus:ring-${accent === 'gold' ? 'goldAccent' : 'neonTurquoise'} focus:ring-offset-2 focus:ring-offset-darkBg`}
-          style={{ zIndex: 1 }}
-        />
-        
-        {/* Max range input */}
-        <input
-          type="range"
-          min={min}
-          max={max}
-          step={step}
-          value={maxVal}
-          onChange={handleMaxChange}
-          className={`absolute w-full h-2 bg-transparent appearance-none cursor-pointer slider-${accent} focus:outline-none focus:ring-2 focus:ring-${accent === 'gold' ? 'goldAccent' : 'neonTurquoise'} focus:ring-offset-2 focus:ring-offset-darkBg`}
-          style={{ zIndex: 2 }}
-        />
+        {/* Range inputs container */}
+        <div className="relative w-full h-2">
+          {/* Min slider */}
+          <input
+            type="range"
+            min={min}
+            max={max}
+            step={step}
+            value={minVal}
+            onChange={handleMinChange}
+            className="absolute w-full h-full bg-transparent appearance-none cursor-pointer outline-none"
+            style={{
+              zIndex: minVal > max - (max - min) * 0.5 ? 5 : 1
+            }}
+          />
+          
+          {/* Max slider */}
+          <input
+            type="range"
+            min={min}
+            max={max}
+            step={step}
+            value={maxVal}
+            onChange={handleMaxChange}
+            className="absolute w-full h-full bg-transparent appearance-none cursor-pointer outline-none"
+            style={{
+              zIndex: maxVal < min + (max - min) * 0.5 ? 5 : 2
+            }}
+          />
+        </div>
       </div>
       
       {/* Value display */}
@@ -92,6 +98,58 @@ function DualRangeSlider({ min, max, step, value, onChange, formatValue, accent 
           {formatValue(maxVal)}
         </span>
       </div>
+      
+      <style jsx>{`
+        input[type="range"] {
+          -webkit-appearance: none;
+          height: 8px;
+          background: transparent;
+          pointer-events: auto;
+        }
+
+        input[type="range"]::-webkit-slider-track {
+          -webkit-appearance: none;
+          background: transparent;
+          height: 8px;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+          -webkit-appearance: none;
+          height: 20px;
+          width: 20px;
+          border-radius: 50%;
+          background: ${accentColor};
+          border: 2px solid ${accentColor};
+          cursor: pointer;
+          box-shadow: 0 0 8px ${accentColor}66;
+          position: relative;
+        }
+
+        input[type="range"]::-moz-range-track {
+          background: transparent;
+          height: 8px;
+          border: none;
+        }
+
+        input[type="range"]::-moz-range-thumb {
+          height: 20px;
+          width: 20px;
+          border-radius: 50%;
+          background: ${accentColor};
+          border: 2px solid ${accentColor};
+          cursor: pointer;
+          box-shadow: 0 0 8px ${accentColor}66;
+          border: none;
+        }
+
+        input[type="range"]:focus::-webkit-slider-thumb {
+          box-shadow: 0 0 12px ${accentColor}88;
+        }
+
+        input[type="range"]:focus::-moz-range-thumb {
+          box-shadow: 0 0 12px ${accentColor}88;
+        }
+      `}</style>
     </div>
   );
 }
@@ -113,7 +171,6 @@ export default function SearchFilters({ onFiltersChange }: SearchFiltersProps) {
   const [isExpanded, setIsExpanded] = useState(false);
 
   useEffect(() => {
-    // Sync with URL params
     const newFilters = {
       ...filters,
       category: searchParams.get('category') || '',
@@ -258,72 +315,6 @@ export default function SearchFilters({ onFiltersChange }: SearchFiltersProps) {
           XÓA BỘ LỌC
         </button>
       </div>
-
-      <style jsx>{`
-        /* Gold themed slider */
-        .slider-gold::-webkit-slider-thumb {
-          appearance: none;
-          height: 20px;
-          width: 20px;
-          border-radius: 50%;
-          background: #C8A15A;
-          border: 2px solid #C8A15A;
-          cursor: pointer;
-          box-shadow: 0 0 8px #C8A15A66;
-          position: relative;
-          z-index: 3;
-        }
-        
-        .slider-gold::-moz-range-thumb {
-          height: 20px;
-          width: 20px;
-          border-radius: 50%;
-          background: #C8A15A;
-          border: 2px solid #C8A15A;
-          cursor: pointer;
-          box-shadow: 0 0 8px #C8A15A66;
-        }
-        
-        /* Neon themed slider */
-        .slider-neon::-webkit-slider-thumb {
-          appearance: none;
-          height: 20px;
-          width: 20px;
-          border-radius: 50%;
-          background: #00E0B8;
-          border: 2px solid #00E0B8;
-          cursor: pointer;
-          box-shadow: 0 0 8px #00E0B866;
-          position: relative;
-          z-index: 3;
-        }
-        
-        .slider-neon::-moz-range-thumb {
-          height: 20px;
-          width: 20px;
-          border-radius: 50%;
-          background: #00E0B8;
-          border: 2px solid #00E0B8;
-          cursor: pointer;
-          box-shadow: 0 0 8px #00E0B866;
-        }
-
-        /* Remove default styling */
-        input[type="range"] {
-          -webkit-appearance: none;
-          appearance: none;
-          background: transparent;
-          cursor: pointer;
-        }
-
-        input[type="range"]::-webkit-slider-track {
-          background: transparent;
-        }
-
-        input[type="range"]::-moz-range-track {
-          background: transparent;
-        }
-      `}</style>
     </div>
   );
 }
