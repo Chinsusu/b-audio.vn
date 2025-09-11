@@ -1,14 +1,16 @@
 'use client';
 import Link from 'next/link';
 import { useState } from 'react';
-import { Search, Phone } from 'lucide-react';
+import { Search, Phone, Heart } from 'lucide-react';
 import { useDebounce } from '@/hooks/useDebounce';
 import { analytics } from '@/lib/analytics';
-import CartDrawer from "../components/cart/CartDrawer";
+import CartDrawer from "../cart/CartDrawer";
+import { useWishlist } from "@/hooks/useWishlist";
 
 export default function Header() {
   const [q, setQ] = useState('');
   const debounced = useDebounce(q, 300);
+  const { wishlist } = useWishlist();
 
   // Simple client-side search redirect
   function submit(e: React.FormEvent) {
@@ -41,7 +43,21 @@ export default function Header() {
         <a href="https://zalo.me/0877257799" className="hidden md:flex items-center gap-2 rounded-xl bg-black px-4 py-2 text-white">
           <Phone className="h-4 w-4" /> 0877 25 77 99
         </a>
-        <CartDrawer />
+        <div className="flex items-center gap-2">
+          <Link 
+            href="/wishlist" 
+            className="relative flex items-center justify-center h-10 w-10 rounded-lg border hover:bg-gray-50 transition-colors"
+            title="Wishlist"
+          >
+            <Heart className="h-5 w-5" />
+            {wishlist.itemCount > 0 && (
+              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium">
+                {wishlist.itemCount}
+              </span>
+            )}
+          </Link>
+          <CartDrawer />
+        </div>
       </div>
     </header>
   );

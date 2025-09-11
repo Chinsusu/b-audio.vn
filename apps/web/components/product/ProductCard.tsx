@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import AddToCartButton from '../cart/AddToCartButton';
+import WishlistButton from "../wishlist/WishlistButton";
 
 export function ProductCard({ p }: { p: any }) {
   const attrs = p?.attributes || {};
@@ -11,7 +12,7 @@ export function ProductCard({ p }: { p: any }) {
         <div className="mt-3 font-medium">{attrs.title}</div>
         <div className="text-sm text-gray-600">{new Intl.NumberFormat('vi-VN').format(attrs.price)} đ</div>
       </Link>
-      <div className="mt-3">
+      <div className="mt-3 flex items-center gap-2">
         <AddToCartButton 
           product={{ 
             id: p.id, 
@@ -22,8 +23,21 @@ export function ProductCard({ p }: { p: any }) {
               images: attrs.images 
             } 
           }} 
-          className="w-full text-sm"
+          className="flex-1 text-sm"
           variant="secondary"
+        />
+        <WishlistButton
+          product={{ 
+            id: p.id, 
+            slug: attrs.slug, 
+            attributes: { 
+              title: attrs.title, 
+              price_vnd: attrs.price, 
+              images: attrs.images 
+            } 
+          }}
+          size="md"
+          variant="icon"
         />
       </div>
     </div>
