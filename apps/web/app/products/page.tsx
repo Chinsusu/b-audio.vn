@@ -213,7 +213,7 @@ export default async function ProductsPage({ searchParams }: { searchParams?: Se
               <p className="mb-4">Thử điều chỉnh bộ lọc hoặc tìm kiếm với từ khóa khác</p>
               <Link 
                 href="/products" 
-                className="inline-block rounded-lg bg-black px-6 py-3 text-white hover:bg-gray-800"
+                className="inline-block rounded-2xl bg-espresso px-6 py-3 text-ivory hover:bg-espresso/90 focus:outline-none focus:ring-2 focus:ring-espresso focus:ring-offset-2"
               >
                 Xem tất cả sản phẩm
               </Link>
@@ -235,22 +235,22 @@ export default async function ProductsPage({ searchParams }: { searchParams?: Se
               
               <div className="flex gap-2">
                 {prevDisabled ? (
-                  <span className="rounded-lg border px-4 py-2 text-gray-400">← Trước</span>
+                  <span className="rounded-2xl border px-4 py-2 text-gray-400">← Trước</span>
                 ) : (
                   <Link
                     href={`/products?${nextQuery(searchParams || {}, { page: String(curPage - 1) })}`}
-                    className="rounded-lg border px-4 py-2 hover:bg-gray-50"
+                    className="rounded-2xl border px-4 py-2 hover:bg-cloud focus:outline-none focus:ring-2 focus:ring-espresso focus:ring-offset-2"
                   >
                     ← Trước
                   </Link>
                 )}
                 
                 {nextDisabled ? (
-                  <span className="rounded-lg border px-4 py-2 text-gray-400">Sau →</span>
+                  <span className="rounded-2xl border px-4 py-2 text-gray-400">Sau →</span>
                 ) : (
                   <Link
                     href={`/products?${nextQuery(searchParams || {}, { page: String(curPage + 1) })}`}
-                    className="rounded-lg border px-4 py-2 hover:bg-gray-50"
+                    className="rounded-2xl border px-4 py-2 hover:bg-cloud focus:outline-none focus:ring-2 focus:ring-espresso focus:ring-offset-2"
                   >
                     Sau →
                   </Link>
@@ -271,8 +271,8 @@ export default async function ProductsPage({ searchParams }: { searchParams?: Se
           <h1 className="text-2xl font-bold">Không tải được danh sách sản phẩm</h1>
           <p className="mt-2 text-gray-600">Hệ thống đang gặp trục trặc tạm thời. Vui lòng thử lại sau ít phút.</p>
           <div className="mt-6 flex flex-wrap gap-3">
-            <a href="/" className="rounded-lg bg-black px-4 py-2 text-white">Về trang chủ</a>
-            <a href="/products" className="rounded-lg border px-4 py-2">Tải lại trang</a>
+            <a href="/" className="rounded-2xl bg-espresso px-4 py-2 text-ivory hover:bg-espresso/90 focus:outline-none focus:ring-2 focus:ring-espresso focus:ring-offset-2">Về trang chủ</a>
+            <a href="/products" className="rounded-2xl border px-4 py-2 hover:bg-cloud focus:outline-none focus:ring-2 focus:ring-espresso focus:ring-offset-2">Tải lại trang</a>
           </div>
           <details className="mt-4 text-xs text-gray-400">
             <summary>Chi tiết kỹ thuật</summary>
