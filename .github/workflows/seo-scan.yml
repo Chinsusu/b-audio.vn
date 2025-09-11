@@ -1,0 +1,28 @@
+name: SEO Scan
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  push:
+    branches: [main, master]
+
+jobs:
+  seo-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Ensure script is executable
+        run: chmod +x scripts/seo_scan.sh
+
+      - name: Run SEO scan
+        run: |
+          ./scripts/seo_scan.sh --root . --max-depth 3 --output reports/seo_scan.txt --strict
+
+      - name: Upload SEO report artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: seo-scan-report
+          path: reports/seo_scan.txt
+          if-no-files-found: warn
