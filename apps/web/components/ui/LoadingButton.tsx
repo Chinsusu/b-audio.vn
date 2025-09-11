@@ -24,13 +24,13 @@ export default function LoadingButton({
   type = 'button',
   loadingText,
 }: LoadingButtonProps) {
-  const baseClasses = 'inline-flex items-center justify-center font-medium rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed';
+  const baseClasses = 'inline-flex items-center justify-center font-medium rounded-2xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-espresso focus:ring-offset-2';
   
   const variants = {
-    primary: 'bg-black text-white hover:bg-gray-800 focus:ring-2 focus:ring-black focus:ring-offset-2',
-    secondary: 'border border-black text-black hover:bg-black hover:text-white focus:ring-2 focus:ring-black focus:ring-offset-2',
-    outline: 'border border-gray-300 text-gray-700 hover:bg-gray-50 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2',
-    ghost: 'text-gray-700 hover:bg-gray-100 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2',
+    primary: 'bg-espresso text-ivory hover:bg-espresso/90',
+    secondary: 'border border-espresso text-espresso hover:bg-espresso hover:text-ivory',
+    outline: 'border border-cloud text-espresso hover:bg-cloud',
+    ghost: 'text-espresso hover:bg-cloud/80',
   };
 
   const sizes = {
