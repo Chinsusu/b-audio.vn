@@ -28,12 +28,17 @@ jobs:
       
       # Build Web (Next.js)
       - name: Build Web App
+        shell: bash
         run: |
+          set -e
           cd apps/web
           pnpm install --frozen-lockfile
           pnpm build
-          tar -czf web-dist.tar.gz .next public package.json pnpm-lock.yaml next.config.js middleware.ts next-sitemap.config.js
-      
+          FILES=(.next public package.json pnpm-lock.yaml)
+          [ -f next.config.js ] && FILES+=(next.config.js)
+          [ -f next-sitemap.config.js ] && FILES+=(next-sitemap.config.js)
+          [ -f middleware.ts ] && FILES+=(middleware.ts)
+          tar -czf web-dist.tar.gz "${FILES[@]}"
       # Build CMS (Strapi) - only if changed
       - name: Check if CMS changed
         id: cms-changes
