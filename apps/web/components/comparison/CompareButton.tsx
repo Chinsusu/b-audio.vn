@@ -100,6 +100,7 @@ export default function CompareButton({
         <button
           onClick={handleToggle}
           disabled={disabled || isLoading}
+          aria-busy={isLoading}
           className={`
             ${sizeClasses[size]} rounded-full flex items-center justify-center
             transition-all duration-200 hover:scale-110 active:scale-95
@@ -129,6 +130,7 @@ export default function CompareButton({
       <button
         onClick={handleToggle}
         disabled={disabled || isLoading}
+        aria-busy={isLoading}
         className={`
           rounded-lg px-4 py-2 font-medium transition-all duration-200 disabled:opacity-50
           ${inComparison

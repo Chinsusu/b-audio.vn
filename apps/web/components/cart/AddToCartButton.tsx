@@ -1,29 +1,36 @@
-'use client';
-import { useState } from 'react';
-import { useCart } from '../../hooks/useCart';
-import { toast } from '../../lib/toast';
-import { CartItem } from '../../lib/cart';
+'use client'
+
+import { useState } from 'react'
+import { ShoppingCart } from 'lucide-react'
+import { useCart } from '../../hooks/useCart'
+import { toast } from '@/lib/toast'
+import LoadingButton from '../ui/LoadingButton'
+import { CartItem } from '../../lib/cart'
 
 interface AddToCartButtonProps {
   product: {
-    id: string;
-    slug: string;
+    id: string
+    slug: string
     attributes: {
-      title: string;
-      price_vnd?: number;
-      images?: { data?: Array<{ attributes?: { url: string } }> };
-    };
-  };
-  className?: string;
-  variant?: 'primary' | 'secondary';
+      title: string
+      price_vnd?: number
+      images?: { data?: Array<{ attributes?: { url: string } }> }
+    }
+  }
+  className?: string
+  variant?: 'primary' | 'secondary' | 'outline'
 }
 
-export default function AddToCartButton({ product, className = '', variant = 'primary' }: AddToCartButtonProps) {
-  const { addItem, isInCart, getItemQuantity } = useCart();
-  const [isAdding, setIsAdding] = useState(false);
+export default function AddToCartButton({ 
+  product, 
+  className = '', 
+  variant = 'primary' 
+}: AddToCartButtonProps) {
+  const { addItem, isInCart, getItemQuantity } = useCart()
+  const [isAdding, setIsAdding] = useState(false)
 
   const handleAddToCart = async () => {
-    setIsAdding(true);
+    setIsAdding(true)
     
     try {
       const cartItem: Omit<CartItem, 'quantity'> = {
@@ -33,49 +40,34 @@ export default function AddToCartButton({ product, className = '', variant = 'pr
         price: product.attributes.price_vnd || 0,
         imageUrl: product.attributes.images?.data?.[0]?.attributes?.url,
         maxQuantity: 10, // Default limit
-      };
+      }
 
-      addItem(cartItem, 1);
+      addItem(cartItem, 1)
       
-      // Optional: Show success feedback
-      // You can implement a toast notification here
+      // Show success toast
+      toast.success('Đã thêm vào giỏ hàng', `${product.attributes.title}`)
       
-    } catch (error) {
-      console.error('Failed to add item to cart:', error);
-      // Handle error (show error message)
+    } catch (err) {
+      console.error('Failed to add item to cart:', err)
+      toast.error('Có lỗi xảy ra', 'Không thể thêm sản phẩm vào giỏ hàng')
     } finally {
-      setIsAdding(false);
+      setIsAdding(false)
     }
-  };
+  }
 
-  const inCart = isInCart(product.id);
-  const quantity = getItemQuantity(product.id);
-
-  const baseClasses = "rounded-lg px-4 py-2 font-medium transition-all duration-200 disabled:opacity-50";
-  const variantClasses = {
-    primary: "bg-black text-white hover:bg-gray-800 active:scale-95",
-    secondary: "border border-black text-black hover:bg-black hover:text-white"
-  };
+  const inCart = isInCart(product.id)
+  const quantity = getItemQuantity(product.id)
 
   return (
-    <button
+    <LoadingButton
       onClick={handleAddToCart}
-      disabled={isAdding}
-      className={`${baseClasses} ${variantClasses[variant]} ${className}`}
+      loading={isAdding}
+      loadingText="Đang thêm..."
+      variant={variant}
+      className={className}
     >
-      {isAdding ? (
-        <span className="flex items-center gap-2">
-          <svg className="w-4 h-4 animate-spin" viewBox="0 0 24 24">
-            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"/>
-            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
-          </svg>
-          Đang thêm...
-        </span>
-      ) : inCart ? (
-        `Trong giỏ (${quantity})`
-      ) : (
-        'Thêm vào giỏ'
-      )}
-    </button>
-  );
+      <ShoppingCart className="w-4 h-4 mr-2" />
+      {inCart ? `Trong giỏ (${quantity})` : 'Thêm vào giỏ'}
+    </LoadingButton>
+  )
 }

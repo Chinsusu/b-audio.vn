@@ -1,5 +1,6 @@
-import './globals.css';
-import type { ReactNode } from 'react';
+import './globals.css'
+import type { ReactNode } from 'react'
+import ToastContainer from '@/components/ui/Toast'
 
 export const metadata = {
   metadataBase: new URL('https://b-audio.vn'),
@@ -10,12 +11,16 @@ export const metadata = {
     images: [{ url: 'https://b-audio.vn/og/home-cover.svg', width: 1200, height: 630, alt: 'B-Audio' }],
   },
   twitter: { card: 'summary_large_image', images: ['https://b-audio.vn/og/home-cover.svg'] },
-};
+}
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="vi">
-      <body className="min-h-screen bg-white text-gray-900">{children}</body>
+      <body className="min-h-screen bg-white text-gray-900">
+        {children}
+        {/* Global toast container */}
+        <ToastContainer />
+      </body>
     </html>
-  );
+  )
 }
