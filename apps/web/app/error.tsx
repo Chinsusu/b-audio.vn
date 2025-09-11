@@ -22,7 +22,7 @@ export default function GlobalError({
           <div className="flex items-start gap-3 rounded-2xl border border-yellow-200 bg-yellow-50 p-4 text-yellow-800">
             <AlertTriangle className="h-5 w-5 flex-shrink-0" />
             <div className="flex-1">
-              <h1 className="text-lg font-semibold">Đã có lỗi xảy ra</h1>
+              <h1 className="text-heading-sm font-semibold">Đã có lỗi xảy ra</h1>
               <p className="mt-1 text-sm opacity-90">Xin lỗi vì sự bất tiện. Bạn có thể thử tải lại trang hoặc quay về trang chủ.</p>
               {process.env.NODE_ENV !== "production" && error?.digest && (
                 <p className="mt-2 text-xs opacity-70">Mã lỗi: {error.digest}</p>

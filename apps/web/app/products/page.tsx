@@ -147,7 +147,7 @@ export default async function ProductsPage({ searchParams }: { searchParams?: Se
     <main className="mx-auto max-w-6xl px-4 py-8">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold">Sản phẩm B-Audio</h1>
+        <h1 className="text-heading-lg font-bold">Sản phẩm B-Audio</h1>
         <p className="mt-2 text-gray-600">
           Khám phá {total} sản phẩm loa chất lượng cao với công nghệ tiên tiến
         </p>
@@ -268,7 +268,7 @@ export default async function ProductsPage({ searchParams }: { searchParams?: Se
     return (
       <main className="mx-auto max-w-3xl px-4 py-16">
         <div className="rounded-2xl border bg-white p-8 shadow">
-          <h1 className="text-2xl font-bold">Không tải được danh sách sản phẩm</h1>
+          <h1 className="text-heading-md font-bold">Không tải được danh sách sản phẩm</h1>
           <p className="mt-2 text-gray-600">Hệ thống đang gặp trục trặc tạm thời. Vui lòng thử lại sau ít phút.</p>
           <div className="mt-6 flex flex-wrap gap-3">
             <a href="/" className="rounded-2xl bg-espresso px-4 py-2 text-ivory hover:bg-espresso/90 focus:outline-none focus:ring-2 focus:ring-espresso focus:ring-offset-2">Về trang chủ</a>
