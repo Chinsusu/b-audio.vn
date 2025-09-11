@@ -3,7 +3,7 @@
   "collectionName": "categories",
   "info": {
     "singularName": "category",
-    "pluralName": "categorys",
+    "pluralName": "categories",
     "displayName": "Category"
   },
   "options": {
