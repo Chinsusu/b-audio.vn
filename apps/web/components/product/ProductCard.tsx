@@ -7,7 +7,7 @@ export function ProductCard({ p }: { p: any }) {
   const attrs = p?.attributes || {};
   const img = attrs.images?.data?.[0]?.attributes?.url;
   return (
-    <div className="group rounded-2xl border p-4 shadow-soft hover:shadow-md transition">
+    <div className="group rounded-2xl border p-4 shadow-soft hover:shadow-md transition focus-within:outline-none focus-within:ring-2 focus-within:ring-espresso focus-within:ring-offset-2">
       <Link href={`/products/${attrs.slug}`}>
         {img && <img src={img} alt={attrs.title} className="aspect-square w-full rounded-xl object-cover" />}
         <div className="mt-3 font-medium">{attrs.title}</div>
