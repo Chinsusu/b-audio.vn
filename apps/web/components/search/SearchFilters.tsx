@@ -1,9 +1,99 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 
 interface SearchFiltersProps {
   onFiltersChange?: (filters: any) => void;
+}
+
+// Dual Range Slider Component
+interface DualRangeSliderProps {
+  min: number;
+  max: number;
+  step: number;
+  value: [number, number];
+  onChange: (value: [number, number]) => void;
+  formatValue: (val: number) => string;
+  accent: 'gold' | 'neon';
+}
+
+function DualRangeSlider({ min, max, step, value, onChange, formatValue, accent }: DualRangeSliderProps) {
+  const [minVal, setMinVal] = useState(value[0]);
+  const [maxVal, setMaxVal] = useState(value[1]);
+
+  // Update local state when prop changes
+  useEffect(() => {
+    setMinVal(value[0]);
+    setMaxVal(value[1]);
+  }, [value]);
+
+  // Handle min value change
+  const handleMinChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+    const newMinVal = Math.min(Number(event.target.value), maxVal - step);
+    setMinVal(newMinVal);
+    onChange([newMinVal, maxVal]);
+  }, [maxVal, step, onChange]);
+
+  // Handle max value change
+  const handleMaxChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+    const newMaxVal = Math.max(Number(event.target.value), minVal + step);
+    setMaxVal(newMaxVal);
+    onChange([minVal, newMaxVal]);
+  }, [minVal, step, onChange]);
+
+  const accentColor = accent === 'gold' ? '#C8A15A' : '#00E0B8';
+  
+  return (
+    <div className="space-y-4">
+      <div className="relative h-2 bg-darkBg rounded-lg">
+        {/* Progress bar between thumbs */}
+        <div 
+          className="absolute h-full rounded-lg"
+          style={{
+            background: accentColor,
+            left: `${((minVal - min) / (max - min)) * 100}%`,
+            right: `${100 - ((maxVal - min) / (max - min)) * 100}%`,
+            opacity: 0.6
+          }}
+        />
+        
+        {/* Min range input */}
+        <input
+          type="range"
+          min={min}
+          max={max}
+          step={step}
+          value={minVal}
+          onChange={handleMinChange}
+          className={`absolute w-full h-2 bg-transparent appearance-none cursor-pointer slider-${accent} focus:outline-none focus:ring-2 focus:ring-${accent === 'gold' ? 'goldAccent' : 'neonTurquoise'} focus:ring-offset-2 focus:ring-offset-darkBg`}
+          style={{ zIndex: 1 }}
+        />
+        
+        {/* Max range input */}
+        <input
+          type="range"
+          min={min}
+          max={max}
+          step={step}
+          value={maxVal}
+          onChange={handleMaxChange}
+          className={`absolute w-full h-2 bg-transparent appearance-none cursor-pointer slider-${accent} focus:outline-none focus:ring-2 focus:ring-${accent === 'gold' ? 'goldAccent' : 'neonTurquoise'} focus:ring-offset-2 focus:ring-offset-darkBg`}
+          style={{ zIndex: 2 }}
+        />
+      </div>
+      
+      {/* Value display */}
+      <div className="flex justify-between items-center text-textGrey text-sm">
+        <span className={`px-2 py-1 rounded text-xs bg-darkBg border ${accent === 'gold' ? 'border-goldAccent/50 text-goldAccent' : 'border-neonTurquoise/50 text-neonTurquoise'}`}>
+          {formatValue(minVal)}
+        </span>
+        <span className="text-textGrey/60">—</span>
+        <span className={`px-2 py-1 rounded text-xs bg-darkBg border ${accent === 'gold' ? 'border-goldAccent/50 text-goldAccent' : 'border-neonTurquoise/50 text-neonTurquoise'}`}>
+          {formatValue(maxVal)}
+        </span>
+      </div>
+    </div>
+  );
 }
 
 export default function SearchFilters({ onFiltersChange }: SearchFiltersProps) {
@@ -12,9 +102,9 @@ export default function SearchFilters({ onFiltersChange }: SearchFiltersProps) {
   const searchParams = useSearchParams();
   
   const [filters, setFilters] = useState({
-    priceRange: [0, 50000000], // 0 - 50M VND
-    powerRange: [0, 2000], // 0 - 2000W
-    batteryRange: [0, 24], // 0 - 24 hours
+    priceRange: [0, 50000000] as [number, number],
+    powerRange: [0, 2000] as [number, number],
+    batteryRange: [0, 24] as [number, number],
     category: searchParams.get('category') || '',
     search: searchParams.get('search') || '',
     sortBy: searchParams.get('sort') || 'newest',
@@ -60,9 +150,9 @@ export default function SearchFilters({ onFiltersChange }: SearchFiltersProps) {
 
   const clearFilters = () => {
     const clearedFilters = {
-      priceRange: [0, 50000000],
-      powerRange: [0, 2000],
-      batteryRange: [0, 24],
+      priceRange: [0, 50000000] as [number, number],
+      powerRange: [0, 2000] as [number, number],
+      batteryRange: [0, 24] as [number, number],
       category: '',
       search: '',
       sortBy: 'newest',
@@ -73,10 +163,13 @@ export default function SearchFilters({ onFiltersChange }: SearchFiltersProps) {
   };
 
   const formatPrice = (price: number) => {
-    if (price >= 1000000) return `${price / 1000000}M`;
-    if (price >= 1000) return `${price / 1000}K`;
-    return price.toString();
+    if (price >= 1000000) return `${price / 1000000}M VND`;
+    if (price >= 1000) return `${price / 1000}K VND`;
+    return `${price} VND`;
   };
+
+  const formatPower = (power: number) => `${power}W`;
+  const formatBattery = (battery: number) => `${battery}h`;
 
   return (
     <div className="bg-darkGrey/60 backdrop-blur-sm rounded-2xl border border-darkGrey shadow-2xl p-6 mb-6">
@@ -112,112 +205,49 @@ export default function SearchFilters({ onFiltersChange }: SearchFiltersProps) {
         {/* Price Range */}
         <div>
           <label className="block font-microcopy text-microcopy text-goldAccent mb-3 tracking-widest">
-            KHOẢNG GIÁ ({formatPrice(filters.priceRange[0])} - {formatPrice(filters.priceRange[1])} VND)
+            KHOẢNG GIÁ
           </label>
-          <div className="space-y-3">
-            <div className="flex gap-3">
-              <div className="flex-1 relative">
-                <input
-                  type="range"
-                  min="0"
-                  max="50000000"
-                  step="100000"
-                  value={filters.priceRange[0]}
-                  onChange={(e) => handleFilterChange('priceRange', [parseInt(e.target.value), filters.priceRange[1]])}
-                  className="w-full h-2 bg-darkBg rounded-lg appearance-none cursor-pointer slider-thumb-gold focus:outline-none focus:ring-2 focus:ring-goldAccent focus:ring-offset-2 focus:ring-offset-darkBg"
-                />
-              </div>
-              <div className="flex-1 relative">
-                <input
-                  type="range"
-                  min="0"
-                  max="50000000"
-                  step="100000"
-                  value={filters.priceRange[1]}
-                  onChange={(e) => handleFilterChange('priceRange', [filters.priceRange[0], parseInt(e.target.value)])}
-                  className="w-full h-2 bg-darkBg rounded-lg appearance-none cursor-pointer slider-thumb-gold focus:outline-none focus:ring-2 focus:ring-goldAccent focus:ring-offset-2 focus:ring-offset-darkBg"
-                />
-              </div>
-            </div>
-            <div className="flex justify-between text-textGrey text-sm">
-              <span>{formatPrice(filters.priceRange[0])} VND</span>
-              <span>{formatPrice(filters.priceRange[1])} VND</span>
-            </div>
-          </div>
+          <DualRangeSlider
+            min={0}
+            max={50000000}
+            step={100000}
+            value={filters.priceRange}
+            onChange={(value) => handleFilterChange('priceRange', value)}
+            formatValue={formatPrice}
+            accent="gold"
+          />
         </div>
 
         {/* Power Range */}
         <div>
           <label className="block font-microcopy text-microcopy text-neonTurquoise mb-3 tracking-widest">
-            CÔNG SUẤT ({filters.powerRange[0]} - {filters.powerRange[1]}W)
+            CÔNG SUẤT
           </label>
-          <div className="space-y-3">
-            <div className="flex gap-3">
-              <div className="flex-1 relative">
-                <input
-                  type="range"
-                  min="0"
-                  max="2000"
-                  step="10"
-                  value={filters.powerRange[0]}
-                  onChange={(e) => handleFilterChange('powerRange', [parseInt(e.target.value), filters.powerRange[1]])}
-                  className="w-full h-2 bg-darkBg rounded-lg appearance-none cursor-pointer slider-thumb-neon focus:outline-none focus:ring-2 focus:ring-neonTurquoise focus:ring-offset-2 focus:ring-offset-darkBg"
-                />
-              </div>
-              <div className="flex-1 relative">
-                <input
-                  type="range"
-                  min="0"
-                  max="2000"
-                  step="10"
-                  value={filters.powerRange[1]}
-                  onChange={(e) => handleFilterChange('powerRange', [filters.powerRange[0], parseInt(e.target.value)])}
-                  className="w-full h-2 bg-darkBg rounded-lg appearance-none cursor-pointer slider-thumb-neon focus:outline-none focus:ring-2 focus:ring-neonTurquoise focus:ring-offset-2 focus:ring-offset-darkBg"
-                />
-              </div>
-            </div>
-            <div className="flex justify-between text-textGrey text-sm">
-              <span>{filters.powerRange[0]}W</span>
-              <span>{filters.powerRange[1]}W</span>
-            </div>
-          </div>
+          <DualRangeSlider
+            min={0}
+            max={2000}
+            step={10}
+            value={filters.powerRange}
+            onChange={(value) => handleFilterChange('powerRange', value)}
+            formatValue={formatPower}
+            accent="neon"
+          />
         </div>
 
         {/* Battery Range */}
         <div>
           <label className="block font-microcopy text-microcopy text-goldAccent mb-3 tracking-widest">
-            THỜI LƯỢNG PIN ({filters.batteryRange[0]} - {filters.batteryRange[1]}H)
+            THỜI LƯỢNG PIN
           </label>
-          <div className="space-y-3">
-            <div className="flex gap-3">
-              <div className="flex-1 relative">
-                <input
-                  type="range"
-                  min="0"
-                  max="24"
-                  step="1"
-                  value={filters.batteryRange[0]}
-                  onChange={(e) => handleFilterChange('batteryRange', [parseInt(e.target.value), filters.batteryRange[1]])}
-                  className="w-full h-2 bg-darkBg rounded-lg appearance-none cursor-pointer slider-thumb-gold focus:outline-none focus:ring-2 focus:ring-goldAccent focus:ring-offset-2 focus:ring-offset-darkBg"
-                />
-              </div>
-              <div className="flex-1 relative">
-                <input
-                  type="range"
-                  min="0"
-                  max="24"
-                  step="1"
-                  value={filters.batteryRange[1]}
-                  onChange={(e) => handleFilterChange('batteryRange', [filters.batteryRange[0], parseInt(e.target.value)])}
-                  className="w-full h-2 bg-darkBg rounded-lg appearance-none cursor-pointer slider-thumb-gold focus:outline-none focus:ring-2 focus:ring-goldAccent focus:ring-offset-2 focus:ring-offset-darkBg"
-                />
-              </div>
-            </div>
-            <div className="flex justify-between text-textGrey text-sm">
-              <span>{filters.batteryRange[0]}h</span>
-              <span>{filters.batteryRange[1]}h</span>
-            </div>
-          </div>
+          <DualRangeSlider
+            min={0}
+            max={24}
+            step={1}
+            value={filters.batteryRange}
+            onChange={(value) => handleFilterChange('batteryRange', value)}
+            formatValue={formatBattery}
+            accent="gold"
+          />
         </div>
 
         {/* Clear Filters */}
@@ -230,43 +260,68 @@ export default function SearchFilters({ onFiltersChange }: SearchFiltersProps) {
       </div>
 
       <style jsx>{`
-        input[type="range"]::-webkit-slider-thumb {
+        /* Gold themed slider */
+        .slider-gold::-webkit-slider-thumb {
           appearance: none;
           height: 20px;
           width: 20px;
           border-radius: 50%;
-          cursor: pointer;
-          border: 2px solid;
-        }
-        
-        .slider-thumb-gold input[type="range"]::-webkit-slider-thumb {
           background: #C8A15A;
-          border-color: #C8A15A;
+          border: 2px solid #C8A15A;
+          cursor: pointer;
           box-shadow: 0 0 8px #C8A15A66;
+          position: relative;
+          z-index: 3;
         }
         
-        .slider-thumb-neon input[type="range"]::-webkit-slider-thumb {
-          background: #00E0B8;
-          border-color: #00E0B8;
-          box-shadow: 0 0 8px #00E0B866;
-        }
-        
-        input[type="range"]::-moz-range-thumb {
+        .slider-gold::-moz-range-thumb {
           height: 20px;
           width: 20px;
           border-radius: 50%;
-          cursor: pointer;
-          border: 2px solid;
-        }
-        
-        .slider-thumb-gold input[type="range"]::-moz-range-thumb {
           background: #C8A15A;
-          border-color: #C8A15A;
+          border: 2px solid #C8A15A;
+          cursor: pointer;
+          box-shadow: 0 0 8px #C8A15A66;
         }
         
-        .slider-thumb-neon input[type="range"]::-moz-range-thumb {
+        /* Neon themed slider */
+        .slider-neon::-webkit-slider-thumb {
+          appearance: none;
+          height: 20px;
+          width: 20px;
+          border-radius: 50%;
           background: #00E0B8;
-          border-color: #00E0B8;
+          border: 2px solid #00E0B8;
+          cursor: pointer;
+          box-shadow: 0 0 8px #00E0B866;
+          position: relative;
+          z-index: 3;
+        }
+        
+        .slider-neon::-moz-range-thumb {
+          height: 20px;
+          width: 20px;
+          border-radius: 50%;
+          background: #00E0B8;
+          border: 2px solid #00E0B8;
+          cursor: pointer;
+          box-shadow: 0 0 8px #00E0B866;
+        }
+
+        /* Remove default styling */
+        input[type="range"] {
+          -webkit-appearance: none;
+          appearance: none;
+          background: transparent;
+          cursor: pointer;
+        }
+
+        input[type="range"]::-webkit-slider-track {
+          background: transparent;
+        }
+
+        input[type="range"]::-moz-range-track {
+          background: transparent;
         }
       `}</style>
     </div>
