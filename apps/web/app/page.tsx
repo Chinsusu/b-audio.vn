@@ -17,11 +17,11 @@ export default async function Page() {
   return (
     <main className="mx-auto max-w-6xl px-6 py-12">
       <section className="py-16">
-        <h1 className="text-4xl font-semibold">Loa DIY · Bluetooth · Loa kéo karaoke</h1>
-        <p className="mt-4 text-lg text-gray-600">Gia công theo yêu cầu · Bảo hành xưởng · Tối ưu âm thanh theo gu của bạn.</p>
+        <h1 className="font-heading text-h1 text-textWhite">Loa DIY · Bluetooth · Loa kéo karaoke</h1>
+        <p className="mt-4 text-body text-textGrey">Gia công theo yêu cầu · Bảo hành xưởng · Tối ưu âm thanh theo gu của bạn.</p>
         <div className="mt-8 flex gap-4">
-          <Link className="rounded-xl bg-black px-5 py-3 text-white" href="/products">Xem sản phẩm</Link>
-          <Link className="rounded-xl border px-5 py-3" href="/custom">Đặt hàng custom</Link>
+          <Link className="rounded-xl bg-goldAccent px-5 py-3 text-darkBg shadow-glowGold hover:shadow-lg transition-shadow" href="/products">Xem sản phẩm</Link>
+          <Link className="rounded-xl border border-darkGrey px-5 py-3 text-textWhite hover:bg-darkGrey/60 transition-colors" href="/custom">Đặt hàng custom</Link>
         </div>
       </section>
     </main>

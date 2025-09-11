@@ -1,5 +1,7 @@
 import './globals.css'
 import type { ReactNode } from 'react'
+import Header from '@/components/ui/Header'
+import Footer from '@/components/ui/Footer'
 import ToastContainer from '@/components/ui/Toast'
 
 export const metadata = {
@@ -16,8 +18,10 @@ export const metadata = {
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="vi">
-      <body className="min-h-screen bg-white text-gray-900">
+      <body className="min-h-screen bg-darkBg text-textWhite font-body">
+        <Header />
         {children}
+        <Footer />
         {/* Global toast container */}
         <ToastContainer />
       </body>
