@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
 async function getProducts() {
-  const base = process.env.NEXT_PUBLIC_API_BASE || 'https://api.yourdomain.com';
+  const base = API_BASE;
   const res = await fetch(`${base}/api/products?populate=images`, { next: { revalidate: 60 }});
   if (!res.ok) return [];
   const json = await res.json();
@@ -17,9 +17,10 @@ export default async function ProductsPage() {
         {products.map((p:any) => {
           const attrs = p.attributes || {};
           const img = attrs.images?.data?.[0]?.attributes?.url;
+          const imageUrl = img ? (/^https?:\/\\//.test(img) ? img : `${API_BASE}${img}`) : null;
           return (
             <Link key={p.id} href={`/products/${attrs.slug}`} className="rounded-xl border p-4">
-              {img && <img src={img} alt={attrs.title} className="aspect-square w-full object-cover rounded-lg" />}
+              {imageUrl && <img src={imageUrl} alt={attrs.title} className="aspect-square w-full object-cover rounded-lg" />}
               <div className="mt-3 font-medium">{attrs.title}</div>
               <div className="text-sm text-gray-600">{new Intl.NumberFormat('vi-VN').format(attrs.price)} đ</div>
             </Link>
