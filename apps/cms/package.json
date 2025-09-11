@@ -4,7 +4,8 @@
   "scripts": {
     "develop": "strapi develop",
     "build": "strapi build",
-    "start": "strapi start"
+    "start": "strapi start",
+    "seed:sample": "node scripts/seed-sample.js"
   },
   "dependencies": {
     "@strapi/plugin-users-permissions": "^4.25.23",
