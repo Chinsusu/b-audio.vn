@@ -33,7 +33,7 @@ export default function Header() {
           <Link href="/custom">Đặt custom</Link>
           <Link href="/blog">Blog</Link>
         </nav>
-        <form onSubmit={submit} className="ml-auto flex items-center gap-2 rounded-2xl border px-3 focus-within:outline-none focus-within:ring-2 focus-within:ring-espresso focus-within:ring-offset-2">
+        <form onSubmit={submit} className="ml-auto flex items-center gap-2 rounded-2xl border border-cloud px-3 focus-within:outline-none focus-within:ring-2 focus-within:ring-espresso focus-within:ring-offset-2">
           <Search className="h-4 w-4 opacity-60" />
           <input
             value={q}
@@ -48,7 +48,7 @@ export default function Header() {
         <div className="flex items-center gap-2">
           <Link 
             href="/wishlist" 
-            className="relative flex items-center justify-center h-10 w-10 rounded-2xl border hover:bg-cloud transition-colors focus:outline-none focus:ring-2 focus:ring-espresso focus:ring-offset-2"
+            className="relative flex items-center justify-center h-10 w-10 rounded-2xl border border-cloud hover:bg-cloud transition-colors focus:outline-none focus:ring-2 focus:ring-espresso focus:ring-offset-2"
             title="Wishlist"
           >
             <Heart className="h-5 w-5" />
@@ -60,7 +60,7 @@ export default function Header() {
           </Link>
                     <Link 
             href="/compare" 
-            className="relative flex items-center justify-center h-10 w-10 rounded-2xl border hover:bg-cloud transition-colors focus:outline-none focus:ring-2 focus:ring-espresso focus:ring-offset-2"
+            className="relative flex items-center justify-center h-10 w-10 rounded-2xl border border-cloud hover:bg-cloud transition-colors focus:outline-none focus:ring-2 focus:ring-espresso focus:ring-offset-2"
             title="So sánh sản phẩm"
           >
             <BarChart3 className="h-5 w-5" />

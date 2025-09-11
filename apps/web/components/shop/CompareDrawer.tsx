@@ -11,13 +11,13 @@ export default function CompareDrawer({ products }: { products: any[] }) {
         So sánh ({selected.length})
       </button>
       {open && (
-        <div className="mt-3 w-[90vw] max-w-3xl rounded-2xl border bg-white p-4 shadow-soft">
+        <div className="mt-3 w-[90vw] max-w-3xl rounded-2xl border border-cloud bg-white p-4 shadow-soft">
           <div className="mb-3 text-lg font-semibold">So sánh sản phẩm</div>
           <div className="grid grid-cols-3 gap-3">
             {selected.map((p:any, i:number)=>{
               const a = p.attributes || {}; const img = a.images?.data?.[0]?.attributes?.url;
               return (
-                <div key={i} className="rounded-xl border p-3">
+                <div key={i} className="rounded-2xl border border-cloud p-3">
                   {img && <img src={img} className="aspect-square w-full rounded-lg object-cover" alt="" />}
                   <div className="mt-2 text-sm font-medium">{a.title}</div>
                   <div className="text-xs text-gray-600">Công suất: {a.power_watt || '-' }W</div>

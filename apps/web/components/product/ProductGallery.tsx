@@ -12,7 +12,7 @@ export function ProductGallery({ images = [] as string[] }) {
       {images.length > 1 && (
         <div className="grid grid-cols-5 gap-2">
           {images.map((src, i) => (
-            <button key={i} onClick={() => setIdx(i)} className={`aspect-square overflow-hidden rounded-xl border ${i===idx?'ring-2 ring-black':''}`}>
+            <button key={i} onClick={() => setIdx(i)} className={`aspect-square overflow-hidden rounded-xl border ${i===idx?'ring-2 ring-espresso':''}`}>
               <img src={src} alt="" className="h-full w-full object-cover" />
             </button>
           ))}

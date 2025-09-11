@@ -21,7 +21,7 @@ export default function Filters() {
   }, [debMin, debMax, power]); // eslint-disable-line
 
   return (
-    <aside className="rounded-2xl border p-4">
+    <aside className="rounded-2xl border border-cloud bg-white p-4">
       <div className="font-medium">Bộ lọc</div>
       <div className="mt-3 grid gap-2">
         <label className="text-sm">Giá tối thiểu</label>

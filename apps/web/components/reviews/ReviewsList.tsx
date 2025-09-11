@@ -131,7 +131,7 @@ export default function ReviewsList({
       {/* Reviews List */}
       <div className="space-y-4">
         {reviews.map((review) => (
-          <div key={review.id} className="bg-white rounded-2xl border p-6">
+          <div key={review.id} className="bg-white rounded-2xl border border-cloud p-6">
             <div className="flex items-start justify-between mb-3">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">

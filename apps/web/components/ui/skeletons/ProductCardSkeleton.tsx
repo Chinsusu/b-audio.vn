@@ -1,6 +1,6 @@
 export default function ProductCardSkeleton() {
   return (
-    <div className="group rounded-2xl border p-4 shadow-soft animate-pulse">
+    <div className="group rounded-2xl border border-cloud p-4 shadow-soft animate-pulse">
       {/* Image skeleton */}
       <div className="aspect-square w-full rounded-xl bg-gray-200" />
       
