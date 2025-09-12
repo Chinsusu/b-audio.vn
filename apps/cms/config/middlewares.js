@@ -8,8 +8,18 @@ module.exports = [
         useDefaults: true,
         directives: {
           'connect-src': ["'self'", 'https:'],
-          'img-src': ["'self'", 'data:', 'blob:', 'https://res.cloudinary.com'],
-          'media-src': ["'self'", 'data:', 'blob:'],
+          'img-src': [
+            "'self'", 
+            'data:', 
+            'blob:', 
+            'https://res.cloudinary.com',
+            'https://vn.jbl.com',
+            'https://*.jbl.com',
+            'https://*.harman.com',
+            'https://*.demandware.net',
+            'https:', // Allow all HTTPS sources for image uploads
+          ],
+          'media-src': ["'self'", 'data:', 'blob:', 'https:'],
           upgradeInsecureRequests: null,
         },
       },

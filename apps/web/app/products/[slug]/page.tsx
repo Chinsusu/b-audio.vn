@@ -6,27 +6,27 @@ const DEFAULT_OG = 'https://b-audio.vn/og/product-default.svg';
 
 export async function generateStaticParams() {
   const res = await fetch(`${API_BASE}/api/products?fields[0]=slug&pagination[pageSize]=100`);
-  const json = await res.json().catch(()=>({data:[]}));
-  return (json.data||[]).map((p:any)=>({ slug: p.attributes.slug }));
+  const json = await res.json().catch(() => ({ data: [] }));
+  return (json.data || []).map((p: any) => ({ slug: p.attributes.slug }));
 }
 
-async function getProduct(slug:string) {
-  const res = await fetch(`${API_BASE}/api/products?filters[slug][$eq]=${slug}&populate=images,reviews,faqs,category`, { next: { revalidate: 120 }});
+async function getProduct(slug: string) {
+  const res = await fetch(`${API_BASE}/api/products?filters[slug][$eq]=${slug}&populate=images,reviews,faqs,category`, {
+    next: { revalidate: 120 },
+  });
   const json = await res.json();
   return json.data?.[0];
 }
 
-export async function generateMetadata({ params }: { params: { slug: string }}): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
   const data = await getProduct(params.slug);
   if (!data) return { title: 'Sản phẩm | B-Audio' };
-  const p = data.attributes;
+  const p = data.attributes as any;
   const rel = p.images?.data?.[0]?.attributes?.url as string | undefined;
   const imageUrl = rel ? (/^https?:\/\//.test(rel) ? rel : `${API_BASE}${rel}`) : undefined;
   const title = `${p.title} | B-Audio`;
-  const desc = p.description ? String(p.description).replace(/<[^>]+>/g,'').slice(0, 160) : `${p.title} – sản phẩm của B-Audio`;
+  const desc = p.description ? String(p.description).replace(/<[^>]+>/g, '').slice(0, 160) : `${p.title} – sản phẩm của B-Audio`;
   const canonical = `https://b-audio.vn/products/${params.slug}`;
-  const catName = p.category?.data?.attributes?.name as string | undefined;
-  const catSlug = p.category?.data?.attributes?.slug as string | undefined;
   return {
     title,
     description: desc,
@@ -41,82 +41,39 @@ export async function generateMetadata({ params }: { params: { slug: string }}):
   };
 }
 
-export default async function ProductPage({ params }: { params: { slug: string }}) {
-  try {
+export default async function ProductPage({ params }: { params: { slug: string } }) {
   const data = await getProduct(params.slug);
-  if (!data) return notFound();
-  const p = data.attributes;
+  if (!data) {
+    notFound();
+  }
+  const p = (data as any).attributes;
   const rel = p.images?.data?.[0]?.attributes?.url as string | undefined;
   const imageUrl = rel ? (/^https?:\/\//.test(rel) ? rel : `${API_BASE}${rel}`) : undefined;
-  const canonical = `https://b-audio.vn/products/${params.slug}`;
   const catName = p.category?.data?.attributes?.name as string | undefined;
   const catSlug = p.category?.data?.attributes?.slug as string | undefined;
 
-  const jsonLdProduct = {
-    '@context': 'https://schema.org',
-    '@type': 'Product',
-    name: p.title,
-    image: imageUrl ? [imageUrl] : undefined,
-    description: p.description ? String(p.description).replace(/<[^>]+>/g,'') : undefined,
-    offers: {
-      '@type': 'Offer',
-      priceCurrency: 'VND',
-      price: p.price,
-      availability: 'http://schema.org/InStock',
-      url: canonical,
-    },
-  };
-
-  const breadcrumb = {
-    '@context': 'https://schema.org',
-    '@type': 'BreadcrumbList',
-    itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'Trang chủ', item: 'https://b-audio.vn/' },
-      { '@type': 'ListItem', position: 2, name: 'Sản phẩm', item: 'https://b-audio.vn/products' },
-      { '@type': 'ListItem', position: 3, name: p.title, item: canonical },
-    ],
-  };
-
   return (
     <main className="mx-auto max-w-5xl px-6 py-12">
-      <script type="application/ld+json" suppressHydrationWarning dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdProduct) }} />
-      <script type="application/ld+json" suppressHydrationWarning dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumb) }} />
       <article className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div>{imageUrl && <img src={imageUrl} alt={p.title} className="rounded-xl w-full object-cover" />}</div>
         <div>
           <div className="flex items-center justify-between">
-          <h1 className="text-3xl font-semibold">{p.title}</h1>
-          {catName && catSlug && (<a href="/products?category=${catSlug}" className="inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-xs text-gray-700">{catName}</a>)}
-        </div>
+            <h1 className="text-3xl font-semibold">{p.title}</h1>
+            {catName && catSlug && (
+              <a href={`/products?category=${catSlug}`} className="inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-xs text-gray-700">
+                {catName}
+              </a>
+            )}
+          </div>
           <div className="mt-2 text-xl text-gray-700">{new Intl.NumberFormat('vi-VN').format(p.price)} đ</div>
-          <div className="prose mt-6" dangerouslySetInnerHTML={{__html: p.description}} />
-          <form className="mt-6 grid gap-3">
+          <div className="prose mt-6" dangerouslySetInnerHTML={{ __html: p.description }} />
+          <form className="mt-6 grid gap-3" action="/contact" method="get">
             <input className="rounded border px-3 py-2" name="name" placeholder="Tên của bạn" />
             <input className="rounded border px-3 py-2" name="phone" placeholder="Số điện thoại" />
-            <button className="rounded bg-black px-5 py-3 text-white" type="button">Đặt hàng nhanh</button>
+            <button className="rounded bg-black px-5 py-3 text-white" type="submit">Đặt hàng nhanh</button>
           </form>
         </div>
       </article>
     </main>
   );
-  } catch (err) {
-    const msg = (err as Error)?.message || 'Unknown error';
-    console.error(`[product-detail] ${params.slug} failed:`, msg);
-    return (
-      <main className="mx-auto max-w-3xl px-4 py-16">
-        <div className="rounded-2xl border bg-white p-8 shadow">
-          <h1 className="text-2xl font-bold">Không tải được sản phẩm</h1>
-          <p className="mt-2 text-gray-600">Hệ thống đang gặp trục trặc tạm thời. Vui lòng thử lại sau ít phút.</p>
-          <div className="mt-6 flex flex-wrap gap-3">
-            <a href="/products" className="rounded-lg bg-black px-4 py-2 text-white">Xem tất cả sản phẩm</a>
-            <button onClick={() => window.location.reload()} className="rounded-lg border px-4 py-2">Tải lại trang</button>
-          </div>
-          <details className="mt-4 text-xs text-gray-400">
-            <summary>Chi tiết kỹ thuật</summary>
-            <pre className="mt-2 whitespace-pre-wrap break-words">{msg}</pre>
-          </details>
-        </div>
-      </main>
-    );
-  }
 }

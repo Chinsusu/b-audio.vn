@@ -1,4 +1,6 @@
 import Link from 'next/link';
+import { mediaUrl } from '../../utils/mediaUrl';
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE || "https://api.b-audio.vn";
 import type { Metadata } from 'next';
 import SearchFilters from '../../components/search/SearchFilters';
 import { ProductCard } from '../../components/product/ProductCard';
@@ -15,7 +17,6 @@ export const metadata: Metadata = {
   twitter: { card: 'summary_large_image', images: ['https://b-audio.vn/og/products-cover.svg'] },
 };
 
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE || 'https://api.b-audio.vn';
 
 type SearchParams = { 
   category?: string; 
@@ -144,11 +145,11 @@ export default async function ProductsPage({ searchParams }: { searchParams?: Se
     const nextDisabled = curPage >= pageCount;
 
     return (
-    <main className="mx-auto max-w-6xl px-4 py-8">
+    <main className="mx-auto max-w-6xl px-6 py-12">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-heading-lg font-bold">Sản phẩm B-Audio</h1>
-        <p className="mt-2 text-gray-600">
+        <h1 className="font-heading text-h1 text-textWhite font-bold">Sản phẩm B-Audio</h1>
+        <p className="mt-2 font-body text-body text-textGrey">
           Khám phá {total} sản phẩm loa chất lượng cao với công nghệ tiên tiến
         </p>
       </div>
@@ -158,11 +159,11 @@ export default async function ProductsPage({ searchParams }: { searchParams?: Se
         <div className="mb-6 flex flex-wrap gap-2">
           <Link 
             href="/products" 
-            className={`rounded-full px-4 py-2 text-sm transition-colors ${
+            className={`rounded-full px-4 py-2 font-microcopy text-microcopy tracking-widest uppercase transition-colors ${
               !searchParams?.category 
-                ? 'bg-espresso text-ivory hover:bg-espresso/90' 
-                : 'bg-gray-100 text-gray-700 hover:bg-cloud'
-            } focus:outline-none focus:ring-2 focus:ring-espresso focus:ring-offset-2`}
+                ? 'bg-goldAccent text-darkBg shadow-glowGold hover:shadow-lg' 
+                : 'bg-darkGrey/40 text-textGrey border border-darkGrey hover:bg-darkGrey/60 hover:text-textWhite'
+            } focus:outline-none focus:ring-2 focus:ring-goldAccent focus:ring-offset-2 focus:ring-offset-darkBg`}
           >
             Tất cả
           </Link>
@@ -172,11 +173,11 @@ export default async function ProductsPage({ searchParams }: { searchParams?: Se
               <Link
                 key={cat.id}
                 href={`/products?category=${cat.attributes.slug}`}
-                className={`rounded-full px-4 py-2 text-sm transition-colors ${
+                className={`rounded-full px-4 py-2 font-microcopy text-microcopy tracking-widest uppercase transition-colors ${
                   isActive 
-                    ? 'bg-espresso text-ivory hover:bg-espresso/90' 
-                    : 'bg-gray-100 text-gray-700 hover:bg-cloud'
-                } focus:outline-none focus:ring-2 focus:ring-espresso focus:ring-offset-2`}
+                    ? 'bg-goldAccent text-darkBg shadow-glowGold hover:shadow-lg' 
+                    : 'bg-darkGrey/40 text-textGrey border border-darkGrey hover:bg-darkGrey/60 hover:text-textWhite'
+                } focus:outline-none focus:ring-2 focus:ring-goldAccent focus:ring-offset-2 focus:ring-offset-darkBg`}
               >
                 {cat.attributes.name}
               </Link>
@@ -195,12 +196,12 @@ export default async function ProductsPage({ searchParams }: { searchParams?: Se
         <div className="lg:col-span-3">
           {/* Results Summary */}
           <div className="mb-6 flex items-center justify-between">
-            <p className="text-sm text-gray-600">
+            <p className="font-body text-body text-textGrey">
               {searchParams?.search && `Kết quả cho "${searchParams.search}": `}
               {total} sản phẩm
             </p>
             {searchParams?.search || searchParams?.category ? (
-              <Link href="/products" className="text-sm text-blue-600 hover:underline">
+              <Link href="/products" className="font-body text-body text-neonTurquoise hover:underline focus:outline-none focus:ring-2 focus:ring-neonTurquoise focus:ring-offset-2 focus:ring-offset-darkBg rounded">
                 Xóa bộ lọc
               </Link>
             ) : null}
@@ -208,12 +209,12 @@ export default async function ProductsPage({ searchParams }: { searchParams?: Se
 
           {/* Products */}
           {products.length === 0 ? (
-            <div className="py-20 text-center text-gray-600">
-              <div className="text-lg font-medium mb-2">Không tìm thấy sản phẩm</div>
-              <p className="mb-4">Thử điều chỉnh bộ lọc hoặc tìm kiếm với từ khóa khác</p>
+            <div className="py-20 text-center text-textWhite">
+              <div className="font-heading text-h3 text-textWhite font-semibold mb-2">Không tìm thấy sản phẩm</div>
+              <p className="font-body text-body text-textGrey mb-4">Thử điều chỉnh bộ lọc hoặc tìm kiếm với từ khóa khác</p>
               <Link 
                 href="/products" 
-                className="inline-block rounded-2xl bg-espresso px-6 py-3 text-ivory hover:bg-espresso/90 focus:outline-none focus:ring-2 focus:ring-espresso focus:ring-offset-2"
+                className="inline-block rounded-2xl bg-goldAccent px-6 py-3 text-darkBg shadow-glowGold hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-goldAccent focus:ring-offset-2 focus:ring-offset-darkBg transition-shadow"
               >
                 Xem tất cả sản phẩm
               </Link>
@@ -229,28 +230,28 @@ export default async function ProductsPage({ searchParams }: { searchParams?: Se
           {/* Pagination */}
           {pageCount > 1 && (
             <nav className="mt-12 flex items-center justify-between">
-              <div className="text-sm text-gray-600">
+              <div className="font-body text-body text-textGrey">
                 Trang {curPage} / {pageCount} ({total} sản phẩm)
               </div>
               
               <div className="flex gap-2">
                 {prevDisabled ? (
-                  <span className="rounded-2xl border px-4 py-2 text-gray-400">← Trước</span>
+                  <span className="rounded-2xl border border-darkGrey px-4 py-2 text-textGrey/40 cursor-not-allowed">← Trước</span>
                 ) : (
                   <Link
                     href={`/products?${nextQuery(searchParams || {}, { page: String(curPage - 1) })}`}
-                    className="rounded-2xl border px-4 py-2 hover:bg-cloud focus:outline-none focus:ring-2 focus:ring-espresso focus:ring-offset-2"
+                    className="rounded-2xl border border-darkGrey px-4 py-2 text-textWhite hover:bg-darkGrey/60 hover:border-goldAccent/50 focus:outline-none focus:ring-2 focus:ring-goldAccent focus:ring-offset-2 focus:ring-offset-darkBg transition-colors"
                   >
                     ← Trước
                   </Link>
                 )}
                 
                 {nextDisabled ? (
-                  <span className="rounded-2xl border px-4 py-2 text-gray-400">Sau →</span>
+                  <span className="rounded-2xl border border-darkGrey px-4 py-2 text-textGrey/40 cursor-not-allowed">Sau →</span>
                 ) : (
                   <Link
                     href={`/products?${nextQuery(searchParams || {}, { page: String(curPage + 1) })}`}
-                    className="rounded-2xl border px-4 py-2 hover:bg-cloud focus:outline-none focus:ring-2 focus:ring-espresso focus:ring-offset-2"
+                    className="rounded-2xl border border-darkGrey px-4 py-2 text-textWhite hover:bg-darkGrey/60 hover:border-goldAccent/50 focus:outline-none focus:ring-2 focus:ring-goldAccent focus:ring-offset-2 focus:ring-offset-darkBg transition-colors"
                   >
                     Sau →
                   </Link>
@@ -266,17 +267,17 @@ export default async function ProductsPage({ searchParams }: { searchParams?: Se
     const msg = (err as Error)?.message || 'Unknown error';
     console.error('[products] rendering failed:', msg);
     return (
-      <main className="mx-auto max-w-3xl px-4 py-16">
-        <div className="rounded-2xl border bg-white p-8 shadow">
-          <h1 className="text-heading-md font-bold">Không tải được danh sách sản phẩm</h1>
-          <p className="mt-2 text-gray-600">Hệ thống đang gặp trục trặc tạm thời. Vui lòng thử lại sau ít phút.</p>
+      <main className="mx-auto max-w-3xl px-6 py-16">
+        <div className="rounded-2xl border border-darkGrey bg-darkGrey/40 p-8 backdrop-blur-sm">
+          <h1 className="font-heading text-h2 text-textWhite font-bold">Không tải được danh sách sản phẩm</h1>
+          <p className="mt-2 font-body text-body text-textGrey">Hệ thống đang gặp trục trặc tạm thời. Vui lòng thử lại sau ít phút.</p>
           <div className="mt-6 flex flex-wrap gap-3">
-            <a href="/" className="rounded-2xl bg-espresso px-4 py-2 text-ivory hover:bg-espresso/90 focus:outline-none focus:ring-2 focus:ring-espresso focus:ring-offset-2">Về trang chủ</a>
-            <a href="/products" className="rounded-2xl border px-4 py-2 hover:bg-cloud focus:outline-none focus:ring-2 focus:ring-espresso focus:ring-offset-2">Tải lại trang</a>
+            <a href="/" className="rounded-2xl bg-goldAccent px-4 py-2 text-darkBg shadow-glowGold hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-goldAccent focus:ring-offset-2 focus:ring-offset-darkBg transition-shadow">Về trang chủ</a>
+            <a href="/products" className="rounded-2xl border border-darkGrey px-4 py-2 text-textWhite hover:bg-darkGrey/60 focus:outline-none focus:ring-2 focus:ring-neonTurquoise focus:ring-offset-2 focus:ring-offset-darkBg transition-colors">Tải lại trang</a>
           </div>
-          <details className="mt-4 text-xs text-gray-400">
+          <details className="mt-4 text-xs text-textGrey/60">
             <summary>Chi tiết kỹ thuật</summary>
-            <pre className="mt-2 whitespace-pre-wrap break-words">{msg}</pre>
+            <pre className="mt-2 whitespace-pre-wrap break-words font-mono">{msg}</pre>
           </details>
         </div>
       </main>

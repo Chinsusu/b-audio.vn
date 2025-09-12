@@ -1,4 +1,6 @@
 import Link from 'next/link';
+import { mediaUrl } from '../../utils/mediaUrl';
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE || "https://api.b-audio.vn";
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -13,7 +15,6 @@ export const metadata: Metadata = {
   twitter: { card: 'summary_large_image', images: ['https://b-audio.vn/og/products-cover.svg'] },
 };
 
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE || 'https://api.b-audio.vn';
 
 const formatVND = (v: any) => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND', maximumFractionDigits: 0 }).format(Number(v || 0));
 

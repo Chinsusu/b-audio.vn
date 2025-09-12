@@ -1,0 +1,87 @@
+import Link from 'next/link';
+import Image from 'next/image';
+import AddToCartButton from '../cart/AddToCartButton';
+import WishlistButton from "../wishlist/WishlistButton";
+import CompareButton from "../comparison/CompareButton";
+
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE || 'https://api.b-audio.vn';
+
+function absUrl(u?: string): string | undefined {
+  if (!u) return undefined;
+  if (/^https?:\/\//.test(u)) return u;
+  return `${API_BASE}${u}`;
+}
+
+export function ProductCard({ p }: { p: any }) {
+  const attrs = p?.attributes || {};
+  const rel = attrs.images?.data?.[0]?.attributes?.url;
+  const imageUrl = absUrl(rel);
+  
+  return (
+    <div className="group rounded-2xl border border-cloud bg-white p-4 shadow-soft hover:shadow-md transition focus-within:outline-none focus-within:ring-2 focus-within:ring-espresso focus-within:ring-offset-2">
+      <Link href={`/products/${attrs.slug}`}>
+        {imageUrl ? (
+          <div className="relative aspect-square w-full rounded-xl overflow-hidden">
+            <Image
+              src={imageUrl}
+              alt={attrs.title}
+              fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              className="object-cover"
+            />
+          </div>
+        ) : (
+          <div className="aspect-square w-full rounded-xl bg-gray-200 flex items-center justify-center">
+            <span className="text-4xl">🔊</span>
+          </div>
+        )}
+        <div className="mt-3 font-medium">{attrs.title}</div>
+        <div className="text-sm text-gray-600">{new Intl.NumberFormat('vi-VN').format(attrs.price)} đ</div>
+      </Link>
+      <div className="mt-3 flex items-center gap-2">
+        <AddToCartButton 
+          product={{ 
+            id: p.id, 
+            slug: attrs.slug, 
+            attributes: { 
+              title: attrs.title, 
+              price_vnd: attrs.price, 
+              images: attrs.images 
+            } 
+          }} 
+          className="flex-1 text-sm"
+          variant="secondary"
+        />
+        <WishlistButton
+          product={{ 
+            id: p.id, 
+            slug: attrs.slug, 
+            attributes: { 
+              title: attrs.title, 
+              price_vnd: attrs.price, 
+              images: attrs.images 
+            } 
+          }}
+          size="md"
+          variant="icon"
+        />        
+        <CompareButton
+          product={{ 
+            id: p.id, 
+            slug: attrs.slug, 
+            attributes: { 
+              title: attrs.title, 
+              price_vnd: attrs.price, 
+              power_watt: attrs.power_watt,
+              battery_hours: attrs.battery_hours,
+              connectivity: attrs.connectivity,
+              images: attrs.images 
+            } 
+          }}
+          size="md"
+          variant="icon"
+        />
+      </div>
+    </div>
+  );
+}

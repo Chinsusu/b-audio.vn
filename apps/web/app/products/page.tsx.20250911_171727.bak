@@ -1,0 +1,285 @@
+import Link from 'next/link';
+import type { Metadata } from 'next';
+import SearchFilters from '../../components/search/SearchFilters';
+import { ProductCard } from '../../components/product/ProductCard';
+
+export const metadata: Metadata = {
+  title: 'Sản phẩm | B-Audio Vietnam',
+  description: 'Danh sách sản phẩm loa B‑Audio: portable, karaoke với hình ảnh, giá cập nhật và bộ lọc thông minh.',
+  alternates: { canonical: 'https://b-audio.vn/products' },
+  openGraph: {
+    title: 'Sản phẩm | B-Audio Vietnam',
+    url: 'https://b-audio.vn/products',
+    images: [{ url: 'https://b-audio.vn/og/products-cover.svg', width: 1200, height: 630, alt: 'B-Audio Products' }],
+  },
+  twitter: { card: 'summary_large_image', images: ['https://b-audio.vn/og/products-cover.svg'] },
+};
+
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE || 'https://api.b-audio.vn';
+
+type SearchParams = { 
+  category?: string; 
+  search?: string;
+  min?: string; 
+  max?: string; 
+  minPrice?: string;
+  maxPrice?: string;
+  minPower?: string;
+  maxPower?: string;
+  minBattery?: string;
+  maxBattery?: string;
+  sort?: string; 
+  page?: string; 
+};
+
+function buildFilters(searchParams: SearchParams) {
+  const params = new URLSearchParams();
+  
+  // Category filter - use proper nested format
+  if (searchParams.category) {
+    params.set('filters[category][slug][$eq]', searchParams.category);
+  }
+  
+  // Price filters
+  const minPrice = searchParams.minPrice || searchParams.min;
+  const maxPrice = searchParams.maxPrice || searchParams.max;
+  if (minPrice) params.set('filters[price][$gte]', minPrice);
+  if (maxPrice) params.set('filters[price][$lte]', maxPrice);
+  
+  // Power filters
+  if (searchParams.minPower) params.set('filters[power_watt][$gte]', searchParams.minPower);
+  if (searchParams.maxPower) params.set('filters[power_watt][$lte]', searchParams.maxPower);
+  
+  // Battery filters
+  if (searchParams.minBattery) params.set('filters[battery_hours][$gte]', searchParams.minBattery);
+  if (searchParams.maxBattery) params.set('filters[battery_hours][$lte]', searchParams.maxBattery);
+  
+  // Search filter
+  if (searchParams.search) {
+    params.set('filters[title][$containsi]', searchParams.search);
+  }
+  
+  return params;
+}
+
+function mapSort(sort?: string): string {
+  switch (sort) {
+    case 'price-asc': return 'price:asc';
+    case 'price-desc': return 'price:desc';
+    case 'power-asc': return 'power_watt:asc';
+    case 'power-desc': return 'power_watt:desc';
+    case 'newest': return 'publishedAt:desc';
+    default: return 'publishedAt:desc';
+  }
+}
+
+async function getCategories() {
+  try {
+    const res = await fetch(`${API_BASE}/api/categories?fields[0]=name&fields[1]=slug&sort=name:asc&pagination[pageSize]=100`, { 
+      next: { revalidate: 300 } 
+    });
+    if (!res.ok) return [];
+    const data = await res.json();
+    return data.data || [];
+  } catch {
+    return [];
+  }
+}
+
+async function getProducts(searchParams: SearchParams) {
+  const page = parseInt(searchParams.page || '1');
+  const pageSize = 12;
+  const sort = mapSort(searchParams.sort);
+  const filterParams = buildFilters(searchParams);
+  
+  const params = new URLSearchParams();
+  params.set('pagination[page]', page.toString());
+  params.set('pagination[pageSize]', pageSize.toString());
+  params.set('populate', 'images,category');
+  params.set('sort', sort);
+  
+  // Merge filter params
+  filterParams.forEach((value, key) => {
+    params.set(key, value);
+  });
+  
+  try {
+    const res = await fetch(`${API_BASE}/api/products?${params.toString()}`, { 
+      next: { revalidate: 60 } 
+    });
+    if (!res.ok) return { products: [], pagination: { page: 1, pageCount: 1, pageSize, total: 0 } };
+    
+    const data = await res.json();
+    return {
+      products: data.data || [],
+      pagination: data.meta?.pagination || { page: 1, pageCount: 1, pageSize, total: 0 }
+    };
+  } catch {
+    return { products: [], pagination: { page: 1, pageCount: 1, pageSize, total: 0 } };
+  }
+}
+
+function nextQuery(current: SearchParams, updates: Partial<SearchParams>): string {
+  const merged = { ...current, ...updates };
+  const params = new URLSearchParams();
+  
+  Object.entries(merged).forEach(([key, value]) => {
+    if (value && value !== 'undefined') {
+      params.set(key, value);
+    }
+  });
+  
+  return params.toString();
+}
+
+export default async function ProductsPage({ searchParams }: { searchParams?: SearchParams }) {
+  try {
+    const [categories, { products, pagination }] = await Promise.all([
+      getCategories(),
+      getProducts(searchParams || {})
+    ]);
+
+    const { page: curPage, pageCount, total } = pagination;
+    const prevDisabled = curPage <= 1;
+    const nextDisabled = curPage >= pageCount;
+
+    return (
+    <main className="mx-auto max-w-6xl px-6 py-12">
+      {/* Header */}
+      <div className="mb-8">
+        <h1 className="font-heading text-h1 text-textWhite font-bold">Sản phẩm B-Audio</h1>
+        <p className="mt-2 font-body text-body text-textGrey">
+          Khám phá {total} sản phẩm loa chất lượng cao với công nghệ tiên tiến
+        </p>
+      </div>
+      
+      {/* Categories */}
+      {categories.length > 0 && (
+        <div className="mb-6 flex flex-wrap gap-2">
+          <Link 
+            href="/products" 
+            className={`rounded-full px-4 py-2 font-microcopy text-microcopy tracking-widest uppercase transition-colors ${
+              !searchParams?.category 
+                ? 'bg-goldAccent text-darkBg shadow-glowGold hover:shadow-lg' 
+                : 'bg-darkGrey/40 text-textGrey border border-darkGrey hover:bg-darkGrey/60 hover:text-textWhite'
+            } focus:outline-none focus:ring-2 focus:ring-goldAccent focus:ring-offset-2 focus:ring-offset-darkBg`}
+          >
+            Tất cả
+          </Link>
+          {categories.map((cat: any) => {
+            const isActive = searchParams?.category === cat.attributes.slug;
+            return (
+              <Link
+                key={cat.id}
+                href={`/products?category=${cat.attributes.slug}`}
+                className={`rounded-full px-4 py-2 font-microcopy text-microcopy tracking-widest uppercase transition-colors ${
+                  isActive 
+                    ? 'bg-goldAccent text-darkBg shadow-glowGold hover:shadow-lg' 
+                    : 'bg-darkGrey/40 text-textGrey border border-darkGrey hover:bg-darkGrey/60 hover:text-textWhite'
+                } focus:outline-none focus:ring-2 focus:ring-goldAccent focus:ring-offset-2 focus:ring-offset-darkBg`}
+              >
+                {cat.attributes.name}
+              </Link>
+            );
+          })}
+        </div>
+      )}
+
+      <div className="grid lg:grid-cols-4 gap-6">
+        {/* Filters Sidebar */}
+        <div className="lg:col-span-1">
+          <SearchFilters />
+        </div>
+
+        {/* Products Grid */}
+        <div className="lg:col-span-3">
+          {/* Results Summary */}
+          <div className="mb-6 flex items-center justify-between">
+            <p className="font-body text-body text-textGrey">
+              {searchParams?.search && `Kết quả cho "${searchParams.search}": `}
+              {total} sản phẩm
+            </p>
+            {searchParams?.search || searchParams?.category ? (
+              <Link href="/products" className="font-body text-body text-neonTurquoise hover:underline focus:outline-none focus:ring-2 focus:ring-neonTurquoise focus:ring-offset-2 focus:ring-offset-darkBg rounded">
+                Xóa bộ lọc
+              </Link>
+            ) : null}
+          </div>
+
+          {/* Products */}
+          {products.length === 0 ? (
+            <div className="py-20 text-center text-textWhite">
+              <div className="font-heading text-h3 text-textWhite font-semibold mb-2">Không tìm thấy sản phẩm</div>
+              <p className="font-body text-body text-textGrey mb-4">Thử điều chỉnh bộ lọc hoặc tìm kiếm với từ khóa khác</p>
+              <Link 
+                href="/products" 
+                className="inline-block rounded-2xl bg-goldAccent px-6 py-3 text-darkBg shadow-glowGold hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-goldAccent focus:ring-offset-2 focus:ring-offset-darkBg transition-shadow"
+              >
+                Xem tất cả sản phẩm
+              </Link>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+              {products.map((product: any) => (
+                <ProductCard key={product.id} p={product} />
+              ))}
+            </div>
+          )}
+
+          {/* Pagination */}
+          {pageCount > 1 && (
+            <nav className="mt-12 flex items-center justify-between">
+              <div className="font-body text-body text-textGrey">
+                Trang {curPage} / {pageCount} ({total} sản phẩm)
+              </div>
+              
+              <div className="flex gap-2">
+                {prevDisabled ? (
+                  <span className="rounded-2xl border border-darkGrey px-4 py-2 text-textGrey/40 cursor-not-allowed">← Trước</span>
+                ) : (
+                  <Link
+                    href={`/products?${nextQuery(searchParams || {}, { page: String(curPage - 1) })}`}
+                    className="rounded-2xl border border-darkGrey px-4 py-2 text-textWhite hover:bg-darkGrey/60 hover:border-goldAccent/50 focus:outline-none focus:ring-2 focus:ring-goldAccent focus:ring-offset-2 focus:ring-offset-darkBg transition-colors"
+                  >
+                    ← Trước
+                  </Link>
+                )}
+                
+                {nextDisabled ? (
+                  <span className="rounded-2xl border border-darkGrey px-4 py-2 text-textGrey/40 cursor-not-allowed">Sau →</span>
+                ) : (
+                  <Link
+                    href={`/products?${nextQuery(searchParams || {}, { page: String(curPage + 1) })}`}
+                    className="rounded-2xl border border-darkGrey px-4 py-2 text-textWhite hover:bg-darkGrey/60 hover:border-goldAccent/50 focus:outline-none focus:ring-2 focus:ring-goldAccent focus:ring-offset-2 focus:ring-offset-darkBg transition-colors"
+                  >
+                    Sau →
+                  </Link>
+                )}
+              </div>
+            </nav>
+          )}
+        </div>
+      </div>
+    </main>
+    );
+  } catch (err) {
+    const msg = (err as Error)?.message || 'Unknown error';
+    console.error('[products] rendering failed:', msg);
+    return (
+      <main className="mx-auto max-w-3xl px-6 py-16">
+        <div className="rounded-2xl border border-darkGrey bg-darkGrey/40 p-8 backdrop-blur-sm">
+          <h1 className="font-heading text-h2 text-textWhite font-bold">Không tải được danh sách sản phẩm</h1>
+          <p className="mt-2 font-body text-body text-textGrey">Hệ thống đang gặp trục trặc tạm thời. Vui lòng thử lại sau ít phút.</p>
+          <div className="mt-6 flex flex-wrap gap-3">
+            <a href="/" className="rounded-2xl bg-goldAccent px-4 py-2 text-darkBg shadow-glowGold hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-goldAccent focus:ring-offset-2 focus:ring-offset-darkBg transition-shadow">Về trang chủ</a>
+            <a href="/products" className="rounded-2xl border border-darkGrey px-4 py-2 text-textWhite hover:bg-darkGrey/60 focus:outline-none focus:ring-2 focus:ring-neonTurquoise focus:ring-offset-2 focus:ring-offset-darkBg transition-colors">Tải lại trang</a>
+          </div>
+          <details className="mt-4 text-xs text-textGrey/60">
+            <summary>Chi tiết kỹ thuật</summary>
+            <pre className="mt-2 whitespace-pre-wrap break-words font-mono">{msg}</pre>
+          </details>
+        </div>
+      </main>
+    );
+  }
+}
