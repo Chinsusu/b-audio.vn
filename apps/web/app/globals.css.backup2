@@ -11,9 +11,6 @@
   }
   
   body {
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    text-rendering: optimizeLegibility;
     font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
     font-size: 16px;
     line-height: 1.6;
@@ -71,20 +68,20 @@
 @layer components {
   /* Industrial Button Components */
   .btn-primary {
-    @apply bg-primary text-secondary-700 px-8 py-4 rounded-2xl font-heading font-semibold text-body-sm uppercase tracking-wide whitespace-nowrap;
+    @apply bg-primary text-secondary-700 px-6 py-3 rounded-2xl font-heading font-semibold text-label uppercase tracking-wide;
     @apply shadow-industrial hover:shadow-gold-glow-intense transition-all duration-300;
     @apply hover:-translate-y-1 hover:scale-105 active:translate-y-0 active:scale-100;
     background: linear-gradient(135deg, #C8A15A 0%, #B8954E 100%);
   }
   
   .btn-secondary {
-    @apply bg-secondary-700 text-neutral-200 border border-primary px-8 py-4 rounded-2xl font-heading font-semibold text-body-sm uppercase tracking-wide whitespace-nowrap;
+    @apply bg-secondary-700 text-neutral-200 border border-primary px-6 py-3 rounded-2xl font-heading font-semibold text-label uppercase tracking-wide;
     @apply shadow-industrial hover:shadow-gold-glow transition-all duration-300;
     @apply hover:-translate-y-1 hover:bg-secondary-600 hover:border-primary-400;
   }
   
   .btn-ghost {
-    @apply bg-transparent text-primary border-2 border-primary px-8 py-4 rounded-2xl font-heading font-semibold text-body-sm uppercase tracking-wide whitespace-nowrap;
+    @apply bg-transparent text-primary border-2 border-primary px-6 py-3 rounded-2xl font-heading font-semibold text-label uppercase tracking-wide;
     @apply hover:bg-primary hover:text-secondary-700 transition-all duration-300;
     @apply hover:-translate-y-1 hover:shadow-gold-glow;
   }
@@ -297,68 +294,4 @@
   .focus-industrial:focus {
     @apply outline-none ring-2 ring-primary ring-offset-2 ring-offset-secondary-800;
   }
-}
-
-/* Additional fixes for text rendering and buttons */
-.btn-primary,
-.btn-secondary,
-.btn-ghost {
-  font-size: 14px !important;
-  line-height: 1.4 !important;
-  min-height: 48px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-
-/* Fix mobile menu positioning */
-.mobile-menu {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 60;
-  background: rgba(15, 15, 15, 0.98);
-  backdrop-filter: blur(10px);
-  transform: translateX(100%);
-  transition: transform 0.3s ease-in-out;
-}
-
-.mobile-menu.open {
-  transform: translateX(0);
-}
-
-/* Improve text readability */
-.font-heading {
-  font-family: 'Orbitron', 'Bebas Neue', 'Arial Black', sans-serif !important;
-  font-weight: 600;
-  letter-spacing: -0.01em;
-}
-
-.logo {
-  font-family: 'Orbitron', sans-serif !important;
-  font-weight: 700;
-  color: #C8A15A;
-  text-transform: lowercase;
-  letter-spacing: -0.05em;
-  text-shadow: 0 0 10px rgba(200, 161, 90, 0.3);
-}
-
-/* Fix card text overflow */
-.card-product h3 {
-  line-height: 1.3 !important;
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-}
-
-/* Ensure text is always readable */
-* {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }

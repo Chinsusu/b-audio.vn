@@ -1,9 +1,7 @@
 import './globals.css'
 import type { ReactNode } from 'react'
-import Header from '@/components/ui/Header'
-import Footer from '@/components/ui/Footer'
-import ToastContainer from '@/components/ui/Toast'
-import ScrollToTop from "@/components/ui/ScrollToTop";
+import Header from '../components/ui/Header'
+import Footer from '../components/ui/Footer'
 
 export const metadata = {
   metadataBase: new URL('https://b-audio.vn'),
@@ -20,6 +18,22 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="vi">
       <head>
+        {/* Preload Critical Fonts */}
+        <link
+          rel="preload"
+          href="https://fonts.gstatic.com/s/orbitron/v31/yMJMMIlzdpvBhQQL_SC3X9yhF25-T1nyGy6BoWgz.woff2"
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="preload"
+          href="https://fonts.gstatic.com/s/inter/v18/UcC73FwrK3iLTeHuS_fvQtMwCp50KnMa1ZL7.woff2"
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
+        
         {/* Google Analytics */}
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-FLX0YSYM3D"></script>
         <script
@@ -33,13 +47,10 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           }}
         />
       </head>
-      <body className="min-h-screen bg-darkBg text-textWhite font-body">
+      <body className="min-h-screen bg-secondary-900 text-neutral-200 font-body antialiased">
         <Header />
         {children}
         <Footer />
-        <ScrollToTop />
-        {/* Global toast container */}
-        <ToastContainer />
       </body>
     </html>
   )
