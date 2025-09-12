@@ -22,23 +22,23 @@ export const metadata: Metadata = {
 
 export default function CartPage() {
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-4xl mx-auto px-4 py-8">
+    <div className="min-h-screen bg-darkBg">
+      <div className="max-w-6xl mx-auto px-6 py-12">
         {/* Breadcrumb */}
         <nav className="mb-8">
           <div className="flex items-center space-x-2 text-sm">
-            <Link href="/" className="text-gray-600 hover:text-black">
+            <Link href="/" className="text-textGrey hover:text-textWhite transition-colors">
               Trang chủ
             </Link>
-            <span className="text-gray-400">/</span>
-            <span className="text-black font-medium">Giỏ hàng</span>
+            <span className="text-darkGrey">/</span>
+            <span className="text-goldAccent font-medium">Giỏ hàng</span>
           </div>
         </nav>
 
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Giỏ hàng của bạn</h1>
-          <p className="mt-2 text-gray-600">
+        <div className="mb-12">
+          <h1 className="font-heading text-hero text-textWhite font-bold">GIỎ HÀNG CỦA BẠN</h1>
+          <p className="mt-4 text-textGrey text-xl">
             Kiểm tra lại sản phẩm trước khi thanh toán
           </p>
         </div>
