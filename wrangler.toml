@@ -1,0 +1,58 @@
+name = "b-audio"
+main = "src/worker.ts"
+compatibility_date = "2025-01-10"
+
+[vars]
+APP_NAME = "b-audio"
+
+[[kv_namespaces]]
+binding = "KV_META"
+id = "205471d492084c73ae47663f0d83d199"
+
+[[r2_buckets]]
+binding = "R2_AUDIO"
+bucket_name = "b-audio"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "b-audio"
+database_id = "addf5626-ef8e-491a-81b1-1c05790ca4d3"
+
+[env.staging]
+name = "b-audio-stg"
+
+[env.staging.vars]
+APP_NAME = "b-audio-staging"
+
+[[env.staging.kv_namespaces]]
+binding = "KV_META"
+id = "205471d492084c73ae47663f0d83d199"
+
+[[env.staging.r2_buckets]]
+binding = "R2_AUDIO"
+bucket_name = "b-audio"
+
+[[env.staging.d1_databases]]
+binding = "DB"
+database_name = "b-audio"
+database_id = "addf5626-ef8e-491a-81b1-1c05790ca4d3"
+
+[env.prod]
+name = "b-audio-prod"
+
+[env.prod.vars]
+APP_NAME = "b-audio-prod"
+
+[[env.prod.kv_namespaces]]
+binding = "KV_META"
+id = "205471d492084c73ae47663f0d83d199"
+
+[[env.prod.r2_buckets]]
+binding = "R2_AUDIO"
+bucket_name = "b-audio"
+
+[[env.prod.d1_databases]]
+binding = "DB"
+database_name = "b-audio"
+database_id = "addf5626-ef8e-491a-81b1-1c05790ca4d3"
+
