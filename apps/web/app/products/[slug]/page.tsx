@@ -110,7 +110,7 @@ export default async function ProductPage({
             {catName && catSlug && (
               <a
                 href={`/products?category=${catSlug}`}
-                className="inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-xs text-gray-700"
+                className="inline-flex items-center gap-1 rounded-full border border-goldAccent/60 bg-secondary-800/60 px-3 py-1 font-heading text-microcopy uppercase tracking-widest text-neutral-100 shadow-gold-glow hover:border-goldAccent hover:bg-secondary-800/80 transition-colors"
               >
                 {catName}
               </a>
