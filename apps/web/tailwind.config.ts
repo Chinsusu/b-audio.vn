@@ -123,9 +123,22 @@ const config: Config = {
         textGrey: "#999999",
       },
       fontFamily: {
-        // Brand Typography System
-        heading: ["Orbitron", "Bebas Neue", "Eurostile", "sans-serif"],
-        body: ["Inter", "Helvetica Neue", "Arial", "sans-serif"],
+        // Brand Typography System mapped to CSS variables provided by next/font
+        heading: [
+          'var(--font-heading)',
+          'Orbitron',
+          'Inter',
+          'Helvetica Neue',
+          'Arial',
+          'sans-serif',
+        ],
+        body: [
+          'var(--font-body)',
+          'Inter',
+          'Helvetica Neue',
+          'Arial',
+          'sans-serif',
+        ],
         mono: ["JetBrains Mono", "Consolas", "Monaco", "monospace"],
       },
       fontSize: {

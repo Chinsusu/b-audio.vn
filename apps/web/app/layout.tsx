@@ -1,5 +1,6 @@
 import "./globals.css";
 
+import { Chakra_Petch, Inter as InterFont } from "next/font/google";
 import Script from "next/script";
 import type { ReactNode } from "react";
 
@@ -27,9 +28,23 @@ export const metadata = {
   },
 };
 
+const fontHeading = Chakra_Petch({
+  subsets: ["latin", "latin-ext"],
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
+  variable: "--font-heading",
+});
+
+const fontBody = InterFont({
+  subsets: ["latin", "latin-ext"],
+  weight: ["300", "400", "500", "600", "700"],
+  display: "swap",
+  variable: "--font-body",
+});
+
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="vi">
+    <html lang="vi" className={`${fontHeading.variable} ${fontBody.variable}`}>
       <head>
         {/* Preconnect for Google Fonts */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -38,21 +53,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           href="https://fonts.gstatic.com"
           crossOrigin="anonymous"
         />
-        {/* Preload Critical Fonts */}
-        <link
-          rel="preload"
-          href="https://fonts.gstatic.com/s/orbitron/v31/yMJMMIlzdpvBhQQL_SC3X9yhF25-T1nyGy6BoWgz.woff2"
-          as="font"
-          type="font/woff2"
-          crossOrigin="anonymous"
-        />
-        <link
-          rel="preload"
-          href="https://fonts.gstatic.com/s/inter/v18/UcC73FwrK3iLTeHuS_fvQtMwCp50KnMa1ZL7.woff2"
-          as="font"
-          type="font/woff2"
-          crossOrigin="anonymous"
-        />
+        {/* Note: no manual font preloads to avoid 404s/unused warnings; fonts are loaded via CSS/next-font */}
 
         {/* Google Analytics */}
         <Script

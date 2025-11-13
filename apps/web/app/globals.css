@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&display=swap");
+/* Fonts are self-hosted via next/font. Remove any Google Fonts @import to avoid network 404s/warnings. */
 
 @tailwind base;
 @tailwind components;
@@ -32,7 +32,8 @@
   h4,
   h5,
   h6 {
-    font-family: "Orbitron", "Bebas Neue", "Eurostile", sans-serif;
+    /* Chakra Petch first for full Vietnamese support; Orbitron as stylistic fallback */
+    font-family: "Chakra Petch", "Orbitron", "Inter", "Bebas Neue", "Eurostile", "Helvetica Neue", Arial, sans-serif;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: -0.02em;
