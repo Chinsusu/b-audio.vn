@@ -5,7 +5,8 @@ export default function Footer() {
         <div>
           <div className="text-lg font-semibold">b‑audio</div>
           <p className="mt-2 text-sm text-gray-600">
-            Xưởng gia công loa DIY, loa bluetooth, loa kéo karaoke – tuỳ biến theo yêu cầu.
+            Xưởng gia công loa DIY, loa bluetooth, loa kéo karaoke – tuỳ biến
+            theo yêu cầu.
           </p>
         </div>
         <div className="text-sm">

@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 export interface ComparisonItem {
   id: string;
@@ -30,15 +30,15 @@ export interface Comparison {
 type ComparisonSubscriber = (comparison: Comparison) => void;
 
 class ComparisonManager {
-  private storageKey = 'b-audio-comparison';
+  private storageKey = "b-audio-comparison";
   private subscribers = new Set<ComparisonSubscriber>();
   private maxItems = 4; // Limit comparison to 4 products max
 
   constructor() {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       this.loadFromStorage();
       // Listen for storage changes from other tabs
-      window.addEventListener('storage', (e) => {
+      window.addEventListener("storage", (e) => {
         if (e.key === this.storageKey) {
           this.loadFromStorage();
           this.notifySubscribers();
@@ -65,7 +65,7 @@ class ComparisonManager {
         this.comparison = parsed;
       }
     } catch (error) {
-      console.warn('Failed to load comparison from localStorage:', error);
+      console.warn("Failed to load comparison from localStorage:", error);
       this.comparison = { items: [], itemCount: 0 };
     }
   }
@@ -74,7 +74,7 @@ class ComparisonManager {
     try {
       localStorage.setItem(this.storageKey, JSON.stringify(this.comparison));
     } catch (error) {
-      console.warn('Failed to save comparison to localStorage:', error);
+      console.warn("Failed to save comparison to localStorage:", error);
     }
   }
 
@@ -86,7 +86,7 @@ class ComparisonManager {
     return { ...this.comparison };
   }
 
-  addItem(item: Omit<ComparisonItem, 'addedAt'>): boolean {
+  addItem(item: Omit<ComparisonItem, "addedAt">): boolean {
     // Check if already in comparison
     if (this.isInComparison(item.id)) {
       return false;
@@ -112,7 +112,9 @@ class ComparisonManager {
 
   removeItem(itemId: string): boolean {
     const initialLength = this.comparison.items.length;
-    this.comparison.items = this.comparison.items.filter(item => item.id !== itemId);
+    this.comparison.items = this.comparison.items.filter(
+      (item) => item.id !== itemId,
+    );
     this.comparison.itemCount = this.comparison.items.length;
 
     if (this.comparison.items.length !== initialLength) {
@@ -123,17 +125,13 @@ class ComparisonManager {
     return false;
   }
 
-  toggleItem(item: Omit<ComparisonItem, 'addedAt'>): boolean {
+  toggleItem(item: Omit<ComparisonItem, "addedAt">): boolean {
     if (this.isInComparison(item.id)) {
       this.removeItem(item.id);
       return false; // Item was removed
     } else {
-      try {
-        this.addItem(item);
-        return true; // Item was added
-      } catch (error) {
-        throw error; // Re-throw the max items error
-      }
+      this.addItem(item);
+      return true; // Item was added
     }
   }
 
@@ -144,7 +142,7 @@ class ComparisonManager {
   }
 
   isInComparison(itemId: string): boolean {
-    return this.comparison.items.some(item => item.id === itemId);
+    return this.comparison.items.some((item) => item.id === itemId);
   }
 
   getItemCount(): number {
@@ -160,7 +158,7 @@ class ComparisonManager {
   }
 
   shareComparison(): string {
-    const slugs = this.comparison.items.map(item => item.slug).join(',');
+    const slugs = this.comparison.items.map((item) => item.slug).join(",");
     return `${window.location.origin}/compare?items=${encodeURIComponent(slugs)}`;
   }
 

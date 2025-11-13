@@ -1,10 +1,10 @@
-'use client';
-import Link from 'next/link';
-import { useState } from 'react';
-import { Search, Phone, Heart, BarChart3, Menu, X } from 'lucide-react';
+"use client";
+import { BarChart3, Heart, Menu, Phone, X } from "lucide-react";
+import Link from "next/link";
+import { useState } from "react";
 
 export default function Header() {
-  const [q, setQ] = useState('');
+  const [q, setQ] = useState("");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Simple client-side search redirect
@@ -21,8 +21,8 @@ export default function Header() {
       <header className="sticky top-0 z-50 glass-industrial border-b border-gray-600">
         <div className="mx-auto flex max-w-7xl items-center gap-6 px-6 py-4">
           {/* Logo */}
-          <Link 
-            href="/" 
+          <Link
+            href="/"
             className="logo text-h2 glow-text hover-glow transition-glow"
           >
             b‑audio
@@ -30,20 +30,20 @@ export default function Header() {
 
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex gap-8 ml-8">
-            <Link 
-              href="/products" 
+            <Link
+              href="/products"
               className="nav-link text-microcopy uppercase tracking-widest"
             >
               SẢN PHẨM
             </Link>
-            <Link 
-              href="/custom" 
+            <Link
+              href="/custom"
               className="nav-link text-microcopy uppercase tracking-widest"
             >
               ĐẶT CUSTOM
             </Link>
-            <Link 
-              href="/blog" 
+            <Link
+              href="/blog"
               className="nav-link text-microcopy uppercase tracking-widest"
             >
               BLOG
@@ -51,14 +51,14 @@ export default function Header() {
           </nav>
 
           {/* Search Bar */}
-          <form 
-            onSubmit={submit} 
+          <form
+            onSubmit={submit}
             className="ml-auto flex-1 max-w-lg hidden md:block"
           >
             <div className="input-search w-full focus-industrial">
               <input
                 value={q}
-                onChange={e => setQ(e.target.value)}
+                onChange={(e) => setQ(e.target.value)}
                 placeholder="Tìm loa 500W, pin 12h..."
                 className="w-full bg-transparent outline-none text-body font-body placeholder:text-gray-400"
               />
@@ -66,19 +66,19 @@ export default function Header() {
           </form>
 
           {/* Contact CTA - Desktop */}
-          <a 
-            href="https://zalo.me/0877257799" 
+          <a
+            href="https://zalo.me/0877257799"
             className="btn-primary hidden lg:flex items-center gap-2 hover-industrial"
           >
-            <Phone className="h-4 w-4" /> 
+            <Phone className="h-4 w-4" />
             0877 25 77 99
           </a>
 
           {/* Action Icons */}
           <div className="flex items-center gap-2">
             {/* Wishlist */}
-            <Link 
-              href="/wishlist" 
+            <Link
+              href="/wishlist"
               className="relative flex items-center justify-center h-12 w-12 rounded-2xl bg-secondary-800 border border-gray-600 text-neutral-300 hover:text-primary hover:border-primary transition-industrial focus-industrial"
               title="Wishlist"
             >
@@ -86,8 +86,8 @@ export default function Header() {
             </Link>
 
             {/* Comparison */}
-            <Link 
-              href="/compare" 
+            <Link
+              href="/compare"
               className="relative flex items-center justify-center h-12 w-12 rounded-2xl bg-secondary-800 border border-gray-600 text-neutral-300 hover:text-primary hover:border-primary transition-industrial focus-industrial"
               title="So sánh sản phẩm"
             >
@@ -99,7 +99,11 @@ export default function Header() {
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="lg:hidden flex items-center justify-center h-12 w-12 rounded-2xl bg-secondary-800 border border-gray-600 text-neutral-300 hover:text-primary hover:border-primary transition-industrial focus-industrial"
             >
-              {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+              {mobileMenuOpen ? (
+                <X className="h-5 w-5" />
+              ) : (
+                <Menu className="h-5 w-5" />
+              )}
             </button>
           </div>
         </div>
@@ -110,7 +114,7 @@ export default function Header() {
             <div className="input-search w-full focus-industrial">
               <input
                 value={q}
-                onChange={e => setQ(e.target.value)}
+                onChange={(e) => setQ(e.target.value)}
                 placeholder="Tìm loa 500W, pin 12h..."
                 className="w-full bg-transparent outline-none text-body font-body placeholder:text-gray-400"
               />
@@ -120,7 +124,7 @@ export default function Header() {
       </header>
 
       {/* Mobile Menu Overlay */}
-      <div className={`mobile-menu ${mobileMenuOpen ? 'open' : ''}`}>
+      <div className={`mobile-menu ${mobileMenuOpen ? "open" : ""}`}>
         <div className="flex flex-col h-full">
           {/* Menu Header */}
           <div className="flex items-center justify-between p-6 border-b border-gray-600">
@@ -135,35 +139,35 @@ export default function Header() {
 
           {/* Menu Content */}
           <nav className="flex flex-col p-6 space-y-6">
-            <Link 
-              href="/products" 
+            <Link
+              href="/products"
               className="text-h4 font-heading text-neutral-200 hover:text-primary transition-colors uppercase tracking-wide"
               onClick={() => setMobileMenuOpen(false)}
             >
               SẢN PHẨM
             </Link>
-            <Link 
-              href="/custom" 
+            <Link
+              href="/custom"
               className="text-h4 font-heading text-neutral-200 hover:text-primary transition-colors uppercase tracking-wide"
               onClick={() => setMobileMenuOpen(false)}
             >
               ĐẶT CUSTOM
             </Link>
-            <Link 
-              href="/blog" 
+            <Link
+              href="/blog"
               className="text-h4 font-heading text-neutral-200 hover:text-primary transition-colors uppercase tracking-wide"
               onClick={() => setMobileMenuOpen(false)}
             >
               BLOG
             </Link>
-            
+
             {/* Mobile Contact CTA */}
             <div className="pt-6 border-t border-gray-600">
-              <a 
-                href="https://zalo.me/0877257799" 
+              <a
+                href="https://zalo.me/0877257799"
                 className="btn-primary w-full flex items-center justify-center gap-2 hover-industrial"
               >
-                <Phone className="h-4 w-4" /> 
+                <Phone className="h-4 w-4" />
                 LIÊN HỆ: 0877 25 77 99
               </a>
             </div>

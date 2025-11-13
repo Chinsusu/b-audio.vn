@@ -5,11 +5,11 @@ export default function ProductDetailLoading() {
         <div className="max-w-6xl mx-auto animate-pulse">
           {/* Breadcrumb skeleton */}
           <div className="h-4 bg-darkGrey/40 rounded w-48 mb-8"></div>
-          
+
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             {/* Image skeleton */}
             <div className="aspect-square bg-darkGrey/60 rounded-2xl"></div>
-            
+
             {/* Content skeleton */}
             <div className="space-y-6">
               <div className="h-10 bg-darkGrey/60 rounded w-3/4"></div>

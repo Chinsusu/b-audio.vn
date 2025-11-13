@@ -1,28 +1,37 @@
 interface LoadingSpinnerProps {
-  size?: 'sm' | 'md' | 'lg';
+  size?: "sm" | "md" | "lg";
   className?: string;
 }
 
-export default function LoadingSpinner({ size = 'md', className = '' }: LoadingSpinnerProps) {
+export default function LoadingSpinner({
+  size = "md",
+  className = "",
+}: LoadingSpinnerProps) {
   const sizeClasses = {
-    sm: 'w-4 h-4',
-    md: 'w-8 h-8',
-    lg: 'w-12 h-12'
+    sm: "w-4 h-4",
+    md: "w-8 h-8",
+    lg: "w-12 h-12",
   };
 
   return (
-    <div className={`animate-spin rounded-full border-2 border-goldAccent/20 border-t-goldAccent ${sizeClasses[size]} ${className}`} />
+    <div
+      className={`animate-spin rounded-full border-2 border-goldAccent/20 border-t-goldAccent ${sizeClasses[size]} ${className}`}
+    />
   );
 }
 
-export function LoadingButton({ children, loading = false, ...props }: { 
-  children: React.ReactNode; 
-  loading?: boolean; 
+export function LoadingButton({
+  children,
+  loading = false,
+  ...props
+}: {
+  children: React.ReactNode;
+  loading?: boolean;
   [key: string]: any;
 }) {
   return (
-    <button 
-      {...props} 
+    <button
+      {...props}
       disabled={loading || props.disabled}
       className={`${props.className} relative`}
     >
@@ -31,9 +40,7 @@ export function LoadingButton({ children, loading = false, ...props }: {
           <LoadingSpinner size="sm" />
         </div>
       )}
-      <span className={loading ? 'opacity-0' : ''}>
-        {children}
-      </span>
+      <span className={loading ? "opacity-0" : ""}>{children}</span>
     </button>
   );
 }

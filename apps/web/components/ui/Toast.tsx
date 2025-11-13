@@ -1,7 +1,8 @@
-'use client';
-import { useEffect, useState } from 'react';
-import { X, CheckCircle, XCircle, Info, AlertTriangle } from 'lucide-react';
-import { Toast, toastManager } from '@/lib/toast';
+"use client";
+import { AlertTriangle,CheckCircle, Info, X, XCircle } from "lucide-react";
+import { useEffect, useState } from "react";
+
+import { Toast, toastManager } from "@/lib/toast";
 
 interface ToastItemProps {
   toast: Toast;
@@ -31,17 +32,17 @@ function ToastItem({ toast, onDismiss }: ToastItemProps) {
   };
 
   const colors = {
-    success: 'bg-green-50 border-green-200 text-green-800',
-    error: 'bg-red-50 border-red-200 text-red-800',
-    info: 'bg-blue-50 border-blue-200 text-blue-800',
-    warning: 'bg-yellow-50 border-yellow-200 text-yellow-800',
+    success: "bg-green-50 border-green-200 text-green-800",
+    error: "bg-red-50 border-red-200 text-red-800",
+    info: "bg-blue-50 border-blue-200 text-blue-800",
+    warning: "bg-yellow-50 border-yellow-200 text-yellow-800",
   };
 
   const iconColors = {
-    success: 'text-green-500',
-    error: 'text-red-500',
-    info: 'text-blue-500',
-    warning: 'text-yellow-500',
+    success: "text-green-500",
+    error: "text-red-500",
+    info: "text-blue-500",
+    warning: "text-yellow-500",
   };
 
   const Icon = icons[toast.type];
@@ -50,18 +51,21 @@ function ToastItem({ toast, onDismiss }: ToastItemProps) {
     <div
       className={`
         transform transition-all duration-300 ease-out
-        ${isVisible && !isLeaving 
-          ? 'translate-x-0 opacity-100 scale-100' 
-          : isLeaving 
-            ? 'translate-x-full opacity-0 scale-95'
-            : 'translate-x-full opacity-0 scale-95'
+        ${
+          isVisible && !isLeaving
+            ? "translate-x-0 opacity-100 scale-100"
+            : isLeaving
+              ? "translate-x-full opacity-0 scale-95"
+              : "translate-x-full opacity-0 scale-95"
         }
       `}
     >
-      <div className={`
+      <div
+        className={`
         max-w-sm w-full rounded-lg border p-4 shadow-lg pointer-events-auto
         ${colors[toast.type]}
-      `}>
+      `}
+      >
         <div className="flex items-start">
           <div className="flex-shrink-0">
             <Icon className={`h-5 w-5 ${iconColors[toast.type]}`} />
@@ -94,7 +98,7 @@ export default function ToastContainer() {
     return unsubscribe;
   }, []);
 
-  if (toasts.length === 0) return null;
+  if (toasts.length === 0) {return null;}
 
   return (
     <div className="fixed top-4 right-4 z-50 space-y-2 pointer-events-none">

@@ -5,7 +5,9 @@
     "develop": "strapi develop",
     "build": "strapi build",
     "start": "strapi start",
-    "seed:sample": "node scripts/seed-sample.js"
+    "seed:sample": "node scripts/seed-sample.js",
+    "lint": "eslint .",
+    "format": "prettier --write ."
   },
   "dependencies": {
     "@strapi/plugin-users-permissions": "^4.25.23",
@@ -26,5 +28,11 @@
       "sharp": "0.34.3",
       "@strapi/plugin-upload>sharp": "0.34.3"
     }
+  },
+  "devDependencies": {
+    "eslint": "^8.57.0",
+    "eslint-plugin-promise": "^6.6.0",
+    "eslint-plugin-security": "^3.0.1",
+    "prettier": "^3.3.3"
   }
 }

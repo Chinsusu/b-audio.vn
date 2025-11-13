@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import Link from "next/link";
 
 export default function NotFound() {
   return (
@@ -10,33 +10,33 @@ export default function NotFound() {
             <div className="text-4xl">🔍</div>
           </div>
         </div>
-        
+
         <h1 className="text-3xl md:text-4xl font-bold text-textWhite mb-4">
           Page Not Found
         </h1>
-        
+
         <p className="text-textGrey mb-8 text-lg">
-          The page you're looking for doesn't exist or has been moved.
+          The page you&apos;re looking for doesn&apos;t exist or has been moved.
         </p>
-        
+
         <div className="space-y-4">
-          <Link 
+          <Link
             href="/"
             className="inline-block bg-goldAccent hover:bg-goldAccent/80 text-darkBg px-8 py-3 rounded-lg font-medium transition-colors btn-transition"
           >
             Go Home
           </Link>
-          
+
           <div className="flex justify-center space-x-4 text-sm">
-            <Link 
-              href="/products" 
+            <Link
+              href="/products"
               className="text-neonTurquoise hover:text-neonTurquoise/80 transition-colors"
             >
               Browse Products
             </Link>
             <span className="text-darkGrey">•</span>
-            <Link 
-              href="/custom" 
+            <Link
+              href="/custom"
               className="text-neonTurquoise hover:text-neonTurquoise/80 transition-colors"
             >
               Custom Builds

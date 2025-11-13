@@ -1,6 +1,6 @@
-'use strict';
+"use strict";
 
-const { RateLimiterMemory } = require('rate-limiter-flexible');
+const { RateLimiterMemory } = require("rate-limiter-flexible");
 
 module.exports = (config, { strapi }) => {
   const rateLimiter = new RateLimiterMemory({
@@ -18,8 +18,8 @@ module.exports = (config, { strapi }) => {
       ctx.body = {
         error: {
           status: 429,
-          name: 'TooManyRequestsError',
-          message: config.message || 'Too many requests',
+          name: "TooManyRequestsError",
+          message: config.message || "Too many requests",
           details: {},
         },
       };

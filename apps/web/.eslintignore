@@ -1,0 +1,11 @@
+.next
+node_modules
+dist
+coverage
+reports
+*.log
+.eslintrc.js
+next.config.*
+postcss.config.js
+tailwind.config.*
+

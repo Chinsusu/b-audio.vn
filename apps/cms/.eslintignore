@@ -1,0 +1,8 @@
+node_modules
+build
+.strapi
+public/uploads
+coverage
+reports
+*.log
+

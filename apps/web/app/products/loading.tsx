@@ -1,4 +1,4 @@
-import { SkeletonGrid } from '../../components/ui/loading/SkeletonCard';
+import { SkeletonGrid } from "../../components/ui/loading/SkeletonCard";
 
 export default function ProductsLoading() {
   return (

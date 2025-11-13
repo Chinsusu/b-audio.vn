@@ -1,12 +1,13 @@
-import Link from 'next/link';
-import { mediaUrl } from '../../utils/mediaUrl';
-import Image from 'next/image';
+import Image from "next/image";
+import Link from "next/link";
+
+import { mediaUrl } from "../../utils/mediaUrl";
 
 export function ProductCard({ p }: { p: any }) {
   const attrs = p?.attributes || {};
   const rel = attrs.images?.data?.[0]?.attributes?.url;
   const imageUrl = mediaUrl(rel);
-  
+
   return (
     <div className="card-product group">
       <Link href={`/products/${attrs.slug}`}>
@@ -26,27 +27,36 @@ export function ProductCard({ p }: { p: any }) {
             <span className="text-6xl text-primary opacity-60">🔊</span>
           </div>
         )}
-        
+
         <div className="mt-4 space-y-2">
           <h3 className="font-heading text-h4 text-neutral-100 font-semibold group-hover:text-primary transition-colors duration-300 uppercase tracking-wide line-clamp-2">
             {attrs.title}
           </h3>
           <div className="text-h3 font-heading text-primary font-bold">
-            {new Intl.NumberFormat('vi-VN').format(attrs.price_vnd || attrs.price)} ₫
+            {new Intl.NumberFormat("vi-VN").format(
+              attrs.price_vnd || attrs.price,
+            )}{" "}
+            ₫
           </div>
         </div>
       </Link>
-      
+
       {/* Action buttons would go here */}
       <div className="mt-4 flex items-center justify-between">
         <button className="btn-ghost text-body-sm px-4 py-2">
           XEM CHI TIẾT
         </button>
         <div className="flex gap-1">
-          <button className="h-10 w-10 rounded-xl bg-secondary-800 border border-gray-600 flex items-center justify-center text-neutral-400 hover:text-primary hover:border-primary transition-industrial" title="Yêu thích">
+          <button
+            className="h-10 w-10 rounded-xl bg-secondary-800 border border-gray-600 flex items-center justify-center text-neutral-400 hover:text-primary hover:border-primary transition-industrial"
+            title="Yêu thích"
+          >
             ♥
           </button>
-          <button className="h-10 w-10 rounded-xl bg-secondary-800 border border-gray-600 flex items-center justify-center text-neutral-400 hover:text-primary hover:border-primary transition-industrial" title="So sánh">
+          <button
+            className="h-10 w-10 rounded-xl bg-secondary-800 border border-gray-600 flex items-center justify-center text-neutral-400 hover:text-primary hover:border-primary transition-industrial"
+            title="So sánh"
+          >
             ⚖
           </button>
         </div>
