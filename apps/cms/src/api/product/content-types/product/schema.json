@@ -33,7 +33,7 @@
       "type": "integer"
     },
     "dimensions": {
-      "type": "text"
+      "type": "string"
     },
     "weight": {
       "type": "decimal"

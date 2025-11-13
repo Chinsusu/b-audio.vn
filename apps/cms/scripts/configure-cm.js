@@ -58,26 +58,25 @@ function buildConfig() {
           { name: "compare_price", size: 4 },
           { name: "power_watt", size: 4 },
         ],
-        // Row 3: battery + dimensions
+        // Row 3: battery + connectivity + category
         [
           { name: "battery_hours", size: 4 },
-          { name: "dimensions", size: 8 },
+          { name: "connectivity", size: 4 },
+          { name: "category", size: 4 },
         ],
-        // Row 4: weight + connectivity
+        // Row 4: weight + dimensions (same height, single line)
         [
-          { name: "weight", size: 4 },
-          { name: "connectivity", size: 8 },
+          { name: "weight", size: 6 },
+          { name: "dimensions", size: 6 },
         ],
         // Row 5: images full width
         [{ name: "images", size: 12 }],
-        // Row 6: category relation
-        [{ name: "category", size: 12 }],
-        // Row 7: ratings (read-only aggregates)
+        // Row 6: ratings (read-only aggregates)
         [
           { name: "rating_avg", size: 6 },
           { name: "rating_count", size: 6 },
         ],
-        // Row 8: description
+        // Row 7: description
         [{ name: "description", size: 12 }],
       ],
       relations: ["category", "images"],
