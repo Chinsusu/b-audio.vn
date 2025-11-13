@@ -15,6 +15,7 @@ export function ReviewStars({
 }) {
   const r = Math.round(rating * 2) / 2;
   const TagEl: any = linkHref ? "a" : "span";
+  const hasCount = typeof count !== "undefined" && count !== null;
 
   return (
     <div className={`flex items-center gap-2 ${className}`}>
@@ -29,7 +30,7 @@ export function ReviewStars({
           </svg>
         ))}
       </div>
-      {count > 0 &&
+      {hasCount &&
         (variant === "tag" ? (
           <Tag href={linkHref}>
             <span aria-label={`${count} đánh giá`}>{count}</span>

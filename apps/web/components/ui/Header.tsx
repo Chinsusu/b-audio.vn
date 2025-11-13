@@ -48,6 +48,18 @@ export default function Header() {
             >
               BLOG
             </Link>
+            <Link
+              href="/about"
+              className="nav-link font-heading text-microcopy uppercase tracking-widest"
+            >
+              GIỚI THIỆU
+            </Link>
+            <Link
+              href="/faq"
+              className="nav-link font-heading text-microcopy uppercase tracking-widest"
+            >
+              FAQ
+            </Link>
           </nav>
 
           {/* Search Bar */}
@@ -159,6 +171,20 @@ export default function Header() {
               onClick={() => setMobileMenuOpen(false)}
             >
               BLOG
+            </Link>
+            <Link
+              href="/about"
+              className="text-h4 font-heading text-neutral-200 hover:text-primary transition-colors uppercase tracking-wide"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              GIỚI THIỆU
+            </Link>
+            <Link
+              href="/faq"
+              className="text-h4 font-heading text-neutral-200 hover:text-primary transition-colors uppercase tracking-wide"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              FAQ
             </Link>
 
             {/* Mobile Contact CTA */}

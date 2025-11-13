@@ -1,0 +1,39 @@
+{
+  "collectionName": "components_section_sections",
+  "info": {
+    "displayName": "section",
+    "description": "Generic page section with kind + content"
+  },
+  "options": {},
+  "attributes": {
+    "kind": {
+      "type": "enumeration",
+      "enum": [
+        "hero",
+        "highlights",
+        "specs",
+        "use_cases",
+        "customization",
+        "video",
+        "faq",
+        "related",
+        "intro",
+        "story",
+        "values",
+        "process",
+        "team",
+        "projects",
+        "cta"
+      ],
+      "required": true
+    },
+    "title": { "type": "string" },
+    "subtitle": { "type": "string" },
+    "body": { "type": "richtext" },
+    "items": { "type": "json" },
+    "video_url": { "type": "string" },
+    "cta_label": { "type": "string" },
+    "cta_href": { "type": "string" },
+    "order": { "type": "integer" }
+  }
+}
