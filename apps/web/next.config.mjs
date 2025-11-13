@@ -8,23 +8,5 @@ export default {
   },
   compress: true,
   optimizeFonts: true,
-  async headers() {
-    return [
-      {
-        source: "/:path*",
-        headers: [
-          // Set a conservative, valid Permissions-Policy to avoid console warnings
-          {
-            key: "Permissions-Policy",
-            value:
-              "geolocation=(), camera=(), microphone=(), fullscreen=(self), autoplay=(self)",
-          },
-          // Helpful security defaults
-          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
-          { key: "X-Content-Type-Options", value: "nosniff" },
-          { key: "X-Frame-Options", value: "SAMEORIGIN" },
-        ],
-      },
-    ];
-  },
+  // Security headers are handled by Nginx and Cloudflare edge; not set here to avoid duplicates.
 };
