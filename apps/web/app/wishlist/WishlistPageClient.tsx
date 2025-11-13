@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -138,11 +139,15 @@ export default function WishlistPageClient() {
             {/* Image */}
             <div className="relative mb-4">
               {item.imageUrl ? (
-                <img
-                  src={item.imageUrl}
-                  alt={item.title}
-                  className="w-full aspect-square object-cover rounded-xl"
-                />
+                <div className="relative w-full aspect-square rounded-xl overflow-hidden">
+                  <Image
+                    src={item.imageUrl}
+                    alt={item.title}
+                    fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 400px"
+                    className="object-cover"
+                  />
+                </div>
               ) : (
                 <div className="w-full aspect-square rounded-xl bg-darkGrey/40 border border-darkGrey flex items-center justify-center">
                   <svg

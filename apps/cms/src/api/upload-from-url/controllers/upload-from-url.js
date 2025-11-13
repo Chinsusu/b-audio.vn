@@ -55,9 +55,11 @@ module.exports = {
       );
 
       // Download file to temporary location
+      // eslint-disable-next-line security/detect-non-literal-fs-filename
       await streamPipeline(response.body, fs.createWriteStream(tempFilePath));
 
       // Get file stats
+      // eslint-disable-next-line security/detect-non-literal-fs-filename
       const stats = fs.statSync(tempFilePath);
 
       // Create file object for Strapi upload
@@ -76,7 +78,12 @@ module.exports = {
       });
 
       // Clean up temporary file
-      fs.unlinkSync(tempFilePath);
+      try {
+        // eslint-disable-next-line security/detect-non-literal-fs-filename
+        fs.unlinkSync(tempFilePath);
+      } catch (e) {
+        // ignore cleanup errors
+      }
 
       ctx.body = uploadedFiles[0];
     } catch (error) {

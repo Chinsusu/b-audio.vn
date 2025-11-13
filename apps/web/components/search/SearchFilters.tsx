@@ -1,7 +1,7 @@
 "use client";
-import { usePathname,useRouter, useSearchParams } from "next/navigation";
-import {useEffect, useState } from "react";
-import { getTrackBackground,Range } from "react-range";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { getTrackBackground, Range } from "react-range";
 
 interface SearchFiltersProps {
   onFiltersChange?: (filters: any) => void;
@@ -150,32 +150,47 @@ export default function SearchFilters({ onFiltersChange }: SearchFiltersProps) {
 
   useEffect(() => {
     const newFilters = {
-      ...filters,
+      priceRange: [0, 50000000] as [number, number],
+      powerRange: [0, 2000] as [number, number],
+      batteryRange: [0, 24] as [number, number],
       category: searchParams.get("category") || "",
       search: searchParams.get("search") || "",
       sortBy: searchParams.get("sort") || "newest",
     };
-    setFilters(newFilters);
-    onFiltersChange?.(newFilters);
-  }, [searchParams]);
+    setFilters((prev) => ({ ...prev, ...newFilters }));
+    onFiltersChange?.({ ...filters, ...newFilters });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams, onFiltersChange]);
 
   const updateURL = (newFilters: typeof filters) => {
     const params = new URLSearchParams();
-    if (newFilters.search) {params.set("search", newFilters.search);}
-    if (newFilters.category) {params.set("category", newFilters.category);}
-    if (newFilters.sortBy !== "newest") {params.set("sort", newFilters.sortBy);}
-    if (newFilters.priceRange[0] > 0)
-      {params.set("minPrice", newFilters.priceRange[0].toString());}
-    if (newFilters.priceRange[1] < 50000000)
-      {params.set("maxPrice", newFilters.priceRange[1].toString());}
-    if (newFilters.powerRange[0] > 0)
-      {params.set("minPower", newFilters.powerRange[0].toString());}
-    if (newFilters.powerRange[1] < 2000)
-      {params.set("maxPower", newFilters.powerRange[1].toString());}
-    if (newFilters.batteryRange[0] > 0)
-      {params.set("minBattery", newFilters.batteryRange[0].toString());}
-    if (newFilters.batteryRange[1] < 24)
-      {params.set("maxBattery", newFilters.batteryRange[1].toString());}
+    if (newFilters.search) {
+      params.set("search", newFilters.search);
+    }
+    if (newFilters.category) {
+      params.set("category", newFilters.category);
+    }
+    if (newFilters.sortBy !== "newest") {
+      params.set("sort", newFilters.sortBy);
+    }
+    if (newFilters.priceRange[0] > 0) {
+      params.set("minPrice", newFilters.priceRange[0].toString());
+    }
+    if (newFilters.priceRange[1] < 50000000) {
+      params.set("maxPrice", newFilters.priceRange[1].toString());
+    }
+    if (newFilters.powerRange[0] > 0) {
+      params.set("minPower", newFilters.powerRange[0].toString());
+    }
+    if (newFilters.powerRange[1] < 2000) {
+      params.set("maxPower", newFilters.powerRange[1].toString());
+    }
+    if (newFilters.batteryRange[0] > 0) {
+      params.set("minBattery", newFilters.batteryRange[0].toString());
+    }
+    if (newFilters.batteryRange[1] < 24) {
+      params.set("maxBattery", newFilters.batteryRange[1].toString());
+    }
     const url = params.toString()
       ? `${pathname}?${params.toString()}`
       : pathname;
@@ -204,8 +219,12 @@ export default function SearchFilters({ onFiltersChange }: SearchFiltersProps) {
   };
 
   const formatPrice = (price: number) => {
-    if (price >= 1000000) {return `${price / 1000000}M VND`;}
-    if (price >= 1000) {return `${price / 1000}K VND`;}
+    if (price >= 1000000) {
+      return `${price / 1000000}M VND`;
+    }
+    if (price >= 1000) {
+      return `${price / 1000}K VND`;
+    }
     return `${price} VND`;
   };
   const formatPower = (power: number) => `${power}W`;

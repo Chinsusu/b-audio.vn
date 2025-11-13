@@ -32,6 +32,9 @@ jobs:
         run: |
           set -e
           cd apps/web
+          # Autofix common lint issues (e.g., import sorting) and then run a strict check
+          pnpm exec eslint . --fix || true
+          pnpm exec eslint . --max-warnings 0
           pnpm install --frozen-lockfile
           pnpm build
           FILES=(.next public package.json pnpm-lock.yaml)

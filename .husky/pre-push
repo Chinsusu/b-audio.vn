@@ -1,0 +1,26 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+echo "🔧 Pre-push: autofix lint and validate build (strict)"
+
+# Autofix lint issues in web and cms
+pnpm --dir apps/web exec eslint . --fix || true
+pnpm --dir apps/cms exec eslint . --fix || true
+
+# Strict lint must pass for web
+pnpm --dir apps/web exec eslint . --max-warnings 0 || {
+  echo "❌ ESLint errors in apps/web. Aborting push." >&2
+  exit 1
+}
+
+# Optional: build web before pushing (can be skipped with SKIP_HOOK_BUILD=1)
+if [ "$SKIP_HOOK_BUILD" != "1" ]; then
+  echo "🏗  Building web to catch issues before deploy..."
+  pnpm --dir apps/web run build || {
+    echo "❌ Build failed. Aborting push." >&2
+    exit 1
+  }
+fi
+
+echo "✅ Pre-push checks passed"
+

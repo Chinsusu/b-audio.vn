@@ -1,5 +1,5 @@
 "use client";
-import { ArrowRight,Minus, Plus, ShoppingCart, Trash2, X } from "lucide-react";
+import { ArrowRight, Minus, Plus, ShoppingCart, Trash2, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";

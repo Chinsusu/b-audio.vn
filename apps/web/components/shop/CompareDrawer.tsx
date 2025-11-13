@@ -1,10 +1,13 @@
 "use client";
+import Image from "next/image";
 import { useState } from "react";
 
 export default function CompareDrawer({ products }: { products: any[] }) {
   const [open, setOpen] = useState(false);
   const selected = products.slice(0, 3); // placeholder: implement your selection logic
-  if (!selected.length) {return null;}
+  if (!selected.length) {
+    return null;
+  }
   return (
     <div className="fixed bottom-4 right-4">
       <button
@@ -23,11 +26,15 @@ export default function CompareDrawer({ products }: { products: any[] }) {
               return (
                 <div key={i} className="rounded-2xl border border-cloud p-3">
                   {img && (
-                    <img
-                      src={img}
-                      className="aspect-square w-full rounded-lg object-cover"
-                      alt=""
-                    />
+                    <div className="relative aspect-square w-full rounded-lg overflow-hidden">
+                      <Image
+                        src={img}
+                        alt={a.title || "Sản phẩm"}
+                        fill
+                        sizes="(max-width: 768px) 33vw, 200px"
+                        className="object-cover"
+                      />
+                    </div>
                   )}
                   <div className="mt-2 text-sm font-medium">{a.title}</div>
                   <div className="text-xs text-gray-600">

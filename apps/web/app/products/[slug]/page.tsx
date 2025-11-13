@@ -32,13 +32,15 @@ async function getProduct(slug: string) {
 async function getTopReviews(productId: number, limit = 3) {
   try {
     const params = new URLSearchParams();
-    params.set('filters[product][id][$eq]', String(productId));
-    params.set('fields[0]', 'rating');
-    params.set('fields[1]', 'author_name');
-    params.set('fields[2]', 'content');
-    params.set('sort', 'createdAt:desc');
-    params.set('pagination[pageSize]', String(limit));
-    const res = await fetch(`${API_BASE}/api/reviews?${params.toString()}`, { next: { revalidate: 60 } });
+    params.set("filters[product][id][$eq]", String(productId));
+    params.set("fields[0]", "rating");
+    params.set("fields[1]", "author_name");
+    params.set("fields[2]", "content");
+    params.set("sort", "createdAt:desc");
+    params.set("pagination[pageSize]", String(limit));
+    const res = await fetch(`${API_BASE}/api/reviews?${params.toString()}`, {
+      next: { revalidate: 60 },
+    });
     const json = await res.json();
     return json.data || [];
   } catch {
@@ -52,7 +54,9 @@ export async function generateMetadata({
   params: { slug: string };
 }): Promise<Metadata> {
   const data = await getProduct(params.slug);
-  if (!data) {return { title: "Sản phẩm | B-Audio" };}
+  if (!data) {
+    return { title: "Sản phẩm | B-Audio" };
+  }
   const p = data.attributes as any;
   const rel = p.images?.data?.[0]?.attributes?.url as string | undefined;
   const imageUrl = rel ? mediaUrl(rel) : undefined;
@@ -127,12 +131,19 @@ export default async function ProductPage({
           />
           {topReviews?.length > 0 && (
             <section className="mt-8">
-              <h2 className="font-heading text-h4 text-neutral-100 mb-2">Đánh giá nổi bật</h2>
+              <h2 className="font-heading text-h4 text-neutral-100 mb-2">
+                Đánh giá nổi bật
+              </h2>
               <div className="space-y-4">
                 {topReviews.map((rv: any) => (
-                  <div key={rv.id} className="rounded-xl border border-gray-600 bg-secondary-800/40 p-4">
+                  <div
+                    key={rv.id}
+                    className="rounded-xl border border-gray-600 bg-secondary-800/40 p-4"
+                  >
                     <div className="flex items-center justify-between mb-2">
-                      <div className="text-neutral-200 font-medium">{rv.attributes.author_name || 'Khách hàng'}</div>
+                      <div className="text-neutral-200 font-medium">
+                        {rv.attributes.author_name || "Khách hàng"}
+                      </div>
                       <ReviewStars rating={Number(rv.attributes.rating) || 0} />
                     </div>
                     <div className="text-neutral-300 whitespace-pre-wrap">
@@ -142,7 +153,12 @@ export default async function ProductPage({
                 ))}
               </div>
               <div className="mt-4">
-                <a href={`/products/${params.slug}/reviews`} className="text-neonTurquoise hover:underline">Xem tất cả đánh giá</a>
+                <a
+                  href={`/products/${params.slug}/reviews`}
+                  className="text-neonTurquoise hover:underline"
+                >
+                  Xem tất cả đánh giá
+                </a>
               </div>
             </section>
           )}

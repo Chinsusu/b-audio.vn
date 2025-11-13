@@ -44,7 +44,9 @@ export default function Price({
 
   if (value === null || value === undefined || value === "") {
     return (
-      <Tag className={["text-textGrey", className].filter(Boolean).join(" ")}>Liên hệ</Tag>
+      <Tag className={["text-textGrey", className].filter(Boolean).join(" ")}>
+        Liên hệ
+      </Tag>
     );
   }
 
@@ -57,13 +59,7 @@ export default function Price({
     size === "sm" ? "text-body" : size === "md" ? "text-h4" : "text-h3";
   const colorClass = tone === "primary" ? "text-primary" : "text-neutral-100";
 
-  const base = [
-    "font-heading",
-    "font-bold",
-    sizeClass,
-    colorClass,
-    className,
-  ]
+  const base = ["font-heading", "font-bold", sizeClass, colorClass, className]
     .filter(Boolean)
     .join(" ");
 

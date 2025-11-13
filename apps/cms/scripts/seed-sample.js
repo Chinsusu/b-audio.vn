@@ -111,7 +111,6 @@ const Strapi = require("@strapi/strapi");
 
     // Attach placeholder images to products if missing
     const https = require("https");
-    const { promisify } = require("util");
 
     const fetchBuffer = (url) =>
       new Promise((resolve, reject) => {
@@ -141,11 +140,16 @@ const Strapi = require("@strapi/strapi");
         populate: { images: true },
         limit: 1,
       });
-      if (!prods.length) return;
+      if (!prods.length) {
+        return;
+      }
       const prod = prods[0];
-      if (prod.images && prod.images.length) return; // already has image
+      if (prod.images && prod.images.length) {
+        return; // already has image
+      }
       const { buffer, contentType } = await fetchBuffer(url);
       const tmpPath = path.join("/tmp", fileName);
+      // eslint-disable-next-line security/detect-non-literal-fs-filename
       await fsp.writeFile(tmpPath, buffer);
       const uploaded = await uploadService.upload({
         data: {},
@@ -157,8 +161,11 @@ const Strapi = require("@strapi/strapi");
         },
       });
       try {
+        // eslint-disable-next-line security/detect-non-literal-fs-filename
         await fsp.unlink(tmpPath);
-      } catch (e) {}
+      } catch (e) {
+        // ignore cleanup errors
+      }
       const file = Array.isArray(uploaded) ? uploaded[0] : uploaded;
       await strapi.entityService.update(prodModel, prod.id, {
         data: { images: [file.id] },

@@ -1,5 +1,5 @@
 "use client";
-import { AlertTriangle,CheckCircle, Info, X, XCircle } from "lucide-react";
+import { AlertTriangle, CheckCircle, Info, X, XCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { Toast, toastManager } from "@/lib/toast";
@@ -98,7 +98,9 @@ export default function ToastContainer() {
     return unsubscribe;
   }, []);
 
-  if (toasts.length === 0) {return null;}
+  if (toasts.length === 0) {
+    return null;
+  }
 
   return (
     <div className="fixed top-4 right-4 z-50 space-y-2 pointer-events-none">

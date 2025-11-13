@@ -6,7 +6,9 @@ export function SpecsTable({
   const entries = Object.entries(specs || {}).filter(
     ([, v]) => v !== null && v !== undefined && v !== "",
   );
-  if (!entries.length) {return null;}
+  if (!entries.length) {
+    return null;
+  }
   return (
     <table className="w-full table-auto overflow-hidden rounded-2xl border border-cloud text-sm">
       <tbody>

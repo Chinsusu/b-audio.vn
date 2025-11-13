@@ -1,5 +1,5 @@
 "use client";
-import {useState } from "react";
+import { useState } from "react";
 
 import StarRating from "./StarRating";
 
@@ -33,7 +33,9 @@ export default function ReviewsList({
 
   // Mock function to load more reviews
   const loadMoreReviews = async () => {
-    if (isLoading || !hasMore) {return;}
+    if (isLoading || !hasMore) {
+      return;
+    }
 
     setIsLoading(true);
     try {
