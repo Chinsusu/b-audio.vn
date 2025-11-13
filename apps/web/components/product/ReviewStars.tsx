@@ -31,7 +31,9 @@ export function ReviewStars({
       </div>
       {count > 0 && (
         variant === 'tag' ? (
-          <Tag href={linkHref}>{count} đánh giá</Tag>
+          <Tag href={linkHref}>
+            <span aria-label={`${count} đánh giá`}>{count}</span>
+          </Tag>
         ) : (
           <span className="text-sm text-gray-400">({count})</span>
         )
