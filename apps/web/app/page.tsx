@@ -1,73 +1,168 @@
-import type { Metadata } from 'next';
-import Link from 'next/link';
+import Image from "next/image";
+
+import { mediaUrl } from "../utils/mediaUrl";
+
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE || "https://api.b-audio.vn";
+
+async function getFeaturedProducts() {
+  try {
+    const res = await fetch(
+      `${API_BASE}/api/products?populate=images&pagination[pageSize]=3&sort=createdAt:desc`,
+      {
+        next: { revalidate: 300 },
+      },
+    );
+    const json = await res.json();
+    return json.data || [];
+  } catch (error) {
+    console.error("Error fetching products:", error);
+    return [];
+  }
+}
+
+import { ArrowRight, Settings, Shield,Wrench, Zap } from "lucide-react";
+import type { Metadata } from "next";
+import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: 'B-Audio | Xưởng Loa DIY',
-  description: 'Loa bluetooth, loa kéo karaoke, gia công theo yêu cầu.',
-  alternates: { canonical: 'https://b-audio.vn/' },
+  title: "B-Audio | Xưởng Loa DIY Công Nghiệp",
+  description:
+    "Loa bluetooth chuyên nghiệp, loa kéo karaoke, gia công theo yêu cầu với tiêu chuẩn công nghiệp cao cấp.",
+  alternates: { canonical: "https://b-audio.vn/" },
   openGraph: {
-    title: 'B-Audio | Xưởng Loa DIY',
-    url: 'https://b-audio.vn/',
-    images: [{ url: 'https://b-audio.vn/og/home-cover.svg', width: 1200, height: 630, alt: 'B-Audio' }],
+    title: "B-Audio | Xưởng Loa DIY Công Nghiệp",
+    url: "https://b-audio.vn/",
+    images: [
+      {
+        url: "https://b-audio.vn/og/home-cover.svg",
+        width: 1200,
+        height: 630,
+        alt: "B-Audio DIY Speaker Workshop",
+      },
+    ],
   },
-  twitter: { card: 'summary_large_image', images: ['https://b-audio.vn/og/home-cover.svg'] },
+  twitter: {
+    card: "summary_large_image",
+    images: ["https://b-audio.vn/og/home-cover.svg"],
+  },
 };
 
 export default async function Page() {
+  const featuredProducts = await getFeaturedProducts();
+
   return (
     <>
-      {/* Hero Section */}
-      <section className="relative min-h-screen bg-darkBg flex items-center overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-darkBg via-darkBg to-darkGrey/50"></div>
-        <div className="relative mx-auto max-w-7xl px-6 py-20 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-          {/* Left Content */}
-          <div className="space-y-8 z-10">
-            <h1 className="font-heading text-hero-lg lg:text-6xl xl:text-7xl text-textWhite font-bold leading-none tracking-tight">
-              DIY BLUETOOTH<br />
-              SPEAKERS &<br />
-              <span className="text-goldAccent animate-glow">PORTABLE<br />KARAOKE SYSTEMS</span>
-            </h1>
-            <p className="text-xl lg:text-2xl text-textGrey font-light max-w-md">
-              Diverse range, customizable to your needs
+      {/* Hero Section - Industrial Dark Tech */}
+      <section className="section-hero min-h-screen flex items-center relative overflow-hidden">
+        {/* Background Pattern */}
+        <div className="absolute inset-0 metal-texture opacity-5"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-secondary-900/50 via-transparent to-accent-800/30"></div>
+
+        <div className="relative mx-auto max-w-7xl px-6 py-20 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center z-10">
+          {/* Hero Content */}
+          <div className="space-y-8 stagger-fade-up">
+            <div className="space-y-4">
+              <h1 className="font-heading text-hero lg:text-display text-neutral-100 font-bold leading-none tracking-tight uppercase">
+                INDUSTRIAL
+                <br />
+                <span className="text-primary glow-text">AUDIO</span>
+                <br />
+                WORKSHOP
+              </h1>
+              <div className="w-24 h-1 bg-primary shadow-gold-glow"></div>
+            </div>
+
+            <p className="text-body-lg text-neutral-300 font-body max-w-lg leading-relaxed">
+              Chế tạo loa bluetooth chuyên nghiệp và hệ thống karaoke di động
+              với tiêu chuẩn công nghiệp.{" "}
+              <span className="text-primary font-semibold">DIY Focus</span> -
+              <span className="text-primary font-semibold">Mobile-First</span> -
+              <span className="text-primary font-semibold">Trust</span>.
             </p>
-            <Link 
-              href="/products"
-              className="inline-flex items-center px-10 py-5 bg-goldAccent text-darkBg text-lg font-bold rounded-lg shadow-glowGold hover:shadow-glowGoldHover transition-all duration-500 transform hover:scale-105 hover:-translate-y-1 group"
-            >
-              <span className="mr-2">SHOP NOW</span>
-              <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd" />
-              </svg>
-            </Link>
+
+            {/* Trust Signals */}
+            <div className="flex items-center gap-6 text-body-sm text-neutral-400">
+              <div className="flex items-center gap-2">
+                <Shield className="h-4 w-4 text-primary" />
+                <span>Bảo hành 2 năm</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Zap className="h-4 w-4 text-primary" />
+                <span>Giao hàng 48h</span>
+              </div>
+            </div>
+
+            {/* CTA Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4">
+              <Link href="/products" className="btn-primary group">
+                <span>KHÁM PHÁ SẢN PHẨM</span>
+                <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" />
+              </Link>
+              <Link href="/custom" className="btn-secondary group">
+                <Wrench className="h-4 w-4" />
+                <span>ĐẶT CUSTOM</span>
+              </Link>
+            </div>
           </div>
-          
-          {/* Right Image */}
+
+          {/* Hero Visual - Industrial Speaker Mockup */}
           <div className="relative lg:justify-self-end">
-            <div className="relative w-full h-[500px] lg:h-[600px]">
-              {/* Glow background effect */}
-              <div className="absolute inset-0 bg-gradient-radial from-goldAccent/10 via-transparent to-transparent rounded-full blur-3xl transform scale-150"></div>
-              {/* Speaker mockup */}
-              <div className="relative w-full h-full bg-gradient-to-b from-darkGrey/40 to-darkGrey/20 rounded-2xl flex items-center justify-center border border-goldAccent/10 backdrop-blur-sm">
-                <div className="w-80 h-96 bg-gradient-to-b from-darkGrey to-darkBg rounded-xl border-2 border-goldAccent/30 flex flex-col items-center justify-center shadow-2xl relative overflow-hidden">
-                  {/* Speaker grille effect */}
-                  <div className="absolute inset-4 border border-goldAccent/20 rounded-lg"></div>
-                  <div className="absolute inset-8 border border-goldAccent/10 rounded-lg"></div>
-                  
-                  {/* Main speaker */}
-                  <div className="w-32 h-32 rounded-full bg-gradient-to-br from-darkGrey to-darkBg border-4 border-goldAccent/50 mb-4 flex items-center justify-center">
-                    <div className="w-20 h-20 rounded-full bg-goldAccent/20 border-2 border-goldAccent/40"></div>
+            <div className="relative w-full max-w-lg mx-auto">
+              {/* Glow Effects */}
+              <div className="absolute inset-0 bg-primary/10 rounded-full blur-3xl transform scale-150 animate-pulse"></div>
+
+              {/* Main Speaker Unit */}
+              <div className="card-industrial p-8 relative overflow-hidden">
+                {/* Industrial Frame */}
+                <div className="absolute inset-4 border-2 border-gray-600 rounded-xl"></div>
+                <div className="absolute inset-6 border border-primary/30 rounded-lg"></div>
+
+                {/* Speaker Components */}
+                <div className="relative space-y-6">
+                  {/* Brand Label */}
+                  <div className="text-center border-b border-gray-600 pb-4 mb-6">
+                    <div className="logo text-h3 mb-2">b-audio</div>
+                    <div className="text-microcopy text-neutral-400 tracking-widest uppercase">
+                      DIY SERIES
+                    </div>
                   </div>
-                  
+
+                  {/* Main Driver */}
+                  <div className="flex justify-center">
+                    <div className="w-40 h-40 rounded-full bg-secondary-800 border-4 border-primary/50 shadow-gold-glow flex items-center justify-center relative overflow-hidden">
+                      {/* Driver cone */}
+                      <div className="w-32 h-32 rounded-full bg-secondary-700 border-2 border-primary/30 flex items-center justify-center">
+                        <div className="w-20 h-20 rounded-full bg-primary/20 border border-primary/40"></div>
+                      </div>
+                      {/* Mounting screws */}
+                      <div className="absolute top-4 left-4 w-2 h-2 rounded-full bg-gray-500"></div>
+                      <div className="absolute top-4 right-4 w-2 h-2 rounded-full bg-gray-500"></div>
+                      <div className="absolute bottom-4 left-4 w-2 h-2 rounded-full bg-gray-500"></div>
+                      <div className="absolute bottom-4 right-4 w-2 h-2 rounded-full bg-gray-500"></div>
+                    </div>
+                  </div>
+
                   {/* Tweeter */}
-                  <div className="w-16 h-16 rounded-full bg-gradient-to-br from-neonTurquoise/30 to-neonTurquoise/10 border-2 border-neonTurquoise/50 flex items-center justify-center">
-                    <div className="w-8 h-8 rounded-full bg-neonTurquoise/40"></div>
+                  <div className="flex justify-center">
+                    <div className="w-20 h-20 rounded-full bg-secondary-800 border-2 border-gray-600 flex items-center justify-center">
+                      <div className="w-12 h-12 rounded-full bg-secondary-700 border border-gray-500 flex items-center justify-center">
+                        <div className="w-6 h-6 rounded-full bg-neutral-400"></div>
+                      </div>
+                    </div>
                   </div>
-                  
-                  {/* Control panel */}
-                  <div className="absolute bottom-6 left-6 right-6 h-8 bg-darkBg/80 rounded border border-goldAccent/30 flex items-center justify-center space-x-2">
-                    <div className="w-2 h-2 rounded-full bg-goldAccent/60"></div>
-                    <div className="w-2 h-2 rounded-full bg-neonTurquoise/60"></div>
-                    <div className="w-2 h-2 rounded-full bg-goldAccent/60"></div>
+
+                  {/* Control Panel */}
+                  <div className="bg-secondary-900 rounded-lg p-4 border border-gray-600">
+                    <div className="flex items-center justify-between">
+                      <div className="flex space-x-3">
+                        <div className="w-3 h-3 rounded-full bg-primary shadow-gold-glow animate-pulse"></div>
+                        <div className="w-3 h-3 rounded-full bg-gray-600"></div>
+                        <div className="w-3 h-3 rounded-full bg-gray-600"></div>
+                      </div>
+                      <div className="text-microcopy text-neutral-400 tracking-wider">
+                        POWER ON
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -76,83 +171,192 @@ export default async function Page() {
         </div>
       </section>
 
-      {/* Featured Products Section */}
-      <section className="bg-darkBg py-24 border-t border-darkGrey/30">
+      {/* Featured Products - Industrial Grid */}
+      <section className="section-dark py-24">
         <div className="mx-auto max-w-7xl px-6">
-          <h2 className="font-heading text-h1 text-textWhite mb-16 text-center">
-            FEATURED <span className="text-goldAccent">PRODUCTS</span>
-          </h2>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {[
-              { name: 'Bluetooth DIY Speaker', price: '$149', icon: '🎵', accent: 'goldAccent' },
-              { name: 'Portable Karaoke Speaker', price: '$269', icon: '🎤', accent: 'neonTurquoise' },
-              { name: 'Customizable DIY Speaker', price: '$179', icon: '🔊', accent: 'goldAccent' },
-              { name: 'DIY Karaoke Speaker', price: '$249', icon: '🎛️', accent: 'neonTurquoise' }
-            ].map((product, idx) => (
-              <div key={idx} className="group bg-darkGrey/40 rounded-xl overflow-hidden border border-darkGrey hover:border-goldAccent/50 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl">
-                <div className="aspect-square bg-gradient-to-br from-darkGrey/60 to-darkBg flex items-center justify-center relative overflow-hidden">
-                  <div className="absolute inset-0 bg-gradient-to-br from-transparent to-goldAccent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                  <div className="text-6xl group-hover:scale-110 transition-transform duration-500" style={{ filter: `drop-shadow(0 0 10px ${product.accent === 'goldAccent' ? '#C8A15A' : '#00E0B8'}66)` }}>
-                    {product.icon}
+          <div className="text-center mb-16">
+            <h2 className="font-heading text-h1 text-neutral-100 mb-4 uppercase tracking-tight">
+              SẢN PHẨM <span className="text-primary">NỔI BẬT</span>
+            </h2>
+            <div className="w-24 h-1 bg-primary mx-auto shadow-gold-glow"></div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 stagger-fade-up">
+            {featuredProducts.map((product, idx) => {
+              const attrs = product.attributes;
+              const imageUrl = attrs.images?.data?.[0]?.attributes?.url
+                ? mediaUrl(attrs.images.data[0].attributes.url)
+                : null;
+              const isCustom =
+                attrs.slug === "custom" ||
+                attrs.title?.toLowerCase().includes("custom");
+
+              return (
+                <Link
+                  key={product.id}
+                  href={isCustom ? "/custom" : `/products/${attrs.slug}`}
+                  className="card-product group relative block"
+                >
+                  {idx === 0 && (
+                    <div className="absolute -top-3 -right-3 bg-primary text-secondary-700 px-3 py-1 rounded-full text-microcopy font-bold uppercase tracking-wider shadow-gold-glow z-10">
+                      BÁN CHẠY
+                    </div>
+                  )}
+
+                  <div className="aspect-square bg-secondary-800 rounded-xl flex items-center justify-center relative mb-6 border border-gray-600 overflow-hidden">
+                    {imageUrl ? (
+                      <Image
+                        src={imageUrl}
+                        alt={attrs.title || "Product"}
+                        fill
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        className="object-cover group-hover:scale-105 transition-transform duration-500"
+                      />
+                    ) : (
+                      <div className="text-6xl group-hover:scale-110 transition-transform duration-500 filter drop-shadow-lg text-primary">
+                        🔊
+                      </div>
+                    )}
+
+                    {/* Overlay gradient on hover */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                   </div>
-                </div>
-                <div className="p-6 text-center">
-                  <h3 className="text-textWhite font-semibold mb-3 group-hover:text-goldAccent transition-colors duration-300">
-                    {product.name}
-                  </h3>
-                  <p className="text-goldAccent font-bold text-2xl">{product.price}</p>
-                </div>
-              </div>
-            ))}
+
+                  <div className="space-y-4">
+                    <h3 className="font-heading text-h4 text-neutral-100 group-hover:text-primary transition-colors duration-300 uppercase tracking-wide">
+                      {attrs.title || "Sản phẩm"}
+                    </h3>
+                    <p className="text-body-sm text-neutral-400 font-mono">
+                      {attrs.power_watt ? `${attrs.power_watt}W RMS` : ""}
+                      {attrs.battery_hours
+                        ? ` • Pin ${attrs.battery_hours}h`
+                        : ""}
+                      {attrs.connectivity ? ` • ${attrs.connectivity}` : ""}
+                    </p>
+                    <div className="flex items-center justify-between">
+                      <span className="text-h3 font-heading text-primary font-bold">
+                        {attrs.price
+                          ? new Intl.NumberFormat("vi-VN").format(attrs.price)
+                          : "Liên hệ"}
+                        ₫
+                      </span>
+                      <span className="btn-ghost text-body-sm px-4 py-2">
+                        XEM CHI TIẾT
+                      </span>
+                    </div>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+
+          <div className="text-center mt-12">
+            <Link href="/products" className="btn-primary group">
+              <span>XEM TẤT CẢ SẢN PHẨM</span>
+              <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" />
+            </Link>
           </div>
         </div>
       </section>
 
-      {/* Custom Speaker Builds Section */}
-      <section className="bg-gradient-to-br from-darkBg to-darkGrey/20 py-24 border-t border-darkGrey/30">
+      {/* DIY Workshop Section */}
+      <section className="section-accent py-24">
         <div className="mx-auto max-w-7xl px-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            {/* Left Content */}
+            {/* Content */}
             <div className="space-y-8">
-              <h2 className="font-heading text-hero text-textWhite font-bold">
-                CUSTOM SPEAKER<br />
-                <span className="text-neonTurquoise">BUILDS</span>
-              </h2>
-              <p className="text-xl text-textGrey leading-relaxed max-w-lg">
-                Design your own DIY speaker tailored to your specifications. Choose components, 
-                materials, and finishes to create a one-of-a-kind audio system.
+              <div>
+                <h2 className="font-heading text-hero text-neutral-100 font-bold uppercase leading-none mb-4">
+                  WORKSHOP
+                  <br />
+                  <span className="text-primary">DIY FOCUS</span>
+                </h2>
+                <div className="w-24 h-1 bg-primary shadow-gold-glow mb-6"></div>
+              </div>
+
+              <p className="text-body-lg text-neutral-300 leading-relaxed">
+                Xưởng chế tạo chuyên nghiệp với đội ngũ kỹ thuật giàu kinh
+                nghiệm. Chúng tôi tập trung vào việc tạo ra những sản phẩm audio
+                chất lượng cao theo tiêu chuẩn công nghiệp, phù hợp với nhu cầu
+                DIY của khách hàng.
               </p>
-              <Link 
-                href="/custom"
-                className="inline-flex items-center px-10 py-5 bg-neonTurquoise text-darkBg text-lg font-bold rounded-lg shadow-glowNeon hover:shadow-glowNeonHover transition-all duration-500 transform hover:scale-105 hover:-translate-y-1 group"
-              >
-                <span className="mr-2">START CUSTOMIZING</span>
-                <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd" />
-                </svg>
+
+              {/* Features */}
+              <div className="space-y-4">
+                {[
+                  "Thiết kế theo yêu cầu riêng biệt",
+                  "Linh kiện chính hãng, chất lượng cao",
+                  "Test âm thanh chuyên nghiệp",
+                  "Hỗ trợ kỹ thuật trọn đời",
+                ].map((feature, idx) => (
+                  <div key={idx} className="flex items-center gap-3">
+                    <div className="w-2 h-2 bg-primary rounded-full shadow-gold-glow"></div>
+                    <span className="text-body text-neutral-300">
+                      {feature}
+                    </span>
+                  </div>
+                ))}
+              </div>
+
+              <Link href="/custom" className="btn-primary group">
+                <Wrench className="h-4 w-4" />
+                <span>BẮT ĐẦU DỰ ÁN DIY</span>
+                <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" />
               </Link>
             </div>
 
-            {/* Right Image */}
+            {/* Workshop Visual */}
             <div className="relative lg:justify-self-end">
-              <div className="relative w-full h-[500px]">
-                <div className="absolute inset-0 bg-gradient-radial from-neonTurquoise/10 via-transparent to-transparent rounded-full blur-3xl transform scale-150"></div>
-                <div className="relative w-full h-full bg-gradient-to-b from-darkGrey/40 to-darkGrey/20 rounded-2xl flex items-center justify-center border border-neonTurquoise/10 backdrop-blur-sm">
-                  <div className="w-80 h-96 bg-gradient-to-b from-darkGrey to-darkBg rounded-xl border-2 border-neonTurquoise/30 flex flex-col items-center justify-center shadow-2xl relative overflow-hidden">
-                    {/* Tool/Customize icons */}
-                    <div className="absolute top-4 left-4 w-8 h-8 bg-neonTurquoise/20 rounded border border-neonTurquoise/40 flex items-center justify-center">
-                      <span className="text-xs">⚙️</span>
+              <div className="card-industrial p-8 max-w-md mx-auto">
+                <div className="space-y-6">
+                  {/* Workshop Header */}
+                  <div className="text-center border-b border-gray-600 pb-4">
+                    <Settings className="h-8 w-8 text-primary mx-auto mb-2" />
+                    <div className="font-heading text-h4 text-neutral-100 uppercase tracking-wide">
+                      DIY WORKSHOP
                     </div>
-                    <div className="absolute top-4 right-4 w-8 h-8 bg-goldAccent/20 rounded border border-goldAccent/40 flex items-center justify-center">
-                      <span className="text-xs">🔧</span>
-                    </div>
-                    
-                    <div className="text-8xl text-neonTurquoise opacity-80 mb-4">🛠️</div>
-                    <div className="text-center space-y-2">
-                      <div className="text-textWhite font-semibold">CUSTOM BUILD</div>
-                      <div className="text-textGrey text-sm">Your Specifications</div>
-                    </div>
+                  </div>
+
+                  {/* Process Steps */}
+                  <div className="space-y-4">
+                    {[
+                      { step: "01", label: "THIẾT KẾ", status: "active" },
+                      { step: "02", label: "CHẾ TẠO", status: "pending" },
+                      {
+                        step: "03",
+                        label: "TEST CHẤT LƯỢNG",
+                        status: "pending",
+                      },
+                      { step: "04", label: "GIAO HÀNG", status: "pending" },
+                    ].map((item, idx) => (
+                      <div
+                        key={idx}
+                        className={`flex items-center gap-4 p-3 rounded-lg border ${
+                          item.status === "active"
+                            ? "border-primary bg-primary/10"
+                            : "border-gray-600 bg-secondary-800/50"
+                        }`}
+                      >
+                        <div
+                          className={`w-8 h-8 rounded-full flex items-center justify-center text-label font-bold ${
+                            item.status === "active"
+                              ? "bg-primary text-secondary-700"
+                              : "bg-gray-600 text-neutral-400"
+                          }`}
+                        >
+                          {item.step}
+                        </div>
+                        <span
+                          className={`text-body-sm font-heading uppercase tracking-wide ${
+                            item.status === "active"
+                              ? "text-primary"
+                              : "text-neutral-400"
+                          }`}
+                        >
+                          {item.label}
+                        </span>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>

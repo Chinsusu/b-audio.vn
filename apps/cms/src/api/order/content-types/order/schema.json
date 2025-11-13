@@ -29,23 +29,12 @@
     },
     "status": {
       "type": "enumeration",
-      "enum": [
-        "new",
-        "processing",
-        "done",
-        "cancelled"
-      ],
+      "enum": ["new", "processing", "done", "cancelled"],
       "default": "new"
     },
     "payment_method": {
       "type": "enumeration",
-      "enum": [
-        "cod",
-        "vnpay",
-        "momo",
-        "zalopay",
-        "bank"
-      ],
+      "enum": ["cod", "vnpay", "momo", "zalopay", "bank"],
       "default": "cod"
     },
     "payment_ref": {

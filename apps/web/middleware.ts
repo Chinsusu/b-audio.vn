@@ -1,9 +1,9 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from "next/server";
 
 export function middleware(request: NextRequest) {
   // Skip HTTPS redirect when behind Cloudflare proxy
   // Cloudflare handles HTTPS termination and passes traffic to origin via HTTP
-  
+
   return NextResponse.next();
 }
 
@@ -16,6 +16,6 @@ export const config = {
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
      */
-    '/((?!api|_next/static|_next/image|favicon.ico).*)',
+    "/((?!api|_next/static|_next/image|favicon.ico).*)",
   ],
 };

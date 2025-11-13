@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
 export interface Toast {
   id: string;
-  type: 'success' | 'error' | 'info' | 'warning';
+  type: "success" | "error" | "info" | "warning";
   title: string;
   description?: string;
   duration?: number;
@@ -23,7 +23,7 @@ class ToastManager {
     this.subscribers.forEach((callback) => callback([...this.toasts]));
   }
 
-  show(toast: Omit<Toast, 'id'>): string {
+  show(toast: Omit<Toast, "id">): string {
     const id = this.generateId();
     const newToast: Toast = {
       ...toast,
@@ -45,19 +45,19 @@ class ToastManager {
   }
 
   success(title: string, description?: string, duration?: number): string {
-    return this.show({ type: 'success', title, description, duration });
+    return this.show({ type: "success", title, description, duration });
   }
 
   error(title: string, description?: string, duration?: number): string {
-    return this.show({ type: 'error', title, description, duration });
+    return this.show({ type: "error", title, description, duration });
   }
 
   info(title: string, description?: string, duration?: number): string {
-    return this.show({ type: 'info', title, description, duration });
+    return this.show({ type: "info", title, description, duration });
   }
 
   warning(title: string, description?: string, duration?: number): string {
-    return this.show({ type: 'warning', title, description, duration });
+    return this.show({ type: "warning", title, description, duration });
   }
 
   dismiss(id: string): void {
@@ -74,7 +74,7 @@ class ToastManager {
     this.subscribers.add(callback);
     // Send current toasts immediately
     callback([...this.toasts]);
-    
+
     return () => {
       this.subscribers.delete(callback);
     };
@@ -90,8 +90,12 @@ export const toastManager = new ToastManager();
 
 // Convenience function for easy usage
 export const toast = {
-  success: (title: string, description?: string) => toastManager.success(title, description),
-  error: (title: string, description?: string) => toastManager.error(title, description),
-  info: (title: string, description?: string) => toastManager.info(title, description),
-  warning: (title: string, description?: string) => toastManager.warning(title, description),
+  success: (title: string, description?: string) =>
+    toastManager.success(title, description),
+  error: (title: string, description?: string) =>
+    toastManager.error(title, description),
+  info: (title: string, description?: string) =>
+    toastManager.info(title, description),
+  warning: (title: string, description?: string) =>
+    toastManager.warning(title, description),
 };

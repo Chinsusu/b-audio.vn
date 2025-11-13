@@ -1,15 +1,16 @@
-'use client';
-import Link from 'next/link';
-import { useState } from 'react';
-import { useWishlist } from '../../hooks/useWishlist';
-import { useCart } from '../../hooks/useCart';
-import { formatPrice } from '../../lib/cart';
-import { formatWishlistDate } from '../../lib/wishlist';
+"use client";
+import Link from "next/link";
+import { useState } from "react";
+
+import { useCart } from "../../hooks/useCart";
+import { useWishlist } from "../../hooks/useWishlist";
+import { formatPrice } from "../../lib/cart";
+import { formatWishlistDate } from "../../lib/wishlist";
 
 export default function WishlistPageClient() {
   const { wishlist, removeItem, clearWishlist, shareWishlist } = useWishlist();
   const { addItem: addToCart } = useCart();
-  const [shareUrl, setShareUrl] = useState('');
+  const [shareUrl, setShareUrl] = useState("");
   const [showShareModal, setShowShareModal] = useState(false);
 
   const handleMoveToCart = (item: any) => {
@@ -40,7 +41,7 @@ export default function WishlistPageClient() {
         await navigator.clipboard.writeText(url);
       }
     } catch (error) {
-      console.error('Failed to share wishlist:', error);
+      console.error("Failed to share wishlist:", error);
     }
   };
 
@@ -57,9 +58,12 @@ export default function WishlistPageClient() {
             />
           </svg>
         </div>
-        <h2 className="font-heading text-h3 text-textWhite mb-2">Danh sách yêu thích trống</h2>
+        <h2 className="font-heading text-h3 text-textWhite mb-2">
+          Danh sách yêu thích trống
+        </h2>
         <p className="text-textGrey mb-6">
-          Hãy khám phá các sản phẩm tuyệt vời và thêm vào danh sách yêu thích của bạn!
+          Hãy khám phá các sản phẩm tuyệt vời và thêm vào danh sách yêu thích
+          của bạn!
         </p>
         <Link
           href="/products"
@@ -85,7 +89,12 @@ export default function WishlistPageClient() {
               onClick={handleShare}
               className="flex items-center gap-2 rounded-2xl border border-darkGrey px-4 py-2 text-sm text-textWhite hover:bg-darkGrey/60 transition-colors focus:outline-none focus:ring-2 focus:ring-neonTurquoise focus:ring-offset-2 focus:ring-offset-darkBg"
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -100,7 +109,12 @@ export default function WishlistPageClient() {
               onClick={clearWishlist}
               className="flex items-center gap-2 rounded-2xl text-sm text-red-400 hover:text-textWhite hover:bg-red-500/10 hover:border-red-500/30 border border-transparent px-4 py-2 transition-colors"
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -117,7 +131,10 @@ export default function WishlistPageClient() {
       {/* Wishlist Items */}
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
         {wishlist.items.map((item) => (
-          <div key={item.id} className="bg-darkBg/40 border border-darkGrey rounded-2xl p-4 backdrop-blur-sm">
+          <div
+            key={item.id}
+            className="bg-darkBg/40 border border-darkGrey rounded-2xl p-4 backdrop-blur-sm"
+          >
             {/* Image */}
             <div className="relative mb-4">
               {item.imageUrl ? (
@@ -128,7 +145,12 @@ export default function WishlistPageClient() {
                 />
               ) : (
                 <div className="w-full aspect-square rounded-xl bg-darkGrey/40 border border-darkGrey flex items-center justify-center">
-                  <svg className="w-12 h-12 text-textGrey" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg
+                    className="w-12 h-12 text-textGrey"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -145,8 +167,18 @@ export default function WishlistPageClient() {
                 className="absolute top-2 right-2 w-8 h-8 bg-darkGrey/80 border border-darkGrey rounded-full flex items-center justify-center text-textGrey hover:text-textWhite hover:border-red-500/40 hover:bg-red-500/10 transition-colors"
                 title="Bỏ yêu thích"
               >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
                 </svg>
               </button>
             </div>
@@ -160,10 +192,14 @@ export default function WishlistPageClient() {
                 >
                   {item.title}
                 </Link>
-                <div className="text-sm text-textGrey mt-1">Đã thêm {formatWishlistDate(item.addedAt)}</div>
+                <div className="text-sm text-textGrey mt-1">
+                  Đã thêm {formatWishlistDate(item.addedAt)}
+                </div>
               </div>
 
-              <div className="text-lg font-semibold text-goldAccent">{formatPrice(item.price)}</div>
+              <div className="text-lg font-semibold text-goldAccent">
+                {formatPrice(item.price)}
+              </div>
 
               {/* Actions */}
               <div className="flex gap-2">
@@ -190,20 +226,34 @@ export default function WishlistPageClient() {
         <div className="fixed inset-0 bg-darkBg/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-darkGrey/95 border border-darkGrey rounded-2xl p-6 max-w-md w-full text-textWhite">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="font-heading text-h4 text-textWhite">Chia sẻ danh sách yêu thích</h3>
+              <h3 className="font-heading text-h4 text-textWhite">
+                Chia sẻ danh sách yêu thích
+              </h3>
               <button
                 onClick={() => setShowShareModal(false)}
                 className="text-textGrey hover:text-textWhite"
               >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
                 </svg>
               </button>
             </div>
 
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-textGrey mb-2">Link chia sẻ:</label>
+                <label className="block text-sm font-medium text-textGrey mb-2">
+                  Link chia sẻ:
+                </label>
                 <div className="flex gap-2">
                   <input
                     type="text"

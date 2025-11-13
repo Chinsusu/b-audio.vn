@@ -1,0 +1,27 @@
+{
+  "name": "mono-root",
+  "private": true,
+  "scripts": {
+    "prepare": "husky install"
+  },
+  "devDependencies": {
+    "husky": "^9.1.6",
+    "lint-staged": "^15.2.10"
+  },
+  "lint-staged": {
+    "apps/web/**/*.{js,jsx,ts,tsx}": [
+      "pnpm --dir apps/web exec prettier --write --",
+      "pnpm --dir apps/web exec eslint --fix --"
+    ],
+    "apps/web/**/*.{css,md,json,yml,yaml}": [
+      "pnpm --dir apps/web exec prettier --write --"
+    ],
+    "apps/cms/**/*.{js,jsx,ts,tsx}": [
+      "pnpm --dir apps/cms exec prettier --write --",
+      "pnpm --dir apps/cms exec eslint --fix --"
+    ],
+    "apps/cms/**/*.{css,md,json,yml,yaml}": [
+      "pnpm --dir apps/cms exec prettier --write --"
+    ]
+  }
+}

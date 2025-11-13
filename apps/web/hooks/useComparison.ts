@@ -1,9 +1,17 @@
-'use client';
-import { useState, useEffect } from 'react';
-import { Comparison, ComparisonItem, comparisonManager } from '../lib/comparison';
+"use client";
+import { useEffect,useState } from "react";
+
+import {
+  Comparison,
+  ComparisonItem,
+  comparisonManager,
+} from "../lib/comparison";
 
 export function useComparison() {
-  const [comparison, setComparison] = useState<Comparison>({ items: [], itemCount: 0 });
+  const [comparison, setComparison] = useState<Comparison>({
+    items: [],
+    itemCount: 0,
+  });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -19,7 +27,7 @@ export function useComparison() {
     return unsubscribe;
   }, []);
 
-  const addItem = (item: Omit<ComparisonItem, 'addedAt'>) => {
+  const addItem = (item: Omit<ComparisonItem, "addedAt">) => {
     try {
       return comparisonManager.addItem(item);
     } catch (error) {
@@ -31,7 +39,7 @@ export function useComparison() {
     return comparisonManager.removeItem(itemId);
   };
 
-  const toggleItem = (item: Omit<ComparisonItem, 'addedAt'>) => {
+  const toggleItem = (item: Omit<ComparisonItem, "addedAt">) => {
     try {
       return comparisonManager.toggleItem(item);
     } catch (error) {

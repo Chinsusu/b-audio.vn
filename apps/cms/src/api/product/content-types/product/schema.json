@@ -40,13 +40,7 @@
     },
     "connectivity": {
       "type": "enumeration",
-      "enum": [
-        "BT",
-        "AUX",
-        "USB",
-        "MIC",
-        "GUITAR"
-      ],
+      "enum": ["BT", "AUX", "USB", "MIC", "GUITAR"],
       "default": "BT"
     },
     "images": {

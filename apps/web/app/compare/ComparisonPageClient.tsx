@@ -1,201 +1,497 @@
-'use client';
-import { useComparison } from '@/hooks/useComparison';
-import { Trash2, Share2, X } from 'lucide-react';
-import Link from 'next/link';
-import { useState } from 'react';
+"use client";
+import {
+  ArrowRight,
+  BarChart3,
+  Battery,
+  Check,
+  Plus,
+  Share2,
+  ShoppingBag,
+  X,
+  Zap,
+} from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { useState } from "react";
+
+import { useComparison } from "../../hooks/useComparison";
+import { mediaUrl } from "../../utils/mediaUrl";
+
+// Mock data for demo - in real app, this would come from API
+const mockProductDetails = {
+  "ba-mini": {
+    power_watt: 50,
+    battery_hours: 12,
+    connectivity: ["Bluetooth 5.0", "AUX", "USB"],
+    weight: 2.5,
+    dimensions: "25x15x18cm",
+    features: ["IPX4 Chống nước", "Bass Boost", "LED RGB", "Micro không dây"],
+    pros: ["Âm bass sâu", "Pin trâu", "Thiết kế đẹp"],
+    cons: ["Hơi nặng", "Giá cao"],
+  },
+  "ba-k1": {
+    power_watt: 100,
+    battery_hours: 8,
+    connectivity: ["Bluetooth 5.0", "AUX", "USB", "Micro"],
+    weight: 4.2,
+    dimensions: "35x25x28cm",
+    features: ["2 Micro không dây", "Echo/Reverb", "LED Party", "Wheels"],
+    pros: ["Âm thanh cực mạnh", "Full tính năng karaoke", "Di chuyển dễ"],
+    cons: ["Khá nặng", "Pin yếu hơn"],
+  },
+};
 
 export default function ComparisonPageClient() {
-  const { comparison, removeItem, clearComparison, shareComparison } = useComparison();
-  const [showShareToast, setShowShareToast] = useState(false);
+  const { comparison, removeItem, clearComparison } = useComparison();
+  const [showDetails, setShowDetails] = useState({
+    features: true,
+    specs: true,
+    proscons: true,
+  });
 
   const handleShare = async () => {
     try {
-      const shareUrl = shareComparison();
-      await navigator.clipboard.writeText(shareUrl);
-      setShowShareToast(true);
-      setTimeout(() => setShowShareToast(false), 2000);
-    } catch (error) {
-      console.error('Failed to copy share URL:', error);
+      await navigator.share({
+        title: "So sánh sản phẩm B-Audio",
+        text: `So sánh ${comparison.items.map((item) => item.attributes.title).join(" vs ")}`,
+        url: window.location.href,
+      });
+    } catch (_error) {
+      // Fallback to copy URL
+      navigator.clipboard.writeText(window.location.href);
+      alert("Đã copy link so sánh!");
     }
   };
 
   if (comparison.itemCount === 0) {
     return (
-      <main className="mx-auto max-w-6xl px-4 py-16">
-        <div className="text-center">
-          <div className="text-6xl mb-4">📊</div>
-          <h1 className="text-2xl font-bold mb-2">Chưa có sản phẩm để so sánh</h1>
-          <p className="text-gray-600 mb-8">
-            Thêm sản phẩm vào danh sách so sánh để xem bảng so sánh chi tiết
+      <div className="card-industrial p-12 text-center">
+        <div className="mb-8">
+          <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-secondary-800 border-2 border-gray-600 flex items-center justify-center">
+            <BarChart3 className="w-10 h-10 text-primary" />
+          </div>
+          <h2 className="font-heading text-h1 text-neutral-100 mb-4 uppercase tracking-wide">
+            CHƯA CÓ SẢN PHẨM SO SÁNH
+          </h2>
+          <p className="text-body-lg text-neutral-400 leading-relaxed max-w-md mx-auto">
+            Thêm sản phẩm từ trang danh sách để so sánh thông số kỹ thuật, tính
+            năng và giá cả một cách chi tiết.
           </p>
-          <Link 
-            href="/products" 
-            className="inline-block bg-black text-white px-6 py-3 rounded-lg hover:bg-gray-800 transition-colors"
-          >
-            Khám phá sản phẩm
-          </Link>
         </div>
-      </main>
+
+        <Link href="/products" className="btn-primary group">
+          <span>KHÁM PHÁ SẢN PHẨM</span>
+          <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" />
+        </Link>
+      </div>
     );
   }
 
-  const formatPrice = (value: number) => `${new Intl.NumberFormat('vi-VN').format(value)} đ`;
-  const formatWatt = (value?: number) => value ? `${value}W` : 'N/A';
-  const formatHours = (value?: number) => value ? `${value}h` : 'N/A';
-  const formatString = (value?: string) => value || 'N/A';
-
   return (
-    <main className="mx-auto max-w-7xl px-4 py-8">
-      {/* Header */}
-      <div className="mb-8 flex items-center justify-between">
+    <div className="space-y-8">
+      {/* Header Controls */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold">So sánh sản phẩm</h1>
-          <p className="text-gray-600 mt-2">
-            So sánh {comparison.itemCount} sản phẩm đã chọn
+          <h2 className="font-heading text-h2 text-neutral-100 mb-2 uppercase tracking-wide">
+            SO SÁNH SẢN PHẨM
+          </h2>
+          <p className="text-body text-neutral-400">
+            {comparison.itemCount} sản phẩm đang được so sánh
           </p>
         </div>
-        <div className="flex gap-3">
-          <button
-            onClick={handleShare}
-            className="flex items-center gap-2 px-4 py-2 border rounded-lg hover:bg-gray-50 transition-colors"
-          >
-            <Share2 className="w-4 h-4" />
-            Chia sẻ
+
+        <div className="flex items-center gap-3">
+          <button onClick={handleShare} className="btn-secondary group">
+            <Share2 className="h-4 w-4" />
+            <span>CHIA SẺ</span>
           </button>
           <button
             onClick={clearComparison}
-            className="flex items-center gap-2 px-4 py-2 text-red-600 border border-red-600 rounded-lg hover:bg-red-50 transition-colors"
+            className="btn-ghost text-body-sm px-4 py-2"
           >
-            <Trash2 className="w-4 h-4" />
-            Xóa tất cả
+            XÓA TẤT CẢ
           </button>
         </div>
       </div>
 
       {/* Comparison Table */}
-      <div className="bg-white rounded-2xl shadow border overflow-x-auto">
-        <table className="w-full">
-          <thead>
-            <tr className="border-b bg-gray-50">
-              <td className="p-4 font-medium sticky left-0 bg-gray-50 z-10">Thông số</td>
-              {comparison.items.map((item) => (
-                <td key={item.id} className="p-4 min-w-[250px] relative">
-                  <button
-                    onClick={() => removeItem(item.id)}
-                    className="absolute top-2 right-2 w-6 h-6 flex items-center justify-center bg-red-100 text-red-600 rounded-full hover:bg-red-200 transition-colors"
-                    title="Bỏ khỏi so sánh"
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
-                  
-                  {/* Product Image */}
-                  <div className="mb-3">
-                    {item.attributes.images?.data?.[0] && (
-                      <img
-                        src={item.attributes.images.data[0].attributes.url}
-                        alt={item.attributes.title}
-                        className="w-full aspect-square object-cover rounded-lg"
-                      />
-                    )}
-                  </div>
-                </td>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {/* Product Names */}
-            <tr className="bg-white">
-              <td className="p-4 font-medium sticky left-0 bg-white z-10 border-r">Tên sản phẩm</td>
-              {comparison.items.map((item) => (
-                <td key={item.id} className="p-4">
-                  <Link 
-                    href={`/products/${item.slug}`}
-                    className="font-medium text-black hover:text-blue-600 transition-colors"
-                  >
-                    {item.attributes.title}
-                  </Link>
-                </td>
-              ))}
-            </tr>
-
-            {/* Price */}
-            <tr className="bg-gray-50/50">
-              <td className="p-4 font-medium sticky left-0 bg-gray-50/50 z-10 border-r">Giá</td>
-              {comparison.items.map((item) => (
-                <td key={item.id} className="p-4">
-                  <span className="font-semibold text-green-600">
-                    {formatPrice(item.attributes.price_vnd)}
+      <div className="card-industrial p-0 overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            {/* Product Headers */}
+            <thead>
+              <tr className="border-b border-gray-600">
+                <th className="p-6 text-left w-48">
+                  <span className="font-heading text-body-sm text-neutral-400 uppercase tracking-wide">
+                    THÔNG SỐ
                   </span>
-                </td>
-              ))}
-            </tr>
+                </th>
+                {comparison.items.map((product, _index) => {
+                  const imageUrl =
+                    product.attributes.images?.data?.[0]?.attributes?.url;
 
-            {/* Power */}
-            <tr className="bg-white">
-              <td className="p-4 font-medium sticky left-0 bg-white z-10 border-r">Công suất</td>
-              {comparison.items.map((item) => (
-                <td key={item.id} className="p-4">
-                  {formatWatt(item.attributes.power_watt)}
-                </td>
-              ))}
-            </tr>
-
-            {/* Battery */}
-            <tr className="bg-gray-50/50">
-              <td className="p-4 font-medium sticky left-0 bg-gray-50/50 z-10 border-r">Pin</td>
-              {comparison.items.map((item) => (
-                <td key={item.id} className="p-4">
-                  {formatHours(item.attributes.battery_hours)}
-                </td>
-              ))}
-            </tr>
-
-            {/* Connectivity */}
-            <tr className="bg-white">
-              <td className="p-4 font-medium sticky left-0 bg-white z-10 border-r">Kết nối</td>
-              {comparison.items.map((item) => (
-                <td key={item.id} className="p-4">
-                  {formatString(item.attributes.connectivity)}
-                </td>
-              ))}
-            </tr>
-            
-            {/* Action Row */}
-            <tr className="border-t-2">
-              <td className="p-4 font-medium sticky left-0 bg-white z-10">Hành động</td>
-              {comparison.items.map((item) => (
-                <td key={item.id} className="p-4">
-                  <div className="flex gap-2">
-                    <Link
-                      href={`/products/${item.slug}`}
-                      className="flex-1 text-center bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors text-sm"
+                  return (
+                    <th
+                      key={product.id}
+                      className="p-6 text-center min-w-[280px] border-l border-gray-600"
                     >
-                      Xem chi tiết
+                      {/* Product Card */}
+                      <div className="relative">
+                        {/* Remove Button */}
+                        <button
+                          onClick={() => removeItem(product.id)}
+                          className="absolute -top-2 -right-2 w-8 h-8 rounded-full bg-red-500 text-white flex items-center justify-center hover:bg-red-600 transition-colors z-10"
+                        >
+                          <X className="h-4 w-4" />
+                        </button>
+
+                        {/* Product Image */}
+                        <div className="relative w-32 h-32 mx-auto mb-4 rounded-xl bg-secondary-800 border border-gray-600 overflow-hidden">
+                          {imageUrl ? (
+                            <Image
+                              src={mediaUrl(imageUrl)}
+                              alt={product.attributes.title}
+                              fill
+                              className="object-cover"
+                            />
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center">
+                              <span className="text-4xl">🔊</span>
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Product Info */}
+                        <h3 className="font-heading text-h4 text-neutral-100 mb-2 uppercase tracking-wide">
+                          {product.attributes.title}
+                        </h3>
+                        <div className="text-h3 font-heading text-primary font-bold mb-4">
+                          {new Intl.NumberFormat("vi-VN").format(
+                            product.attributes.price_vnd,
+                          )}{" "}
+                          ₫
+                        </div>
+
+                        {/* Quick Actions */}
+                        <div className="flex gap-2">
+                          <Link
+                            href={`/products/${product.slug}`}
+                            className="btn-secondary flex-1 text-body-sm px-3 py-2"
+                          >
+                            XEM CHI TIẾT
+                          </Link>
+                          <button className="btn-primary px-3 py-2 group">
+                            <ShoppingBag className="h-4 w-4" />
+                          </button>
+                        </div>
+                      </div>
+                    </th>
+                  );
+                })}
+                {/* Add More Column */}
+                {comparison.itemCount < 4 && (
+                  <th className="p-6 text-center min-w-[200px] border-l border-gray-600">
+                    <Link
+                      href="/products"
+                      className="flex flex-col items-center justify-center h-full min-h-[300px] text-neutral-400 hover:text-primary transition-colors group"
+                    >
+                      <Plus className="h-12 w-12 mb-4 group-hover:scale-110 transition-transform" />
+                      <span className="font-heading text-body uppercase tracking-wide">
+                        THÊM SẢN PHẨM
+                      </span>
                     </Link>
-                  </div>
+                  </th>
+                )}
+              </tr>
+            </thead>
+
+            <tbody>
+              {/* Technical Specs Section */}
+              <tr>
+                <td
+                  colSpan={
+                    comparison.itemCount + (comparison.itemCount < 4 ? 2 : 1)
+                  }
+                  className="p-0"
+                >
+                  <button
+                    onClick={() =>
+                      setShowDetails((prev) => ({
+                        ...prev,
+                        specs: !prev.specs,
+                      }))
+                    }
+                    className="w-full p-4 text-left bg-secondary-800/50 border-b border-gray-600 font-heading text-body-sm text-neutral-200 uppercase tracking-wide hover:bg-secondary-800/70 transition-colors"
+                  >
+                    THÔNG SỐ KỸ THUẬT {showDetails.specs ? "▼" : "▶"}
+                  </button>
                 </td>
-              ))}
-            </tr>
-          </tbody>
-        </table>
+              </tr>
+
+              {showDetails.specs && (
+                <>
+                  {/* Power */}
+                  <tr className="border-b border-gray-600/50">
+                    <td className="p-4 font-heading text-body-sm text-neutral-400 uppercase tracking-wide flex items-center gap-2">
+                      <Zap className="h-4 w-4 text-primary" />
+                      CÔNG SUẤT
+                    </td>
+                    {comparison.items.map((product) => {
+                      const mockDetails =
+                        mockProductDetails[
+                          product.id as keyof typeof mockProductDetails
+                        ];
+                      return (
+                        <td
+                          key={`power-${product.id}`}
+                          className="p-4 text-center border-l border-gray-600/50"
+                        >
+                          <span className="font-heading text-body text-neutral-100 font-semibold">
+                            {product.attributes.power_watt ||
+                              mockDetails?.power_watt ||
+                              "N/A"}
+                            W RMS
+                          </span>
+                        </td>
+                      );
+                    })}
+                    {comparison.itemCount < 4 && (
+                      <td className="border-l border-gray-600/50"></td>
+                    )}
+                  </tr>
+
+                  {/* Battery */}
+                  <tr className="border-b border-gray-600/50">
+                    <td className="p-4 font-heading text-body-sm text-neutral-400 uppercase tracking-wide flex items-center gap-2">
+                      <Battery className="h-4 w-4 text-primary" />
+                      PIN
+                    </td>
+                    {comparison.items.map((product) => {
+                      const mockDetails =
+                        mockProductDetails[
+                          product.id as keyof typeof mockProductDetails
+                        ];
+                      return (
+                        <td
+                          key={`battery-${product.id}`}
+                          className="p-4 text-center border-l border-gray-600/50"
+                        >
+                          <span className="font-heading text-body text-neutral-100 font-semibold">
+                            {product.attributes.battery_hours ||
+                              mockDetails?.battery_hours ||
+                              "N/A"}
+                            h
+                          </span>
+                        </td>
+                      );
+                    })}
+                    {comparison.itemCount < 4 && (
+                      <td className="border-l border-gray-600/50"></td>
+                    )}
+                  </tr>
+
+                  {/* Weight & Dimensions */}
+                  <tr className="border-b border-gray-600/50">
+                    <td className="p-4 font-heading text-body-sm text-neutral-400 uppercase tracking-wide">
+                      CHI TIẾT
+                    </td>
+                    {comparison.items.map((product) => {
+                      const mockDetails =
+                        mockProductDetails[
+                          product.id as keyof typeof mockProductDetails
+                        ];
+                      return (
+                        <td
+                          key={`details-${product.id}`}
+                          className="p-4 text-center border-l border-gray-600/50"
+                        >
+                          <div className="space-y-1">
+                            <div className="text-body-sm text-neutral-300">
+                              {mockDetails?.weight}kg
+                            </div>
+                            <div className="text-body-sm text-neutral-400">
+                              {mockDetails?.dimensions}
+                            </div>
+                          </div>
+                        </td>
+                      );
+                    })}
+                    {comparison.itemCount < 4 && (
+                      <td className="border-l border-gray-600/50"></td>
+                    )}
+                  </tr>
+                </>
+              )}
+
+              {/* Features Section */}
+              <tr>
+                <td
+                  colSpan={
+                    comparison.itemCount + (comparison.itemCount < 4 ? 2 : 1)
+                  }
+                  className="p-0"
+                >
+                  <button
+                    onClick={() =>
+                      setShowDetails((prev) => ({
+                        ...prev,
+                        features: !prev.features,
+                      }))
+                    }
+                    className="w-full p-4 text-left bg-secondary-800/50 border-b border-gray-600 font-heading text-body-sm text-neutral-200 uppercase tracking-wide hover:bg-secondary-800/70 transition-colors"
+                  >
+                    TÍNH NĂNG {showDetails.features ? "▼" : "▶"}
+                  </button>
+                </td>
+              </tr>
+
+              {showDetails.features && (
+                <tr>
+                  <td className="p-4 font-heading text-body-sm text-neutral-400 uppercase tracking-wide">
+                    TÍNH NĂNG
+                  </td>
+                  {comparison.items.map((product) => {
+                    const mockDetails =
+                      mockProductDetails[
+                        product.id as keyof typeof mockProductDetails
+                      ];
+                    return (
+                      <td
+                        key={`features-${product.id}`}
+                        className="p-4 border-l border-gray-600/50"
+                      >
+                        <div className="space-y-2">
+                          {mockDetails?.features?.map((feature, index) => (
+                            <div
+                              key={index}
+                              className="flex items-center gap-2"
+                            >
+                              <Check className="h-3 w-3 text-primary flex-shrink-0" />
+                              <span className="text-body-sm text-neutral-300">
+                                {feature}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      </td>
+                    );
+                  })}
+                  {comparison.itemCount < 4 && (
+                    <td className="border-l border-gray-600/50"></td>
+                  )}
+                </tr>
+              )}
+
+              {/* Pros & Cons Section */}
+              <tr>
+                <td
+                  colSpan={
+                    comparison.itemCount + (comparison.itemCount < 4 ? 2 : 1)
+                  }
+                  className="p-0"
+                >
+                  <button
+                    onClick={() =>
+                      setShowDetails((prev) => ({
+                        ...prev,
+                        proscons: !prev.proscons,
+                      }))
+                    }
+                    className="w-full p-4 text-left bg-secondary-800/50 border-b border-gray-600 font-heading text-body-sm text-neutral-200 uppercase tracking-wide hover:bg-secondary-800/70 transition-colors"
+                  >
+                    ƯU & NHƯỢC ĐIỂM {showDetails.proscons ? "▼" : "▶"}
+                  </button>
+                </td>
+              </tr>
+
+              {showDetails.proscons && (
+                <tr>
+                  <td className="p-4 font-heading text-body-sm text-neutral-400 uppercase tracking-wide">
+                    ĐÁNH GIÁ
+                  </td>
+                  {comparison.items.map((product) => {
+                    const mockDetails =
+                      mockProductDetails[
+                        product.id as keyof typeof mockProductDetails
+                      ];
+                    return (
+                      <td
+                        key={`proscons-${product.id}`}
+                        className="p-4 border-l border-gray-600/50"
+                      >
+                        <div className="space-y-4">
+                          {/* Pros */}
+                          <div>
+                            <h4 className="font-heading text-body-sm text-primary uppercase tracking-wide mb-2">
+                              ƯU ĐIỂM
+                            </h4>
+                            <div className="space-y-1">
+                              {mockDetails?.pros?.map((pro, index) => (
+                                <div
+                                  key={index}
+                                  className="flex items-center gap-2"
+                                >
+                                  <div className="w-2 h-2 rounded-full bg-primary flex-shrink-0"></div>
+                                  <span className="text-body-sm text-neutral-300">
+                                    {pro}
+                                  </span>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+
+                          {/* Cons */}
+                          <div>
+                            <h4 className="font-heading text-body-sm text-neutral-400 uppercase tracking-wide mb-2">
+                              NHƯỢC ĐIỂM
+                            </h4>
+                            <div className="space-y-1">
+                              {mockDetails?.cons?.map((con, index) => (
+                                <div
+                                  key={index}
+                                  className="flex items-center gap-2"
+                                >
+                                  <div className="w-2 h-2 rounded-full bg-neutral-500 flex-shrink-0"></div>
+                                  <span className="text-body-sm text-neutral-400">
+                                    {con}
+                                  </span>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+                    );
+                  })}
+                  {comparison.itemCount < 4 && (
+                    <td className="border-l border-gray-600/50"></td>
+                  )}
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
 
-      {/* Back to Products */}
-      <div className="mt-8 text-center">
-        <Link 
-          href="/products" 
-          className="inline-block text-blue-600 hover:text-blue-800 hover:underline"
-        >
-          ← Quay lại danh sách sản phẩm
+      {/* Action Footer */}
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 card-industrial p-6">
+        <div className="text-center sm:text-left">
+          <p className="text-body text-neutral-400">
+            Cần hỗ trợ chọn sản phẩm?
+            <Link
+              href="https://zalo.me/0877257799"
+              className="text-primary hover:text-primary/80 transition-colors ml-1"
+            >
+              Liên hệ chuyên gia
+            </Link>
+          </p>
+        </div>
+
+        <Link href="/products" className="btn-primary group">
+          <span>XEM THÊM SẢN PHẨM</span>
+          <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" />
         </Link>
       </div>
-
-      {/* Share Toast */}
-      {showShareToast && (
-        <div className="fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50">
-          Đã copy link chia sẻ!
-        </div>
-      )}
-    </main>
+    </div>
   );
 }

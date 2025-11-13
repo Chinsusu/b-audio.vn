@@ -1,8 +1,9 @@
-'use client';
-import { useState } from 'react';
-import { BarChart3, Check } from 'lucide-react';
-import { useComparison } from '../../hooks/useComparison';
-import { toast } from '../../lib/toast';
+"use client";
+import { BarChart3, Check } from "lucide-react";
+import { useState } from "react";
+
+import { useComparison } from "../../hooks/useComparison";
+import { toast } from "../../lib/toast";
 
 interface Product {
   id: string;
@@ -27,18 +28,19 @@ interface Product {
 
 interface CompareButtonProps {
   product: Product;
-  size?: 'sm' | 'md' | 'lg';
-  variant?: 'icon' | 'button';
+  size?: "sm" | "md" | "lg";
+  variant?: "icon" | "button";
   className?: string;
 }
 
-export default function CompareButton({ 
-  product, 
-  size = 'md', 
-  variant = 'button',
-  className = '' 
+export default function CompareButton({
+  product,
+  size = "md",
+  variant = "button",
+  className = "",
 }: CompareButtonProps) {
-  const { isInComparison, toggleItem, canAddMore, getMaxItems } = useComparison();
+  const { isInComparison, toggleItem, canAddMore, getMaxItems } =
+    useComparison();
   const [isLoading, setIsLoading] = useState(false);
   const [showToast, setShowToast] = useState(false);
 
@@ -50,7 +52,7 @@ export default function CompareButton({
   };
 
   const handleToggle = async () => {
-    if (isLoading) return;
+    if (isLoading) {return;}
 
     setIsLoading(true);
     try {
@@ -68,13 +70,14 @@ export default function CompareButton({
       });
 
       if (wasAdded) {
-        toast.success('Đã thêm vào so sánh');
+        toast.success("Đã thêm vào so sánh");
       } else {
-        toast.info('Đã bỏ khỏi so sánh');
+        toast.info("Đã bỏ khỏi so sánh");
       }
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Có lỗi xảy ra';
-      toast.error('Lỗi', errorMessage);
+      const errorMessage =
+        error instanceof Error ? error.message : "Có lỗi xảy ra";
+      toast.error("Lỗi", errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -82,17 +85,17 @@ export default function CompareButton({
 
   const disabled = !inComparison && !canAddMore();
 
-  if (variant === 'icon') {
+  if (variant === "icon") {
     const sizeClasses = {
-      sm: 'w-8 h-8',
-      md: 'w-10 h-10',
-      lg: 'w-12 h-12'
+      sm: "w-8 h-8",
+      md: "w-10 h-10",
+      lg: "w-12 h-12",
     };
 
     const iconSizes = {
-      sm: 'w-4 h-4',
-      md: 'w-5 h-5',
-      lg: 'w-6 h-6'
+      sm: "w-4 h-4",
+      md: "w-5 h-5",
+      lg: "w-6 h-6",
     };
 
     return (
@@ -104,21 +107,34 @@ export default function CompareButton({
           className={`
             ${sizeClasses[size]} rounded-full flex items-center justify-center
             transition-all duration-200 hover:scale-110 active:scale-95 focus:outline-none focus:ring-2 focus:ring-espresso focus:ring-offset-2
-            ${inComparison 
-              ? 'bg-blue-500 text-white hover:bg-blue-600' 
-              : 'bg-white/80 text-gray-400 hover:text-blue-500 hover:bg-white shadow-sm'
+            ${
+              inComparison
+                ? "bg-blue-500 text-white hover:bg-blue-600"
+                : "bg-white/80 text-gray-400 hover:text-blue-500 hover:bg-white shadow-sm"
             }
             disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100
             ${className}
           `}
-          title={inComparison ? 'Bỏ khỏi so sánh' : disabled ? `Chỉ so sánh được ${getMaxItems()} sản phẩm` : 'Thêm vào so sánh'}
+          title={
+            inComparison
+              ? "Bỏ khỏi so sánh"
+              : disabled
+                ? `Chỉ so sánh được ${getMaxItems()} sản phẩm`
+                : "Thêm vào so sánh"
+          }
         >
           {isLoading ? (
-            <div className={`${iconSizes[size]} animate-spin border-2 border-current border-t-transparent rounded-full`} />
+            <div
+              className={`${iconSizes[size]} animate-spin border-2 border-current border-t-transparent rounded-full`}
+            />
           ) : inComparison ? (
-            <Check className={`${iconSizes[size]} transition-all duration-200`} />
+            <Check
+              className={`${iconSizes[size]} transition-all duration-200`}
+            />
           ) : (
-            <BarChart3 className={`${iconSizes[size]} transition-all duration-200`} />
+            <BarChart3
+              className={`${iconSizes[size]} transition-all duration-200`}
+            />
           )}
         </button>
       </div>
@@ -133,13 +149,14 @@ export default function CompareButton({
         aria-busy={isLoading}
         className={`
           rounded-2xl px-4 py-2 font-medium transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-espresso focus:ring-offset-2
-          ${inComparison
-            ? 'bg-blue-500 text-white hover:bg-blue-600'
-            : 'border border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white'
+          ${
+            inComparison
+              ? "bg-blue-500 text-white hover:bg-blue-600"
+              : "border border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white"
           }
           disabled:cursor-not-allowed
-          ${size === 'sm' ? 'text-xs px-3 py-1.5' : ''}
-          ${size === 'lg' ? 'text-lg px-6 py-3' : ''}
+          ${size === "sm" ? "text-xs px-3 py-1.5" : ""}
+          ${size === "lg" ? "text-lg px-6 py-3" : ""}
           ${className}
         `}
       >
@@ -150,8 +167,16 @@ export default function CompareButton({
           </div>
         ) : (
           <div className="flex items-center gap-2">
-            {inComparison ? <Check className="w-4 h-4" /> : <BarChart3 className="w-4 h-4" />}
-            {inComparison ? 'Đã so sánh' : disabled ? 'Đã đủ số lượng' : 'So sánh'}
+            {inComparison ? (
+              <Check className="w-4 h-4" />
+            ) : (
+              <BarChart3 className="w-4 h-4" />
+            )}
+            {inComparison
+              ? "Đã so sánh"
+              : disabled
+                ? "Đã đủ số lượng"
+                : "So sánh"}
           </div>
         )}
       </button>

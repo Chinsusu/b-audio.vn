@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import React, { Component, ErrorInfo, ReactNode } from 'react';
+import React, { Component, ErrorInfo, ReactNode } from "react";
 
 interface Props {
   children: ReactNode;
@@ -24,12 +24,12 @@ export default class ErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error('ErrorBoundary caught an error:', error, errorInfo);
+    console.error("ErrorBoundary caught an error:", error, errorInfo);
     this.props.onError?.(error, errorInfo);
 
     // Track error in GA if available
-    if (typeof window !== 'undefined' && (window as any).gtag) {
-      (window as any).gtag('event', 'exception', {
+    if (typeof window !== "undefined" && (window as any).gtag) {
+      (window as any).gtag("event", "exception", {
         description: error.message,
         fatal: false,
       });
@@ -54,23 +54,24 @@ export default class ErrorBoundary extends Component<Props, State> {
               Oops! Something went wrong
             </h2>
             <p className="text-textGrey mb-6 text-sm">
-              We encountered an unexpected error. Don't worry, our team has been notified.
+              We encountered an unexpected error. Don't worry, our team has been
+              notified.
             </p>
             <div className="space-y-3">
-              <button 
+              <button
                 onClick={this.handleRetry}
                 className="w-full bg-goldAccent hover:bg-goldAccent/80 text-darkBg px-6 py-3 rounded-lg font-medium transition-colors btn-transition"
               >
                 Try Again
               </button>
-              <button 
+              <button
                 onClick={() => window.location.reload()}
                 className="w-full bg-darkGrey/60 hover:bg-darkGrey/80 text-textWhite px-6 py-3 rounded-lg font-medium transition-colors btn-transition"
               >
                 Refresh Page
               </button>
             </div>
-            {process.env.NODE_ENV === 'development' && this.state.error && (
+            {process.env.NODE_ENV === "development" && this.state.error && (
               <details className="mt-4 text-left">
                 <summary className="text-sm text-textGrey cursor-pointer">
                   Error Details (Dev Only)

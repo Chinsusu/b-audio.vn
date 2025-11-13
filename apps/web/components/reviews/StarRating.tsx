@@ -1,43 +1,43 @@
-'use client';
-import { useState } from 'react';
+"use client";
+import { useState } from "react";
 
 interface StarRatingProps {
   rating?: number;
   onRatingChange?: (rating: number) => void;
   readonly?: boolean;
-  size?: 'sm' | 'md' | 'lg';
+  size?: "sm" | "md" | "lg";
   showValue?: boolean;
 }
 
-export default function StarRating({ 
-  rating = 0, 
-  onRatingChange, 
+export default function StarRating({
+  rating = 0,
+  onRatingChange,
   readonly = false,
-  size = 'md',
-  showValue = false 
+  size = "md",
+  showValue = false,
 }: StarRatingProps) {
   const [hoverRating, setHoverRating] = useState(0);
   const [currentRating, setCurrentRating] = useState(rating);
 
   const sizeClasses = {
-    sm: 'w-4 h-4',
-    md: 'w-5 h-5',
-    lg: 'w-6 h-6'
+    sm: "w-4 h-4",
+    md: "w-5 h-5",
+    lg: "w-6 h-6",
   };
 
   const handleClick = (value: number) => {
-    if (readonly) return;
+    if (readonly) {return;}
     setCurrentRating(value);
     onRatingChange?.(value);
   };
 
   const handleMouseEnter = (value: number) => {
-    if (readonly) return;
+    if (readonly) {return;}
     setHoverRating(value);
   };
 
   const handleMouseLeave = () => {
-    if (readonly) return;
+    if (readonly) {return;}
     setHoverRating(0);
   };
 
@@ -51,7 +51,7 @@ export default function StarRating({
             key={star}
             type="button"
             className={`${sizeClasses[size]} transition-colors ${
-              readonly ? 'cursor-default' : 'cursor-pointer hover:scale-110'
+              readonly ? "cursor-default" : "cursor-pointer hover:scale-110"
             }`}
             onClick={() => handleClick(star)}
             onMouseEnter={() => handleMouseEnter(star)}
@@ -61,8 +61,8 @@ export default function StarRating({
             <svg
               className={`w-full h-full ${
                 star <= displayRating
-                  ? 'text-yellow-400 fill-current'
-                  : 'text-gray-300 fill-current'
+                  ? "text-yellow-400 fill-current"
+                  : "text-gray-300 fill-current"
               }`}
               viewBox="0 0 24 24"
             >
@@ -71,10 +71,10 @@ export default function StarRating({
           </button>
         ))}
       </div>
-      
+
       {showValue && (
         <span className="text-sm text-gray-600 ml-2">
-          {displayRating > 0 ? `${displayRating}/5` : 'Chưa đánh giá'}
+          {displayRating > 0 ? `${displayRating}/5` : "Chưa đánh giá"}
         </span>
       )}
     </div>

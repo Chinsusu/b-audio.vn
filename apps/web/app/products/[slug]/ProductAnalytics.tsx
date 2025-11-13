@@ -1,3 +1,4 @@
-'use client';
-export default function ProductAnalytics({ product }: { product: any }) {
+"use client";
+export default function ProductAnalytics() {
+  return null;
 }

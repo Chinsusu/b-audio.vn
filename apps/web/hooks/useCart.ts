@@ -1,6 +1,7 @@
-'use client';
-import { useState, useEffect } from 'react';
-import { Cart, CartItem, cartManager } from '../lib/cart';
+"use client";
+import { useEffect,useState } from "react";
+
+import { Cart, CartItem, cartManager } from "../lib/cart";
 
 export function useCart() {
   const [cart, setCart] = useState<Cart>({ items: [], total: 0, itemCount: 0 });
@@ -19,7 +20,7 @@ export function useCart() {
     return unsubscribe;
   }, []);
 
-  const addItem = (item: Omit<CartItem, 'quantity'>, quantity: number = 1) => {
+  const addItem = (item: Omit<CartItem, "quantity">, quantity: number = 1) => {
     cartManager.addItem(item, quantity);
   };
 

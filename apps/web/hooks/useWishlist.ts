@@ -1,9 +1,13 @@
-'use client';
-import { useState, useEffect } from 'react';
-import { Wishlist, WishlistItem, wishlistManager } from '../lib/wishlist';
+"use client";
+import { useEffect,useState } from "react";
+
+import { Wishlist, WishlistItem, wishlistManager } from "../lib/wishlist";
 
 export function useWishlist() {
-  const [wishlist, setWishlist] = useState<Wishlist>({ items: [], itemCount: 0 });
+  const [wishlist, setWishlist] = useState<Wishlist>({
+    items: [],
+    itemCount: 0,
+  });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -19,7 +23,7 @@ export function useWishlist() {
     return unsubscribe;
   }, []);
 
-  const addItem = (item: Omit<WishlistItem, 'addedAt'>) => {
+  const addItem = (item: Omit<WishlistItem, "addedAt">) => {
     wishlistManager.addItem(item);
   };
 
@@ -27,7 +31,7 @@ export function useWishlist() {
     wishlistManager.removeItem(itemId);
   };
 
-  const toggleItem = (item: Omit<WishlistItem, 'addedAt'>) => {
+  const toggleItem = (item: Omit<WishlistItem, "addedAt">) => {
     return wishlistManager.toggleItem(item);
   };
 
