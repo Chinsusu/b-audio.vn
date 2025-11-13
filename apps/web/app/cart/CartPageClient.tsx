@@ -13,8 +13,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 
+import Price from "../../components/ui/Price";
 import { useCart } from "../../hooks/useCart";
-import { formatPrice } from "../../lib/cart";
 import { mediaUrl } from "../../utils/mediaUrl";
 
 export default function CartPageClient() {
@@ -124,8 +124,8 @@ export default function CartPageClient() {
                       <p className="text-body-sm text-neutral-400 font-mono mt-1">
                         SKU: {item.id}
                       </p>
-                      <div className="text-h4 font-heading text-primary font-bold mt-2">
-                        {formatPrice(item.price)} ₫
+                      <div className="mt-2">
+                        <Price value={item.price} as="div" size="md" />
                       </div>
                     </div>
 
@@ -172,8 +172,8 @@ export default function CartPageClient() {
                     </div>
 
                     {/* Item Total */}
-                    <div className="text-h4 font-heading text-primary font-bold">
-                      {formatPrice(item.price * item.quantity)} ₫
+                    <div className="font-heading">
+                      <Price value={item.price * item.quantity} as="div" size="md" />
                     </div>
                   </div>
                 </div>
@@ -195,7 +195,7 @@ export default function CartPageClient() {
             <div className="flex justify-between text-body">
               <span className="text-neutral-400">Tạm tính:</span>
               <span className="text-neutral-100 font-heading">
-                {formatPrice(subtotal)} ₫
+                <Price value={subtotal} as="span" size="md" tone="neutral" />
               </span>
             </div>
             <div className="flex justify-between text-body">
@@ -203,14 +203,18 @@ export default function CartPageClient() {
               <span
                 className={`font-heading ${shipping === 0 ? "text-primary" : "text-neutral-100"}`}
               >
-                {shipping === 0 ? "Miễn phí" : `${formatPrice(shipping)} ₫`}
+                {shipping === 0 ? (
+                  "Miễn phí"
+                ) : (
+                  <Price value={shipping} as="span" size="md" tone="neutral" />
+                )}
               </span>
             </div>
             {promoApplied && (
               <div className="flex justify-between text-body">
                 <span className="text-neutral-400">Giảm giá (DIY2024):</span>
                 <span className="text-primary font-heading">
-                  -{formatPrice(promoDiscount)} ₫
+                  <Price value={-promoDiscount} as="span" size="md" />
                 </span>
               </div>
             )}
@@ -219,8 +223,8 @@ export default function CartPageClient() {
                 <span className="font-heading text-h4 text-neutral-100 uppercase">
                   TỔNG CỘNG:
                 </span>
-                <span className="font-heading text-h3 text-primary font-bold">
-                  {formatPrice(totalWithShipping)} ₫
+                <span className="font-heading">
+                  <Price value={totalWithShipping} as="span" />
                 </span>
               </div>
             </div>
@@ -261,7 +265,18 @@ export default function CartPageClient() {
             <p className="text-body-sm text-neutral-400 leading-relaxed">
               {shipping === 0
                 ? "Đủ điều kiện giao hàng miễn phí! Đơn hàng sẽ được giao trong 2-3 ngày."
-                : `Thêm ${formatPrice(5000000 - subtotal)} ₫ để được miễn phí vận chuyển.`}
+                : (
+                    <>
+                      Thêm {""}
+                      <Price
+                        value={5000000 - subtotal}
+                        as="span"
+                        size="sm"
+                        tone="neutral"
+                      />{" "}
+                      để được miễn phí vận chuyển.
+                    </>
+                  )}
             </p>
           </div>
 
