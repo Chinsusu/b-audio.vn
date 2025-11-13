@@ -52,23 +52,21 @@ function buildConfig() {
           { name: "title", size: 6 },
           { name: "slug", size: 6 },
         ],
-        // Row 2: price trio
+        // Row 2: price + compare + category
         [
           { name: "price", size: 4 },
           { name: "compare_price", size: 4 },
-          { name: "power_watt", size: 4 },
-        ],
-        // Row 3: battery + connectivity + category
-        [
-          { name: "battery_hours", size: 4 },
-          { name: "connectivity", size: 4 },
           { name: "category", size: 4 },
         ],
-        // Row 4: weight + dimensions (same height, single line)
+        // Row 3: compact stats in one line (each 3 cols)
         [
-          { name: "weight", size: 6 },
-          { name: "dimensions", size: 6 },
+          { name: "power_watt", size: 3 },
+          { name: "battery_hours", size: 3 },
+          { name: "weight", size: 3 },
+          { name: "connectivity", size: 3 },
         ],
+        // Row 4: dimensions alongside (single line input)
+        [{ name: "dimensions", size: 12 }],
         // Row 5: images full width
         [{ name: "images", size: 12 }],
         // Row 6: ratings (read-only aggregates)
