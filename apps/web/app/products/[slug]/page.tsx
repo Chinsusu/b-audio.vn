@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { ProductGallery } from "../../../components/product/ProductGallery";
+import Price from "../../../components/ui/Price";
 import { mediaUrl } from "../../../utils/mediaUrl";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE || "https://api.b-audio.vn";
@@ -95,9 +96,7 @@ export default async function ProductPage({
               </a>
             )}
           </div>
-          <div className="mt-3 font-heading text-h3 text-primary font-bold tracking-wide">
-            {new Intl.NumberFormat("vi-VN").format(p.price)} đ
-          </div>
+          <Price value={p.price} className="mt-3 tracking-wide" />
           <div
             className="prose mt-6"
             dangerouslySetInnerHTML={{ __html: p.description }}
