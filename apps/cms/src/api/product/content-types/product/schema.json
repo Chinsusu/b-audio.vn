@@ -54,6 +54,14 @@
       "type": "boolean",
       "default": false
     },
+    "rating_avg": {
+      "type": "decimal",
+      "default": 0
+    },
+    "rating_count": {
+      "type": "integer",
+      "default": 0
+    },
     "category": {
       "type": "relation",
       "relation": "manyToOne",
