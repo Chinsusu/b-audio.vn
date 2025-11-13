@@ -256,12 +256,17 @@ export default function WishlistPageClient() {
 
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-textGrey mb-2">
+                <label
+                  htmlFor="wishlist-share-url"
+                  className="block text-sm font-medium text-textGrey mb-2"
+                >
                   Link chia sẻ:
                 </label>
                 <div className="flex gap-2">
                   <input
                     type="text"
+                    id="wishlist-share-url"
+                    name="shareUrl"
                     value={shareUrl}
                     readOnly
                     className="flex-1 rounded-2xl border border-darkGrey px-3 py-2 bg-darkBg text-sm text-textWhite placeholder:text-textGrey focus:outline-none focus:ring-2 focus:ring-neonTurquoise focus:ring-offset-2 focus:ring-offset-darkBg"

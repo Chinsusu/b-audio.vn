@@ -37,22 +37,36 @@ export default function Filters() {
     <aside className="rounded-2xl border border-cloud bg-white p-4">
       <div className="font-medium">Bộ lọc</div>
       <div className="mt-3 grid gap-2">
-        <label className="text-sm">Giá tối thiểu</label>
+        <label className="text-sm" htmlFor="filter-min">
+          Giá tối thiểu
+        </label>
         <input
+          id="filter-min"
+          name="min"
+          inputMode="numeric"
           value={min}
           onChange={(e) => setMin(e.target.value)}
           className="rounded border px-3 py-2"
           placeholder="500000"
         />
-        <label className="mt-3 text-sm">Giá tối đa</label>
+        <label className="mt-3 text-sm" htmlFor="filter-max">
+          Giá tối đa
+        </label>
         <input
+          id="filter-max"
+          name="max"
+          inputMode="numeric"
           value={max}
           onChange={(e) => setMax(e.target.value)}
           className="rounded border px-3 py-2"
           placeholder="3000000"
         />
-        <label className="mt-3 text-sm">Công suất (W)</label>
+        <label className="mt-3 text-sm" htmlFor="filter-power">
+          Công suất (W)
+        </label>
         <select
+          id="filter-power"
+          name="power"
           value={power}
           onChange={(e) => setPower(e.target.value)}
           className="rounded border px-3 py-2"
