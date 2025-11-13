@@ -33,6 +33,8 @@ async function getTopReviews(productId: number, limit = 3) {
   try {
     const params = new URLSearchParams();
     params.set("filters[product][id][$eq]", String(productId));
+    // ensure only published reviews are returned
+    params.set("filters[publishedAt][$notNull]", "true");
     params.set("fields[0]", "rating");
     params.set("fields[1]", "author_name");
     params.set("fields[2]", "content");
@@ -101,7 +103,21 @@ export default async function ProductPage({
 
   const catName = p.category?.data?.attributes?.name as string | undefined;
   const catSlug = p.category?.data?.attributes?.slug as string | undefined;
-  const topReviews = await getTopReviews(productId, 3);
+  let topReviews = await getTopReviews(productId, 3);
+  // Fallback: if direct reviews endpoint is restricted, use populated relation
+  if (
+    (!topReviews || topReviews.length === 0) &&
+    Array.isArray(p.reviews?.data)
+  ) {
+    topReviews = (p.reviews.data as any[]).slice(0, 3).map((rv: any) => ({
+      id: rv.id,
+      attributes: {
+        rating: rv.attributes?.rating,
+        author_name: rv.attributes?.author_name,
+        content: rv.attributes?.content,
+      },
+    }));
+  }
 
   return (
     <main className="mx-auto max-w-5xl px-6 py-12">
