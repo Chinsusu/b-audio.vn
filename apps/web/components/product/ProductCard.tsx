@@ -2,6 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { mediaUrl } from "../../utils/mediaUrl";
+import Price from "../ui/Price";
+import { ReviewStars } from "./ReviewStars";
 
 export function ProductCard({ p }: { p: any }) {
   const attrs = p?.attributes || {};
@@ -32,12 +34,10 @@ export function ProductCard({ p }: { p: any }) {
           <h3 className="font-heading text-h4 text-neutral-100 font-semibold group-hover:text-primary transition-colors duration-300 uppercase tracking-wide line-clamp-2">
             {attrs.title}
           </h3>
-          <div className="text-h3 font-heading text-primary font-bold">
-            {new Intl.NumberFormat("vi-VN").format(
-              attrs.price_vnd || attrs.price,
-            )}{" "}
-            ₫
-          </div>
+          {typeof attrs.rating_avg !== 'undefined' && (
+            <ReviewStars rating={Number(attrs.rating_avg) || 0} count={Number(attrs.rating_count) || 0} />
+          )}
+          <Price value={attrs.price_vnd || attrs.price} />
         </div>
       </Link>
 

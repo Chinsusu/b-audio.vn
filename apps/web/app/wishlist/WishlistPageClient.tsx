@@ -2,9 +2,9 @@
 import Link from "next/link";
 import { useState } from "react";
 
+import Price from "../../components/ui/Price";
 import { useCart } from "../../hooks/useCart";
 import { useWishlist } from "../../hooks/useWishlist";
-import { formatPrice } from "../../lib/cart";
 import { formatWishlistDate } from "../../lib/wishlist";
 
 export default function WishlistPageClient() {
@@ -198,7 +198,7 @@ export default function WishlistPageClient() {
               </div>
 
               <div className="text-lg font-semibold text-goldAccent">
-                {formatPrice(item.price)}
+                <Price value={item.price} as="div" size="md" />
               </div>
 
               {/* Actions */}

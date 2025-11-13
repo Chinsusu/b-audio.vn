@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { ProductGallery } from "../../../components/product/ProductGallery";
+import { ReviewStars } from "../../../components/product/ReviewStars";
+import Price from "../../../components/ui/Price";
 import { mediaUrl } from "../../../utils/mediaUrl";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE || "https://api.b-audio.vn";
@@ -24,6 +26,23 @@ async function getProduct(slug: string) {
   );
   const json = await res.json();
   return json.data?.[0];
+}
+
+async function getTopReviews(productId: number, limit = 3) {
+  try {
+    const params = new URLSearchParams();
+    params.set('filters[product][id][$eq]', String(productId));
+    params.set('fields[0]', 'rating');
+    params.set('fields[1]', 'author_name');
+    params.set('fields[2]', 'content');
+    params.set('sort', 'createdAt:desc');
+    params.set('pagination[pageSize]', String(limit));
+    const res = await fetch(`${API_BASE}/api/reviews?${params.toString()}`, { next: { revalidate: 60 } });
+    const json = await res.json();
+    return json.data || [];
+  } catch {
+    return [];
+  }
 }
 
 export async function generateMetadata({
@@ -69,6 +88,7 @@ export default async function ProductPage({
     notFound();
   }
   const p = (data as any).attributes;
+  const productId = (data as any).id as number;
 
   // Get all image URLs
   const allImages =
@@ -76,6 +96,7 @@ export default async function ProductPage({
 
   const catName = p.category?.data?.attributes?.name as string | undefined;
   const catSlug = p.category?.data?.attributes?.slug as string | undefined;
+  const topReviews = await getTopReviews(productId, 3);
 
   return (
     <main className="mx-auto max-w-5xl px-6 py-12">
@@ -95,13 +116,35 @@ export default async function ProductPage({
               </a>
             )}
           </div>
-          <div className="mt-3 font-heading text-h3 text-primary font-bold tracking-wide">
-            {new Intl.NumberFormat("vi-VN").format(p.price)} đ
+          <div className="mt-2">
+            <ReviewStars rating={Number(p.rating_avg) || 0} count={Number(p.rating_count) || 0} />
           </div>
+          <Price value={p.price} className="mt-3 tracking-wide" />
           <div
             className="prose mt-6"
             dangerouslySetInnerHTML={{ __html: p.description }}
           />
+          {topReviews?.length > 0 && (
+            <section className="mt-8">
+              <h2 className="font-heading text-h4 text-neutral-100 mb-2">Đánh giá nổi bật</h2>
+              <div className="space-y-4">
+                {topReviews.map((rv: any) => (
+                  <div key={rv.id} className="rounded-xl border border-gray-600 bg-secondary-800/40 p-4">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="text-neutral-200 font-medium">{rv.attributes.author_name || 'Khách hàng'}</div>
+                      <ReviewStars rating={Number(rv.attributes.rating) || 0} />
+                    </div>
+                    <div className="text-neutral-300 whitespace-pre-wrap">
+                      {rv.attributes.content}
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-4">
+                <a href={`/products/${params.slug}/reviews`} className="text-neonTurquoise hover:underline">Xem tất cả đánh giá</a>
+              </div>
+            </section>
+          )}
           <form className="mt-6 grid gap-3" action="/contact" method="get">
             <input
               className="rounded border px-3 py-2"

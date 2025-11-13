@@ -5,8 +5,8 @@ import Link from "next/link";
 import { useState } from "react";
 
 import { useCart } from "../../hooks/useCart";
-import { formatPrice } from "../../lib/cart";
 import { mediaUrl } from "../../utils/mediaUrl";
+import Price from "../ui/Price";
 
 export default function CartDrawer() {
   const { cart, updateQuantity, removeItem } = useCart();
@@ -91,8 +91,8 @@ export default function CartDrawer() {
                   <h3 className="font-heading text-body-sm text-neutral-100 group-hover:text-primary transition-colors duration-300 uppercase tracking-wide line-clamp-2">
                     {item.title}
                   </h3>
-                  <p className="text-h5 font-heading text-primary font-bold mt-1">
-                    {formatPrice(item.price)} ₫
+                  <p className="mt-1">
+                    <Price value={item.price} as="span" size="md" />
                   </p>
 
                   {/* Quantity Controls */}
@@ -144,8 +144,8 @@ export default function CartDrawer() {
             <span className="font-heading text-body-sm text-neutral-400 uppercase tracking-wide">
               TỔNG CỘNG:
             </span>
-            <span className="font-heading text-h3 text-primary font-bold">
-              {formatPrice(cart.total)} ₫
+            <span className="font-heading">
+              <Price value={cart.total} as="span" />
             </span>
           </div>
 

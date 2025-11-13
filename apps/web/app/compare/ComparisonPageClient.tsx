@@ -14,6 +14,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 
+import Price from "../../components/ui/Price";
 import { useComparison } from "../../hooks/useComparison";
 import { mediaUrl } from "../../utils/mediaUrl";
 
@@ -165,12 +166,10 @@ export default function ComparisonPageClient() {
                         <h3 className="font-heading text-h4 text-neutral-100 mb-2 uppercase tracking-wide">
                           {product.attributes.title}
                         </h3>
-                        <div className="text-h3 font-heading text-primary font-bold mb-4">
-                          {new Intl.NumberFormat("vi-VN").format(
-                            product.attributes.price_vnd,
-                          )}{" "}
-                          ₫
-                        </div>
+                        <Price
+                          value={product.attributes.price_vnd}
+                          className="mb-4"
+                        />
 
                         {/* Quick Actions */}
                         <div className="flex gap-2">

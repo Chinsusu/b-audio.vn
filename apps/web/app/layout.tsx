@@ -1,7 +1,7 @@
 import "./globals.css";
 
-import type { ReactNode } from "react";
 import Script from "next/script";
+import type { ReactNode } from "react";
 
 import Footer from "../components/ui/Footer";
 import Header from "../components/ui/Header";

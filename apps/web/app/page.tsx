@@ -1,5 +1,9 @@
+import { ArrowRight, Settings, Shield, Wrench, Zap } from "lucide-react";
+import type { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
 
+import Price from "../components/ui/Price";
 import { mediaUrl } from "../utils/mediaUrl";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE || "https://api.b-audio.vn";
@@ -19,10 +23,6 @@ async function getFeaturedProducts() {
     return [];
   }
 }
-
-import { ArrowRight, Settings, Shield,Wrench, Zap } from "lucide-react";
-import type { Metadata } from "next";
-import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "B-Audio | Xưởng Loa DIY Công Nghiệp",
@@ -235,10 +235,7 @@ export default async function Page() {
                     </p>
                     <div className="flex items-center justify-between">
                       <span className="text-h3 font-heading text-primary font-bold">
-                        {attrs.price
-                          ? new Intl.NumberFormat("vi-VN").format(attrs.price)
-                          : "Liên hệ"}
-                        ₫
+                        <Price value={attrs.price ?? null} as="span" />
                       </span>
                       <span className="btn-ghost text-body-sm px-4 py-2">
                         XEM CHI TIẾT
