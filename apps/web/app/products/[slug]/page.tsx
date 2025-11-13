@@ -117,7 +117,12 @@ export default async function ProductPage({
             )}
           </div>
           <div className="mt-2">
-            <ReviewStars rating={Number(p.rating_avg) || 0} count={Number(p.rating_count) || 0} />
+            <ReviewStars
+              rating={Number(p.rating_avg) || 0}
+              count={Number(p.rating_count) || 0}
+              variant="tag"
+              linkHref={`/products/${params.slug}/reviews`}
+            />
           </div>
           <Price value={p.price} className="mt-3 tracking-wide" />
           <div
