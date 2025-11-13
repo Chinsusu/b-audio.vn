@@ -1,3 +1,5 @@
+import Tag from "../ui/Tag";
+
 export function ReviewStars({
   rating = 0,
   count = 0,
@@ -29,12 +31,7 @@ export function ReviewStars({
       </div>
       {count > 0 && (
         variant === 'tag' ? (
-          <TagEl
-            href={linkHref}
-            className="inline-flex items-center gap-1 rounded-full border border-goldAccent/60 bg-secondary-800/60 px-2.5 py-0.5 font-heading text-microcopy uppercase tracking-widest text-neutral-100 hover:border-goldAccent hover:bg-secondary-800/80 transition-colors"
-          >
-            {count} đánh giá
-          </TagEl>
+          <Tag href={linkHref}>{count} đánh giá</Tag>
         ) : (
           <span className="text-sm text-gray-400">({count})</span>
         )

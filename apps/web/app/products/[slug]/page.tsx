@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { ProductGallery } from "../../../components/product/ProductGallery";
 import { ReviewStars } from "../../../components/product/ReviewStars";
 import Price from "../../../components/ui/Price";
+import Tag from "../../../components/ui/Tag";
 import { mediaUrl } from "../../../utils/mediaUrl";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE || "https://api.b-audio.vn";
@@ -108,12 +109,7 @@ export default async function ProductPage({
           <div className="flex items-center justify-between">
             <h1 className="text-3xl font-semibold">{p.title}</h1>
             {catName && catSlug && (
-              <a
-                href={`/products?category=${catSlug}`}
-                className="inline-flex items-center gap-1 rounded-full border border-goldAccent/60 bg-secondary-800/60 px-3 py-1 font-heading text-microcopy uppercase tracking-widest text-neutral-100 shadow-gold-glow hover:border-goldAccent hover:bg-secondary-800/80 transition-colors"
-              >
-                {catName}
-              </a>
+              <Tag href={`/products?category=${catSlug}`}>{catName}</Tag>
             )}
           </div>
           <div className="mt-2">
