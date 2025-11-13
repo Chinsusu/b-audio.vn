@@ -14,6 +14,7 @@ interface DualRangeSliderProps {
   step: number;
   value: [number, number];
   onChange: (value: [number, number]) => void;
+  onCommit?: (value: [number, number]) => void; // called on pointer up / drag end
   formatValue: (val: number) => string;
   accent: "gold" | "neon";
 }
@@ -24,10 +25,12 @@ function DualRangeSlider({
   step,
   value,
   onChange,
+  onCommit,
   formatValue,
   accent,
 }: DualRangeSliderProps) {
   const [vals, setVals] = useState<[number, number]>(value);
+  const [dragging, setDragging] = useState(false);
 
   useEffect(() => {
     // keep in sync if parent changes
@@ -42,6 +45,22 @@ function DualRangeSlider({
     min,
     max,
   });
+
+  // Commit the value when the user releases the pointer
+  useEffect(() => {
+    const handleUp = () => {
+      if (dragging) {
+        setDragging(false);
+        onCommit?.(vals);
+      }
+    };
+    window.addEventListener("mouseup", handleUp);
+    window.addEventListener("touchend", handleUp);
+    return () => {
+      window.removeEventListener("mouseup", handleUp);
+      window.removeEventListener("touchend", handleUp);
+    };
+  }, [dragging, vals, onCommit]);
 
   return (
     <div className="space-y-4">
@@ -71,6 +90,7 @@ function DualRangeSlider({
 
           const next: [number, number] = [next0, next1];
           setVals(next);
+          setDragging(true);
           onChange(next);
         }}
         renderTrack={({ props, children }) => (
@@ -197,11 +217,19 @@ export default function SearchFilters({ onFiltersChange }: SearchFiltersProps) {
     router.push(url, { scroll: false });
   };
 
-  const handleFilterChange = (key: string, value: any) => {
+  // Update state immediately; only push URL when commit=true,
+  // or when non-slider fields change.
+  const handleFilterChange = (
+    key: string,
+    value: any,
+    commit: boolean = false,
+  ) => {
     const newFilters = { ...filters, [key]: value };
     setFilters(newFilters);
     onFiltersChange?.(newFilters);
-    updateURL(newFilters);
+    if (commit || key === "sortBy" || key === "search" || key === "category") {
+      updateURL(newFilters);
+    }
   };
 
   const clearFilters = () => {
@@ -272,6 +300,7 @@ export default function SearchFilters({ onFiltersChange }: SearchFiltersProps) {
             step={100000}
             value={filters.priceRange}
             onChange={(v) => handleFilterChange("priceRange", v)}
+            onCommit={(v) => handleFilterChange("priceRange", v, true)}
             formatValue={formatPrice}
             accent="gold"
           />
@@ -287,6 +316,7 @@ export default function SearchFilters({ onFiltersChange }: SearchFiltersProps) {
             step={10}
             value={filters.powerRange}
             onChange={(v) => handleFilterChange("powerRange", v)}
+            onCommit={(v) => handleFilterChange("powerRange", v, true)}
             formatValue={formatPower}
             accent="neon"
           />
@@ -302,6 +332,7 @@ export default function SearchFilters({ onFiltersChange }: SearchFiltersProps) {
             step={1}
             value={filters.batteryRange}
             onChange={(v) => handleFilterChange("batteryRange", v)}
+            onCommit={(v) => handleFilterChange("batteryRange", v, true)}
             formatValue={formatBattery}
             accent="gold"
           />
