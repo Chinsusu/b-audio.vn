@@ -6,6 +6,7 @@
     "build": "strapi build",
     "start": "strapi start",
     "seed:sample": "node scripts/seed-sample.js",
+    "seed:pages": "node scripts/seed-pages.js",
     "ratings:backfill": "node scripts/backfill-ratings.js",
     "lint": "eslint .",
     "format": "prettier --write ."
