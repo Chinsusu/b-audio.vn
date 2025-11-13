@@ -15,8 +15,8 @@ export default function BlogPage() {
             <span className="text-goldAccent">Coming Soon</span>
           </h1>
           <div className="text-textGrey text-lg mb-8">
-            We&apos;re working on bringing you the latest in DIY audio technology,
-            speaker building guides, and tech insights.
+            We&apos;re working on bringing you the latest in DIY audio
+            technology, speaker building guides, and tech insights.
           </div>
           <div className="bg-cardBg/40 backdrop-blur-sm border border-darkGrey rounded-2xl p-8">
             <h2 className="text-2xl font-bold text-goldAccent mb-4">

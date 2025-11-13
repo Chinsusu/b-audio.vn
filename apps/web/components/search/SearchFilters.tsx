@@ -1,7 +1,7 @@
 "use client";
-import { usePathname,useRouter, useSearchParams } from "next/navigation";
-import {useEffect, useState } from "react";
-import { getTrackBackground,Range } from "react-range";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { getTrackBackground, Range } from "react-range";
 
 interface SearchFiltersProps {
   onFiltersChange?: (filters: any) => void;
@@ -14,6 +14,7 @@ interface DualRangeSliderProps {
   step: number;
   value: [number, number];
   onChange: (value: [number, number]) => void;
+  onCommit?: (value: [number, number]) => void; // called on pointer up / drag end
   formatValue: (val: number) => string;
   accent: "gold" | "neon";
 }
@@ -24,10 +25,12 @@ function DualRangeSlider({
   step,
   value,
   onChange,
+  onCommit,
   formatValue,
   accent,
 }: DualRangeSliderProps) {
   const [vals, setVals] = useState<[number, number]>(value);
+  const [dragging, setDragging] = useState(false);
 
   useEffect(() => {
     // keep in sync if parent changes
@@ -42,6 +45,22 @@ function DualRangeSlider({
     min,
     max,
   });
+
+  // Commit the value when the user releases the pointer
+  useEffect(() => {
+    const handleUp = () => {
+      if (dragging) {
+        setDragging(false);
+        onCommit?.(vals);
+      }
+    };
+    window.addEventListener("mouseup", handleUp);
+    window.addEventListener("touchend", handleUp);
+    return () => {
+      window.removeEventListener("mouseup", handleUp);
+      window.removeEventListener("touchend", handleUp);
+    };
+  }, [dragging, vals, onCommit]);
 
   return (
     <div className="space-y-4">
@@ -71,6 +90,7 @@ function DualRangeSlider({
 
           const next: [number, number] = [next0, next1];
           setVals(next);
+          setDragging(true);
           onChange(next);
         }}
         renderTrack={({ props, children }) => (
@@ -150,43 +170,66 @@ export default function SearchFilters({ onFiltersChange }: SearchFiltersProps) {
 
   useEffect(() => {
     const newFilters = {
-      ...filters,
+      priceRange: [0, 50000000] as [number, number],
+      powerRange: [0, 2000] as [number, number],
+      batteryRange: [0, 24] as [number, number],
       category: searchParams.get("category") || "",
       search: searchParams.get("search") || "",
       sortBy: searchParams.get("sort") || "newest",
     };
-    setFilters(newFilters);
-    onFiltersChange?.(newFilters);
-  }, [searchParams]);
+    setFilters((prev) => ({ ...prev, ...newFilters }));
+    onFiltersChange?.({ ...filters, ...newFilters });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams, onFiltersChange]);
 
   const updateURL = (newFilters: typeof filters) => {
     const params = new URLSearchParams();
-    if (newFilters.search) {params.set("search", newFilters.search);}
-    if (newFilters.category) {params.set("category", newFilters.category);}
-    if (newFilters.sortBy !== "newest") {params.set("sort", newFilters.sortBy);}
-    if (newFilters.priceRange[0] > 0)
-      {params.set("minPrice", newFilters.priceRange[0].toString());}
-    if (newFilters.priceRange[1] < 50000000)
-      {params.set("maxPrice", newFilters.priceRange[1].toString());}
-    if (newFilters.powerRange[0] > 0)
-      {params.set("minPower", newFilters.powerRange[0].toString());}
-    if (newFilters.powerRange[1] < 2000)
-      {params.set("maxPower", newFilters.powerRange[1].toString());}
-    if (newFilters.batteryRange[0] > 0)
-      {params.set("minBattery", newFilters.batteryRange[0].toString());}
-    if (newFilters.batteryRange[1] < 24)
-      {params.set("maxBattery", newFilters.batteryRange[1].toString());}
+    if (newFilters.search) {
+      params.set("search", newFilters.search);
+    }
+    if (newFilters.category) {
+      params.set("category", newFilters.category);
+    }
+    if (newFilters.sortBy !== "newest") {
+      params.set("sort", newFilters.sortBy);
+    }
+    if (newFilters.priceRange[0] > 0) {
+      params.set("minPrice", newFilters.priceRange[0].toString());
+    }
+    if (newFilters.priceRange[1] < 50000000) {
+      params.set("maxPrice", newFilters.priceRange[1].toString());
+    }
+    if (newFilters.powerRange[0] > 0) {
+      params.set("minPower", newFilters.powerRange[0].toString());
+    }
+    if (newFilters.powerRange[1] < 2000) {
+      params.set("maxPower", newFilters.powerRange[1].toString());
+    }
+    if (newFilters.batteryRange[0] > 0) {
+      params.set("minBattery", newFilters.batteryRange[0].toString());
+    }
+    if (newFilters.batteryRange[1] < 24) {
+      params.set("maxBattery", newFilters.batteryRange[1].toString());
+    }
     const url = params.toString()
       ? `${pathname}?${params.toString()}`
       : pathname;
     router.push(url, { scroll: false });
   };
 
-  const handleFilterChange = (key: string, value: any) => {
+  // Update state immediately; only push URL when commit=true,
+  // or when non-slider fields change.
+  const handleFilterChange = (
+    key: string,
+    value: any,
+    commit: boolean = false,
+  ) => {
     const newFilters = { ...filters, [key]: value };
     setFilters(newFilters);
     onFiltersChange?.(newFilters);
-    updateURL(newFilters);
+    if (commit || key === "sortBy" || key === "search" || key === "category") {
+      updateURL(newFilters);
+    }
   };
 
   const clearFilters = () => {
@@ -204,8 +247,12 @@ export default function SearchFilters({ onFiltersChange }: SearchFiltersProps) {
   };
 
   const formatPrice = (price: number) => {
-    if (price >= 1000000) {return `${price / 1000000}M VND`;}
-    if (price >= 1000) {return `${price / 1000}K VND`;}
+    if (price >= 1000000) {
+      return `${price / 1000000}M VND`;
+    }
+    if (price >= 1000) {
+      return `${price / 1000}K VND`;
+    }
     return `${price} VND`;
   };
   const formatPower = (power: number) => `${power}W`;
@@ -253,6 +300,7 @@ export default function SearchFilters({ onFiltersChange }: SearchFiltersProps) {
             step={100000}
             value={filters.priceRange}
             onChange={(v) => handleFilterChange("priceRange", v)}
+            onCommit={(v) => handleFilterChange("priceRange", v, true)}
             formatValue={formatPrice}
             accent="gold"
           />
@@ -268,6 +316,7 @@ export default function SearchFilters({ onFiltersChange }: SearchFiltersProps) {
             step={10}
             value={filters.powerRange}
             onChange={(v) => handleFilterChange("powerRange", v)}
+            onCommit={(v) => handleFilterChange("powerRange", v, true)}
             formatValue={formatPower}
             accent="neon"
           />
@@ -283,6 +332,7 @@ export default function SearchFilters({ onFiltersChange }: SearchFiltersProps) {
             step={1}
             value={filters.batteryRange}
             onChange={(v) => handleFilterChange("batteryRange", v)}
+            onCommit={(v) => handleFilterChange("batteryRange", v, true)}
             formatValue={formatBattery}
             accent="gold"
           />

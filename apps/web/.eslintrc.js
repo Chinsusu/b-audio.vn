@@ -6,7 +6,13 @@ module.exports = {
   env: { browser: true, es2022: true, node: false },
   parser: "@typescript-eslint/parser",
   parserOptions: { ecmaVersion: 2022, sourceType: "module" },
-  plugins: ["@typescript-eslint", "import", "unused-imports", "react-refresh", "simple-import-sort"],
+  plugins: [
+    "@typescript-eslint",
+    "import",
+    "unused-imports",
+    "react-refresh",
+    "simple-import-sort",
+  ],
   extends: [
     "next/core-web-vitals",
     "eslint:recommended",

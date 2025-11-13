@@ -8,7 +8,12 @@ type TagProps = {
   className?: string;
 };
 
-export default function Tag({ children, href, variant = "gold", className = "" }: TagProps) {
+export default function Tag({
+  children,
+  href,
+  variant = "gold",
+  className = "",
+}: TagProps) {
   const base = [
     "inline-flex items-center gap-1 rounded-full px-3 py-1",
     "font-heading text-microcopy uppercase tracking-widest",
@@ -31,4 +36,3 @@ export default function Tag({ children, href, variant = "gold", className = "" }
   }
   return <span className={cls}>{children}</span>;
 }
-

@@ -123,21 +123,20 @@ const config: Config = {
         textGrey: "#999999",
       },
       fontFamily: {
-        // Brand Typography System mapped to CSS variables provided by next/font
+        // Brand Typography System mapped to active CSS variable (switchable)
         heading: [
-          'var(--font-heading)',
-          'Orbitron',
-          'Inter',
-          'Helvetica Neue',
-          'Arial',
-          'sans-serif',
+          "var(--font-heading-active)",
+          "Inter",
+          "Helvetica Neue",
+          "Arial",
+          "sans-serif",
         ],
         body: [
-          'var(--font-body)',
-          'Inter',
-          'Helvetica Neue',
-          'Arial',
-          'sans-serif',
+          "var(--font-body)",
+          "Inter",
+          "Helvetica Neue",
+          "Arial",
+          "sans-serif",
         ],
         mono: ["JetBrains Mono", "Consolas", "Monaco", "monospace"],
       },

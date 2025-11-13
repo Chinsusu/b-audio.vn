@@ -2,7 +2,7 @@
 
 const { RateLimiterMemory } = require("rate-limiter-flexible");
 
-module.exports = (config, { strapi }) => {
+module.exports = (config, { strapi: _strapi }) => {
   const rateLimiter = new RateLimiterMemory({
     keyGenerator: (req) => req.ip || req.connection.remoteAddress,
     points: config.max || 10, // Number of requests

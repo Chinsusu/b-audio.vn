@@ -9,3 +9,4 @@ next.config.*
 postcss.config.js
 tailwind.config.*
 
+app/products/page_original.tsx

@@ -1,6 +1,6 @@
 "use client";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect,useState } from "react";
+import { useEffect, useState } from "react";
 
 import { useDebounce } from "@/hooks/useDebounce";
 
@@ -15,12 +15,21 @@ export default function Filters() {
 
   useEffect(() => {
     const qs = new URLSearchParams(sp.toString());
-    if (debMin) {qs.set("min", debMin);}
-    else {qs.delete("min");}
-    if (debMax) {qs.set("max", debMax);}
-    else {qs.delete("max");}
-    if (power) {qs.set("power", power);}
-    else {qs.delete("power");}
+    if (debMin) {
+      qs.set("min", debMin);
+    } else {
+      qs.delete("min");
+    }
+    if (debMax) {
+      qs.set("max", debMax);
+    } else {
+      qs.delete("max");
+    }
+    if (power) {
+      qs.set("power", power);
+    } else {
+      qs.delete("power");
+    }
     router.replace(`/products?${qs.toString()}`, { scroll: false });
   }, [debMin, debMax, power]); // eslint-disable-line
 

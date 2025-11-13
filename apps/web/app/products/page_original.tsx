@@ -42,15 +42,20 @@ type SearchParams = {
 };
 
 function mapSort(sort?: string): string {
-  if (!sort) {return "publishedAt:desc";}
+  if (!sort) {
+    return "publishedAt:desc";
+  }
   if (
     sort === "price:asc" ||
     sort === "price:desc" ||
     sort === "publishedAt:desc" ||
     sort === "publishedAt:asc"
-  )
-    {return sort;}
-  if (sort === "newest") {return "publishedAt:desc";}
+  ) {
+    return sort;
+  }
+  if (sort === "newest") {
+    return "publishedAt:desc";
+  }
   return sort;
 }
 
@@ -59,7 +64,9 @@ async function getCategories() {
     `${API_BASE}/api/categories?fields[0]=name&fields[1]=slug&sort=name:asc&pagination[pageSize]=100`,
     { next: { revalidate: 300 } },
   );
-  if (!res.ok) {return [] as any[];}
+  if (!res.ok) {
+    return [] as any[];
+  }
   const json = await res.json();
   return (json.data || []) as any[];
 }
@@ -73,17 +80,22 @@ async function getProducts(
   const page = String(Number(searchParams.page || "1") || 1);
   params.set("pagination[pageSize]", pageSize);
   params.set("pagination[page]", page);
-  if (searchParams?.category)
-    {params.set("filters[category][slug][$eq]", searchParams.category);}
-  if (searchParams?.min) {params.set("filters[price][$gte]", searchParams.min);}
-  if (searchParams?.max) {params.set("filters[price][$lte]", searchParams.max);}
+  if (searchParams?.category) {
+    params.set("filters[category][slug][$eq]", searchParams.category);
+  }
+  if (searchParams?.min) {
+    params.set("filters[price][$gte]", searchParams.min);
+  }
+  if (searchParams?.max) {
+    params.set("filters[price][$lte]", searchParams.max);
+  }
   params.set("sort", mapSort(searchParams?.sort));
 
   const res = await fetch(`${API_BASE}/api/products?${params.toString()}`, {
     next: { revalidate: 60 },
   });
-  if (!res.ok)
-    {return {
+  if (!res.ok) {
+    return {
       items: [] as any[],
       meta: {
         pagination: {
@@ -93,7 +105,8 @@ async function getProducts(
           total: 0,
         },
       },
-    };}
+    };
+  }
   const json = await res.json();
   return {
     items: (json.data || []) as any[],
@@ -114,11 +127,21 @@ function nextQuery(
 ): string {
   const merged: SearchParams = { ...current, ...patch };
   const sp = new URLSearchParams();
-  if (merged.category) {sp.set("category", merged.category);}
-  if (merged.min) {sp.set("min", merged.min);}
-  if (merged.max) {sp.set("max", merged.max);}
-  if (merged.sort) {sp.set("sort", merged.sort);}
-  if (merged.page) {sp.set("page", merged.page);}
+  if (merged.category) {
+    sp.set("category", merged.category);
+  }
+  if (merged.min) {
+    sp.set("min", merged.min);
+  }
+  if (merged.max) {
+    sp.set("max", merged.max);
+  }
+  if (merged.sort) {
+    sp.set("sort", merged.sort);
+  }
+  if (merged.page) {
+    sp.set("page", merged.page);
+  }
   return sp.toString();
 }
 

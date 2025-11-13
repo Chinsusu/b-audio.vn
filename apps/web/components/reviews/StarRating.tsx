@@ -26,18 +26,24 @@ export default function StarRating({
   };
 
   const handleClick = (value: number) => {
-    if (readonly) {return;}
+    if (readonly) {
+      return;
+    }
     setCurrentRating(value);
     onRatingChange?.(value);
   };
 
   const handleMouseEnter = (value: number) => {
-    if (readonly) {return;}
+    if (readonly) {
+      return;
+    }
     setHoverRating(value);
   };
 
   const handleMouseLeave = () => {
-    if (readonly) {return;}
+    if (readonly) {
+      return;
+    }
     setHoverRating(0);
   };
 

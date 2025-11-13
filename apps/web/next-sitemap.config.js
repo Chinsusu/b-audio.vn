@@ -1,4 +1,4 @@
-module.exports = {
+const config = {
   siteUrl: "https://b-audio.vn",
   generateRobotsTxt: true,
   exclude: ["/admin/*", "/api/*"],
@@ -7,11 +7,15 @@ module.exports = {
     additionalSitemaps: [],
   },
   changefreq: "weekly",
-  transform: async (config, path) => {
+  transform: async (_config, path) => {
     let priority = 0.5;
-    if (path === "/") {priority = 1.0;}
-    else if (path.startsWith("/products/")) {priority = 0.7;}
-    else if (path.startsWith("/products")) {priority = 0.8;}
+    if (path === "/") {
+      priority = 1.0;
+    } else if (path.startsWith("/products/")) {
+      priority = 0.7;
+    } else if (path.startsWith("/products")) {
+      priority = 0.8;
+    }
     return {
       loc: path,
       changefreq: "weekly",
@@ -20,3 +24,5 @@ module.exports = {
     };
   },
 };
+
+export default config;

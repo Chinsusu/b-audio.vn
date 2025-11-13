@@ -55,20 +55,28 @@ function buildFilters(searchParams: SearchParams) {
   // Price filters
   const minPrice = searchParams.minPrice || searchParams.min;
   const maxPrice = searchParams.maxPrice || searchParams.max;
-  if (minPrice) {params.set("filters[price][$gte]", minPrice);}
-  if (maxPrice) {params.set("filters[price][$lte]", maxPrice);}
+  if (minPrice) {
+    params.set("filters[price][$gte]", minPrice);
+  }
+  if (maxPrice) {
+    params.set("filters[price][$lte]", maxPrice);
+  }
 
   // Power filters
-  if (searchParams.minPower)
-    {params.set("filters[power_watt][$gte]", searchParams.minPower);}
-  if (searchParams.maxPower)
-    {params.set("filters[power_watt][$lte]", searchParams.maxPower);}
+  if (searchParams.minPower) {
+    params.set("filters[power_watt][$gte]", searchParams.minPower);
+  }
+  if (searchParams.maxPower) {
+    params.set("filters[power_watt][$lte]", searchParams.maxPower);
+  }
 
   // Battery filters
-  if (searchParams.minBattery)
-    {params.set("filters[battery_hours][$gte]", searchParams.minBattery);}
-  if (searchParams.maxBattery)
-    {params.set("filters[battery_hours][$lte]", searchParams.maxBattery);}
+  if (searchParams.minBattery) {
+    params.set("filters[battery_hours][$gte]", searchParams.minBattery);
+  }
+  if (searchParams.maxBattery) {
+    params.set("filters[battery_hours][$lte]", searchParams.maxBattery);
+  }
 
   // Search filter
   if (searchParams.search) {
@@ -103,7 +111,9 @@ async function getCategories() {
         next: { revalidate: 300 },
       },
     );
-    if (!res.ok) {return [];}
+    if (!res.ok) {
+      return [];
+    }
     const data = await res.json();
     return data.data || [];
   } catch {
@@ -132,11 +142,12 @@ async function getProducts(searchParams: SearchParams) {
     const res = await fetch(`${API_BASE}/api/products?${params.toString()}`, {
       next: { revalidate: 60 },
     });
-    if (!res.ok)
-      {return {
+    if (!res.ok) {
+      return {
         products: [],
         pagination: { page: 1, pageCount: 1, pageSize, total: 0 },
-      };}
+      };
+    }
 
     const data = await res.json();
     return {

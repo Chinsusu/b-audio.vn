@@ -52,7 +52,9 @@ export default function CompareButton({
   };
 
   const handleToggle = async () => {
-    if (isLoading) {return;}
+    if (isLoading) {
+      return;
+    }
 
     setIsLoading(true);
     try {

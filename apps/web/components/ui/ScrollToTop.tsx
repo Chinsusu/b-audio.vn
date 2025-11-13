@@ -1,7 +1,7 @@
 "use client";
 
 import { ChevronUp } from "lucide-react";
-import { useEffect,useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function ScrollToTop() {
   const [isVisible, setIsVisible] = useState(false);
@@ -22,7 +22,9 @@ export default function ScrollToTop() {
     });
   };
 
-  if (!isVisible) {return null;}
+  if (!isVisible) {
+    return null;
+  }
 
   return (
     <button

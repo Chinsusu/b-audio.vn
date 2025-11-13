@@ -26,14 +26,25 @@
   }
 
   /* Industrial Typography Hierarchy */
+  :root {
+    /* Default: use primary heading font */
+    --font-heading-active: var(--font-heading);
+  }
+
+  html.use-exo2 {
+    /* Toggle: use alternate heading font (Exo 2) */
+    --font-heading-active: var(--font-heading-alt);
+  }
+
   h1,
   h2,
   h3,
   h4,
   h5,
   h6 {
-    /* Chakra Petch first for full Vietnamese support; Orbitron as stylistic fallback */
-    font-family: "Chakra Petch", "Orbitron", "Inter", "Bebas Neue", "Eurostile", "Helvetica Neue", Arial, sans-serif;
+    /* Use active variable for headings/buttons */
+    font-family:
+      var(--font-heading-active), "Inter", "Helvetica Neue", Arial, sans-serif;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: -0.02em;
@@ -391,8 +402,11 @@
 }
 
 /* Improve text readability */
+/* Ensure Tailwind's font-heading uses the active heading variable (Exo 2)
+   Do not override it to Orbitron here; logo styling remains separate. */
 .font-heading {
-  font-family: "Orbitron", "Bebas Neue", "Arial Black", sans-serif !important;
+  font-family:
+    var(--font-heading-active), "Inter", "Helvetica Neue", Arial, sans-serif;
   font-weight: 600;
   letter-spacing: -0.01em;
 }

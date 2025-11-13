@@ -10,7 +10,9 @@ const API_BASE = process.env.NEXT_PUBLIC_API_BASE || "http://localhost:1337";
  */
 export function getPublicMediaUrl(url: string | null | undefined): string {
   // Return empty string for null/undefined
-  if (!url) {return "";}
+  if (!url) {
+    return "";
+  }
 
   // If already starts with our public API base, return as is
   if (url.startsWith(API_BASE)) {
@@ -41,7 +43,9 @@ export function getPublicMediaUrl(url: string | null | undefined): string {
  * Handles both single media and media arrays
  */
 export function getStrapiMediaUrl(media: any): string {
-  if (!media) {return "";}
+  if (!media) {
+    return "";
+  }
 
   // If it's an array, get the first item
   if (Array.isArray(media) && media.length > 0) {

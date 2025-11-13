@@ -173,7 +173,11 @@ export default function CartPageClient() {
 
                     {/* Item Total */}
                     <div className="font-heading">
-                      <Price value={item.price * item.quantity} as="div" size="md" />
+                      <Price
+                        value={item.price * item.quantity}
+                        as="div"
+                        size="md"
+                      />
                     </div>
                   </div>
                 </div>
@@ -263,20 +267,20 @@ export default function CartPageClient() {
               </span>
             </div>
             <p className="text-body-sm text-neutral-400 leading-relaxed">
-              {shipping === 0
-                ? "Đủ điều kiện giao hàng miễn phí! Đơn hàng sẽ được giao trong 2-3 ngày."
-                : (
-                    <>
-                      Thêm {""}
-                      <Price
-                        value={5000000 - subtotal}
-                        as="span"
-                        size="sm"
-                        tone="neutral"
-                      />{" "}
-                      để được miễn phí vận chuyển.
-                    </>
-                  )}
+              {shipping === 0 ? (
+                "Đủ điều kiện giao hàng miễn phí! Đơn hàng sẽ được giao trong 2-3 ngày."
+              ) : (
+                <>
+                  Thêm {""}
+                  <Price
+                    value={5000000 - subtotal}
+                    as="span"
+                    size="sm"
+                    tone="neutral"
+                  />{" "}
+                  để được miễn phí vận chuyển.
+                </>
+              )}
             </p>
           </div>
 

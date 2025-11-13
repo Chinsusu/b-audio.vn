@@ -34,8 +34,11 @@ export function ProductCard({ p }: { p: any }) {
           <h3 className="font-heading text-h4 text-neutral-100 font-semibold group-hover:text-primary transition-colors duration-300 uppercase tracking-wide line-clamp-2">
             {attrs.title}
           </h3>
-          {typeof attrs.rating_avg !== 'undefined' && (
-            <ReviewStars rating={Number(attrs.rating_avg) || 0} count={Number(attrs.rating_count) || 0} />
+          {typeof attrs.rating_avg !== "undefined" && (
+            <ReviewStars
+              rating={Number(attrs.rating_avg) || 0}
+              count={Number(attrs.rating_count) || 0}
+            />
           )}
           <Price value={attrs.price_vnd || attrs.price} />
         </div>

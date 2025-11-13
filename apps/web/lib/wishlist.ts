@@ -31,7 +31,9 @@ export class WishlistManager {
   }
 
   private loadFromStorage(): void {
-    if (typeof window === "undefined") {return;}
+    if (typeof window === "undefined") {
+      return;
+    }
 
     try {
       const stored = localStorage.getItem(WISHLIST_STORAGE_KEY);
@@ -47,7 +49,9 @@ export class WishlistManager {
   }
 
   private saveToStorage(): void {
-    if (typeof window === "undefined") {return;}
+    if (typeof window === "undefined") {
+      return;
+    }
 
     try {
       localStorage.setItem(WISHLIST_STORAGE_KEY, JSON.stringify(this.wishlist));
@@ -133,7 +137,9 @@ export class WishlistManager {
     const itemIndex = this.wishlist.items.findIndex(
       (item) => item.id === itemId,
     );
-    if (itemIndex === -1) {return null;}
+    if (itemIndex === -1) {
+      return null;
+    }
 
     const item = this.wishlist.items[itemIndex];
     this.removeItem(itemId);
@@ -164,10 +170,18 @@ export function formatWishlistDate(dateString: string): string {
     const diffMs = now.getTime() - date.getTime();
     const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
 
-    if (diffDays === 0) {return "Hôm nay";}
-    if (diffDays === 1) {return "Hôm qua";}
-    if (diffDays < 7) {return `${diffDays} ngày trước`;}
-    if (diffDays < 30) {return `${Math.floor(diffDays / 7)} tuần trước`;}
+    if (diffDays === 0) {
+      return "Hôm nay";
+    }
+    if (diffDays === 1) {
+      return "Hôm qua";
+    }
+    if (diffDays < 7) {
+      return `${diffDays} ngày trước`;
+    }
+    if (diffDays < 30) {
+      return `${Math.floor(diffDays / 7)} tuần trước`;
+    }
 
     return date.toLocaleDateString("vi-VN", {
       day: "numeric",

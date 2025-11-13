@@ -1,5 +1,5 @@
 "use client";
-import { useEffect,useState } from "react";
+import { useEffect, useState } from "react";
 
 import {
   Comparison,
@@ -28,11 +28,7 @@ export function useComparison() {
   }, []);
 
   const addItem = (item: Omit<ComparisonItem, "addedAt">) => {
-    try {
-      return comparisonManager.addItem(item);
-    } catch (error) {
-      throw error; // Let the component handle the error (max items limit)
-    }
+    return comparisonManager.addItem(item);
   };
 
   const removeItem = (itemId: string) => {
@@ -40,11 +36,7 @@ export function useComparison() {
   };
 
   const toggleItem = (item: Omit<ComparisonItem, "addedAt">) => {
-    try {
-      return comparisonManager.toggleItem(item);
-    } catch (error) {
-      throw error; // Let the component handle the error
-    }
+    return comparisonManager.toggleItem(item);
   };
 
   const clearComparison = () => {

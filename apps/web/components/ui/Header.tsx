@@ -32,19 +32,19 @@ export default function Header() {
           <nav className="hidden lg:flex gap-8 ml-8">
             <Link
               href="/products"
-              className="nav-link text-microcopy uppercase tracking-widest"
+              className="nav-link font-heading text-microcopy uppercase tracking-widest"
             >
               SẢN PHẨM
             </Link>
             <Link
               href="/custom"
-              className="nav-link text-microcopy uppercase tracking-widest"
+              className="nav-link font-heading text-microcopy uppercase tracking-widest"
             >
               ĐẶT CUSTOM
             </Link>
             <Link
               href="/blog"
-              className="nav-link text-microcopy uppercase tracking-widest"
+              className="nav-link font-heading text-microcopy uppercase tracking-widest"
             >
               BLOG
             </Link>

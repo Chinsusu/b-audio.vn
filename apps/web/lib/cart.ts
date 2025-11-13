@@ -33,7 +33,9 @@ export class CartManager {
   }
 
   private loadFromStorage(): void {
-    if (typeof window === "undefined") {return;}
+    if (typeof window === "undefined") {
+      return;
+    }
 
     try {
       const stored = localStorage.getItem(CART_STORAGE_KEY);
@@ -49,7 +51,9 @@ export class CartManager {
   }
 
   private saveToStorage(): void {
-    if (typeof window === "undefined") {return;}
+    if (typeof window === "undefined") {
+      return;
+    }
 
     try {
       localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(this.cart));

@@ -34,7 +34,7 @@ export default function CheckoutPage() {
               </div>
               <div className="flex items-center">
                 <span className="text-neonTurquoise mr-3">3.</span>
-              We&apos;ll provide pricing and payment options
+                We&apos;ll provide pricing and payment options
               </div>
               <div className="flex items-center">
                 <span className="text-neonTurquoise mr-3">4.</span>

@@ -1,6 +1,10 @@
 import "./globals.css";
 
-import { Chakra_Petch, Inter as InterFont } from "next/font/google";
+import {
+  Barlow_Condensed as BarlowCondensed,
+  Exo_2 as Exo2Font,
+  Inter as InterFont,
+} from "next/font/google";
 import Script from "next/script";
 import type { ReactNode } from "react";
 
@@ -28,9 +32,10 @@ export const metadata = {
   },
 };
 
-const fontHeading = Chakra_Petch({
+// Default heading: Exo 2 (square, industrial, good Vietnamese support)
+const fontHeading = Exo2Font({
   subsets: ["latin", "latin-ext"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["400", "500", "600", "700", "800"],
   display: "swap",
   variable: "--font-heading",
 });
@@ -42,9 +47,20 @@ const fontBody = InterFont({
   variable: "--font-body",
 });
 
+// Alternate option to compare quickly if needed
+const fontHeadingAlt = BarlowCondensed({
+  subsets: ["latin", "latin-ext"],
+  weight: ["400", "500", "600", "700", "800"],
+  display: "swap",
+  variable: "--font-heading-alt",
+});
+
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="vi" className={`${fontHeading.variable} ${fontBody.variable}`}>
+    <html
+      lang="vi"
+      className={`${fontHeading.variable} ${fontHeadingAlt.variable} ${fontBody.variable}`}
+    >
       <head>
         {/* Preconnect for Google Fonts */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -63,9 +79,20 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <Script id="ga-init" strategy="afterInteractive">
           {`
             window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
+            function gtag(){dataLayer.push(arguments);} 
             gtag('js', new Date());
             gtag('config', 'G-FLX0YSYM3D');
+          `}
+        </Script>
+        {/* Small helper to toggle alternate font via ?font=barlow */}
+        <Script id="font-toggle" strategy="afterInteractive">
+          {`
+            try {
+              const url = new URL(window.location.href);
+              const f = url.searchParams.get('font');
+              // Default is Exo 2; pass ?font=barlow to preview Barlow Condensed
+              if (f && f.toLowerCase() === 'barlow') document.documentElement.classList.add('use-exo2');
+            } catch (e) {}
           `}
         </Script>
       </head>
