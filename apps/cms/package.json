@@ -7,6 +7,8 @@
     "start": "strapi start",
     "seed:sample": "node scripts/seed-sample.js",
     "seed:pages": "node scripts/seed-pages.js",
+    "token:create": "node scripts/create-api-token.js",
+    "cm:product-layout": "node scripts/configure-cm.js",
     "ratings:backfill": "node scripts/backfill-ratings.js",
     "lint": "eslint .",
     "format": "prettier --write ."
